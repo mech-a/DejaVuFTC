@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,11 +14,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by gbhat on 8/20/2017.
  */
 
-public class HWRobot {
+@TeleOp(name="HWMAP", group="Invis")
+@Disabled
+public class HWRobot extends LinearOpMode{
     public DcMotor motorFL = null;
     public DcMotor motorBL = null;
     public DcMotor motorFR = null;
     public DcMotor motorBR = null;
+    public double[][] joystick = {
+            {
+                    gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, -gamepad1.right_stick_y
+            },
+            {
+                    gamepad2.left_stick_x, -gamepad2.left_stick_y, gamepad2.right_stick_x, -gamepad2.right_stick_y
+            }
+    };
+
+    public boolean[][] buttons = {
+            {
+                    gamepad1.a, gamepad1.b, gamepad1.x, gamepad1.y,
+            },
+            {
+                    gamepad2.a, gamepad2.b, gamepad2.x, gamepad2.y
+            }
+    };
+
 
     public static final double DEADZONE = 0.1;
 
@@ -40,6 +64,10 @@ public class HWRobot {
         motorBL.setPower(0);
         motorFR.setPower(0);
         motorBR.setPower(0);
+    }
 
+    @Override
+    public void runOpMode(){
+        //useless
     }
 }
