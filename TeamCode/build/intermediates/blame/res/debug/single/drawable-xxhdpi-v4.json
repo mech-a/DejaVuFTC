@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
+    },
+    {
         "merged": "C:\\Users\\gbhat\\Desktop\\FTC DV Code\\DejaVuFTC\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
         "source": "C:\\Users\\gbhat\\Desktop\\FTC DV Code\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
     }

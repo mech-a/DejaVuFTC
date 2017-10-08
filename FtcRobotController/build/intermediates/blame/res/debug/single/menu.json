@@ -8,7 +8,19 @@
         "source": "C:\\Users\\gbhat\\Desktop\\FTC DV Code\\DejaVuFTC\\FtcRobotController\\src\\main\\res\\menu\\ftc_robot_controller.xml"
     },
     {
+        "merged": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\menu\\menu_server.xml",
+        "source": "C:\\Users\\Kalie\\.android\\build-cache\\b8a2c80544c008f1a8cb3b3a2711dbe67f2b4d94\\output\\res\\menu\\menu_server.xml"
+    },
+    {
         "merged": "C:\\Users\\gbhat\\Desktop\\FTC DV Code\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\menu\\menu_server.xml",
         "source": "C:\\Users\\gbhat\\.android\\build-cache\\9d517c25cf67a080742e35c6b0511eade9e95cbd\\output\\res\\menu\\menu_server.xml"
+    },
+    {
+        "merged": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\menu\\main_menu.xml",
+        "source": "C:\\Users\\Kalie\\.android\\build-cache\\bff2398d8565b39d642063acc38620e801c3f895\\output\\res\\menu\\main_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\menu\\ftc_robot_controller.xml",
+        "source": "C:\\Users\\Kalie\\Documents\\GitHub\\DejaVuFTC\\FtcRobotController\\src\\main\\res\\menu\\ftc_robot_controller.xml"
     }
 ]
