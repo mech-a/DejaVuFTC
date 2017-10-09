@@ -46,6 +46,9 @@ import com.qualcomm.robotcore.util.Range;
  *  -vuforia implementation
  *  -BNO055IMU gyroscopic capability
  *
+ *
+ * License Key
+ * AboeStD/////AAAAGaA8AMxAS0isjCVUhD5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P39rY/QC64WcjeCtnUDq0jj7yWEPkWZClLRC2KVwsjQPUe/mjwl6y51KfIKgSulpN63fEYOBdY5ZR4fNswicR46PElRn4NaKqkV6fr9cLS62V8Oa8ow88oUK3xga8OJkNYf+3VoIQ7dj/RxiKzQCBJRt2ZbRIUimTFw4oTC5LJ/NXV2jSD+m7KnW7TCpC7n/7hRxyKRmw+JKGoz5kJIfxhliqs1XD3MnD9KN5w6cEwEmg3uYUZ5Bx7bcuON/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw
  *  Initially created by gb
  */
 
