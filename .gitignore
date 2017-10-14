@@ -1,6 +1,8 @@
 
 FtcRobotController/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
-.gradle/3.5/taskHistory/taskHistory.lock
-.idea/
-.gradle/3.5/taskHistory/taskHistory.lock
 doc/javadoc
+*.iml
+.idea
+.gradle
+build/
+local.properties
