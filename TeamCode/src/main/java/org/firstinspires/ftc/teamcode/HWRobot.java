@@ -92,7 +92,7 @@ public class HWRobot
         int b = 1;
 
         dirLocal = dir.toLowerCase();
-        inchLocal = inches * DISTANCE_MODIFIER;
+        inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
 
         if(dir == "fwd" || dir == "forward") {
             a = 1;
@@ -114,7 +114,7 @@ public class HWRobot
         int countTarget;
 
         if(active) {
-            countTarget = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+            countTarget = mtrFL.getCurrentPosition() + (int) (inchLocal * COUNTS_PER_INCH);
             posFL = a * countTarget;
             posFR = b * countTarget;
             posBL = b * countTarget;
@@ -133,7 +133,7 @@ public class HWRobot
 
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        
+
     }
 
 
