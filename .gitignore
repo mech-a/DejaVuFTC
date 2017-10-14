@@ -2,8 +2,10 @@
 FtcRobotController/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
 doc/javadoc
 *.iml
-.idea
-.gradle
+.idea/
+.gradle/
 build/
 local.properties
 TeamCode/build
+.idea/workspace.xml
+*.xml

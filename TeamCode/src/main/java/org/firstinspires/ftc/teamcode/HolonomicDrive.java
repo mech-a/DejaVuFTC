@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp(name="Holonomic Drive", group="DriveOPs")
 //@Disabled
 public class HolonomicDrive extends LinearOpMode{
-    //HWRobot robot = new HWRobot();
+    //HWRobotOld robot = new HWRobotOld();
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
