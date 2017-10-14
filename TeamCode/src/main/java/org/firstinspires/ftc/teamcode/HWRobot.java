@@ -19,6 +19,7 @@ public class HWRobot
     public double powBR = 0;
 
 
+    //TODO check if counts per inch actually work
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;
@@ -138,7 +139,7 @@ public class HWRobot
 
 
     //Function to rotate on the field (encoders)
-    public void rotate(){}
+    public void rotateUsingGyro(){}
 
 
 
