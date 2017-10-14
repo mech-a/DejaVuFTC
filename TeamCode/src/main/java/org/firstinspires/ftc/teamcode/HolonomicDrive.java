@@ -32,10 +32,10 @@ public class HolonomicDrive extends LinearOpMode{
         mtrBL = hardwareMap.dcMotor.get("bl_drive");
         mtrBR = hardwareMap.dcMotor.get("br_drive");
 
-        mtrFL.setDirection(DcMotor.Direction.FORWARD);
-        mtrFR.setDirection(DcMotor.Direction.REVERSE);
-        mtrBL.setDirection(DcMotor.Direction.FORWARD);
-        mtrBR.setDirection(DcMotor.Direction.REVERSE);
+        mtrFL.setDirection(DcMotor.Direction.REVERSE);
+        mtrFR.setDirection(DcMotor.Direction.FORWARD);
+        mtrBL.setDirection(DcMotor.Direction.REVERSE);
+        mtrBR.setDirection(DcMotor.Direction.FORWARD);
 
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
