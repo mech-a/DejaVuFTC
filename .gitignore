@@ -6,3 +6,4 @@ doc/javadoc
 .gradle
 build/
 local.properties
+TeamCode/build
