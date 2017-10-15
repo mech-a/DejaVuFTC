@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +13,7 @@ public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public ColorSensor sensorColor;
 
 
     // Declare speeds and other vars
@@ -45,6 +47,7 @@ public class HWRobot
         mtrFR = ahwMap.dcMotor.get("fr_drive");
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
+        sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.REVERSE);
@@ -214,6 +217,8 @@ public class HWRobot
         mtrBL.setTargetPosition(posBL);
         mtrBR.setTargetPosition(posBR);
     }
+
+    //private void determineValueOfATranslation
 
 
 
