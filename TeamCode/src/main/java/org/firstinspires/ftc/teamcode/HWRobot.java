@@ -22,6 +22,16 @@ public class HWRobot
     public double powBL = 0;
     public double powBR = 0;
 
+    public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
+            "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
+            "39rY/QC64WcjeCtnUDq0jj7yWEPkWZClL" +
+            "RC2KVwsjQPUe/mjwl6y51KfIKgSulpN63f" +
+            "EYOBdY5ZR4fNswicR46PElRn4NaKqkV6fr9cLS62V8O" +
+            "a8ow88oUK3xga8OJkNYf+3VoIQ7dj/RxiKzQCBJRt" +
+            "2ZbRIUimTFw4oTC5LJ/NXV2jSD+m7KnW7TCpC7n/7hRxyKR" +
+            "mw+JKGoz5kJIfxhliqs1XD3MnD9KN5w6cEwEmg3uYUZ5Bx7bcuO" +
+            "N/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw";
+
 
     //TODO check if counts per inch actually work
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
