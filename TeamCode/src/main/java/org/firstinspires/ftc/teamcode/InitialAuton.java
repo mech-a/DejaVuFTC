@@ -23,7 +23,6 @@ public class InitialAuton extends LinearOpMode {
     // Declare OpMode members: motors, servos, sensors
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
-    private Servo jewelSrv, rightSrv, leftSrv;
     private ColorSensor sensorColor;
     int a = 0;
     int b = 0;

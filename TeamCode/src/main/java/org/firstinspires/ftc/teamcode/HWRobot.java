@@ -13,6 +13,7 @@ public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
 
 
@@ -57,6 +58,11 @@ public class HWRobot
         mtrFR = ahwMap.dcMotor.get("fr_drive");
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
+
+        srvJewel = ahwMap.servo.get(Servo.class, "jewel_thing");
+        srvL = ahwMap.servo.get(Servo.class, "claw_left");
+        srvR = ahwMap.servo.get(Servo.class, "claw_right");
+
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
@@ -229,14 +235,6 @@ public class HWRobot
     }
 
     //private void determineValueOfATranslation
-
-
-
-
-
-
-
-
 
     /* redundant- moved to init
     HWRobot(DcMotor amtrFL, DcMotor amtrFR, DcMotor amtrBL, DcMotor amtrBR, DcMotor.RunMode mode) {
