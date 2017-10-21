@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public ColorSensor sensorColor;
 
 
     // Declare speeds and other vars
@@ -17,6 +21,16 @@ public class HWRobot
     public double powFR = 0;
     public double powBL = 0;
     public double powBR = 0;
+
+    public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
+            "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
+            "39rY/QC64WcjeCtnUDq0jj7yWEPkWZClL" +
+            "RC2KVwsjQPUe/mjwl6y51KfIKgSulpN63f" +
+            "EYOBdY5ZR4fNswicR46PElRn4NaKqkV6fr9cLS62V8O" +
+            "a8ow88oUK3xga8OJkNYf+3VoIQ7dj/RxiKzQCBJRt" +
+            "2ZbRIUimTFw4oTC5LJ/NXV2jSD+m7KnW7TCpC7n/7hRxyKR" +
+            "mw+JKGoz5kJIfxhliqs1XD3MnD9KN5w6cEwEmg3uYUZ5Bx7bcuO" +
+            "N/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw";
 
 
     //TODO check if counts per inch actually work
@@ -28,18 +42,22 @@ public class HWRobot
 
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
+    Telemetry telemetry = null;
 
     // Initialize standard Hardware interfaces.
-    public void init(HardwareMap ahwMap, DcMotor.RunMode mode) {
+    public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
 
         // Save reference to Hardware map.
         hwMap = ahwMap;
+        telemetry = atelemetry;
+
 
         // Define and initialize hardware
         mtrFL = ahwMap.dcMotor.get("fl_drive");
         mtrFR = ahwMap.dcMotor.get("fr_drive");
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
+        sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.REVERSE);
@@ -87,12 +105,10 @@ public class HWRobot
     //TODO make repitition into own functions
     public void translate(String dir, double speed, double inches, boolean active){
         double inchLocal;
-        String dirLocal;
         int posFL, posFR, posBL, posBR;
         int a = 1;
         int b = 1;
 
-        dirLocal = dir.toLowerCase();
         inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
 
         if(dir == "fwd" || dir == "forward") {
@@ -121,14 +137,64 @@ public class HWRobot
             posBL = b * countTarget;
             posBR = a * countTarget;
 
-            mtrFL.setTargetPosition(posFL);
-            mtrFR.setTargetPosition(posFR);
-            mtrBL.setTargetPosition(posBL);
-            mtrBR.setTargetPosition(posBR);
+            mtrSetTargetPos(posFL,posFR,posBL,posBR);
 
             mtrChangeMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             mtrSetSpeed(speed);
+
+            while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+                posOutOfFinalTelemetry(countTarget);
+            }
+
+            mtrSetSpeed(0);
+
+            mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+    }
+
+    public void translate(String dir, double speed, int counts, boolean active){
+        int posFL, posFR, posBL, posBR;
+        int a = 1;
+        int b = 1;
+
+
+        if(dir == "fwd" || dir == "forward") {
+            a = 1;
+            b = 1;
+        }
+        else if(dir == "bk" || dir == "backwards") {
+            a = -1;
+            b = -1;
+        }
+        else if(dir == "left") {
+            a = -1;
+            b = 1;
+        }
+        else if (dir == "right") {
+            a = 1;
+            b = -1;
+        }
+
+        int countTarget;
+
+        if(active) {
+            countTarget = mtrFL.getCurrentPosition() + counts;
+            posFL = a * countTarget;
+            posFR = b * countTarget;
+            posBL = b * countTarget;
+            posBR = a * countTarget;
+
+            mtrSetTargetPos(posFL,posFR,posBL,posBR);
+
+            mtrChangeMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            mtrSetSpeed(speed);
+
+            while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+                posOutOfFinalTelemetry(countTarget);
+            }
 
             mtrSetSpeed(0);
 
@@ -140,6 +206,31 @@ public class HWRobot
 
     //Function to rotate on the field (encoders)
     public void rotateUsingGyro(){}
+
+
+
+
+
+
+
+    private void posOutOfFinalTelemetry(int countTarget) {
+        telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTarget);
+        telemetry.addData("MtrFR", "Pos / Final", mtrFR.getCurrentPosition(), "/", countTarget);
+        telemetry.addData("MtrBL", "Pos / Final", mtrBL.getCurrentPosition(), "/", countTarget);
+        telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTarget);
+        telemetry.update();
+    }
+
+    private void mtrSetTargetPos(int posFL, int posFR, int posBL, int posBR) {
+        mtrFL.setTargetPosition(posFL);
+        mtrFR.setTargetPosition(posFR);
+        mtrBL.setTargetPosition(posBL);
+        mtrBR.setTargetPosition(posBR);
+    }
+
+    //private void determineValueOfATranslation
+
+
 
 
 
