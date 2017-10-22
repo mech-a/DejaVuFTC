@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp(name="Holonomic Drive", group="DriveOPs")
 //@Disabled
 public class HolonomicDrive extends LinearOpMode{
-    //HWRobotOld robot = new HWRobotOld();
+    HWRobot robot = new HWRobot();
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
@@ -26,7 +26,7 @@ public class HolonomicDrive extends LinearOpMode{
 
     @Override
     public void runOpMode() {
-        //robot.init(hardwareMap);
+        /*//robot.init(hardwareMap);
         mtrFL = hardwareMap.dcMotor.get("fl_drive");
         mtrFR = hardwareMap.dcMotor.get("fr_drive");
         mtrBL = hardwareMap.dcMotor.get("bl_drive");
@@ -41,30 +41,13 @@ public class HolonomicDrive extends LinearOpMode{
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+*/
 
-
+        robot.init(hardwareMap, DcMotor.RunMode.RUN_WITHOUT_ENCODER, telemetry);
         prompt(telemetry, "Init", "HW initialized");
-
         waitForStart();
 
         while(opModeIsActive()) {
-           /*
-           powFL = robot.joystick[0][1] + robot.joystick[0][0] + robot.joystick[0][2];
-           powFR = robot.joystick[0][1] - robot.joystick[0][0] - robot.joystick[0][2];
-           powBL = robot.joystick[0][1] + robot.joystick[0][0] - robot.joystick[0][2];
-           powBR = robot.joystick[0][1] - robot.joystick[0][0] + robot.joystick[0][2];
-*/
-            /*
-            ch1 = gamepad1.right_stick_x;
-            ch3 = -gamepad1.left_stick_y;
-            ch4 = gamepad1.left_stick_x;
-
-            powFL = ch3 + ch1 + ch4;
-            powFR = ch3 - ch1 - ch4;
-            powBL = ch3 + ch1 - ch4;
-            powBR = ch3 - ch1 + ch4;
-            */
-
             ch1 = gamepad1.left_stick_x;
             ch2 = -gamepad1.left_stick_y;
             ch3 = gamepad1.right_stick_x;
@@ -75,13 +58,10 @@ public class HolonomicDrive extends LinearOpMode{
             powBL = ch2 - ch1 + ch3;
             powBR = ch2 + ch1 - ch3;
 
-
-            mtrFL.setPower(powFL);
-            mtrFR.setPower(powFR);
-            mtrBL.setPower(powBL);
-            mtrBR.setPower(powBR);
-
-
+            robot.mtrFL.setPower(powFL);
+            robot.mtrFR.setPower(powFR);
+            robot.mtrBL.setPower(powBL);
+            robot.mtrBR.setPower(powBR);
         }
     }
 

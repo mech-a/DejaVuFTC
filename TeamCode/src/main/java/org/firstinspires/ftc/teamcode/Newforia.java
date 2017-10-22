@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -19,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Made By Gaurav
  */
 
-@Autonomous(name="Testing Translation", group="Testing")
-@Disabled
+@TeleOp(name="Newforia", group="Testing")
+//@Disabled
 public class Newforia extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -30,11 +31,11 @@ public class Newforia extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.init(hardwareMap, DcMotor.RunMode.RUN_USING_ENCODERS, telemetry);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        parameters.vuforiaLicenseKey= robot.vuforiaKey;
+        parameters.vuforiaLicenseKey = robot.vuforiaKey;
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -46,10 +47,10 @@ public class Newforia extends LinearOpMode {
         waitForStart();
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while opModeIsActive()
-        robot.translate("fwd", 0.6, 1120, opModeIsActive());
+        //robot.translate("fwd", 0.6, 1120, opModeIsActive());
 
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
-        robot.translate("left", 0.4, 12.0, opModeIsActive());
+        //robot.translate("left", 0.4, 12.0, opModeIsActive());
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while(opModeIsActive()) {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class HWRobot
 {
@@ -15,6 +17,8 @@ public class HWRobot
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
+    public BNO055IMU imu;
+    public Orientation angles;
 
 
     // Declare speeds and other vars
@@ -59,9 +63,20 @@ public class HWRobot
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
 
-        srvJewel = ahwMap.servo.get(Servo.class, "jewel_thing");
-        srvL = ahwMap.servo.get(Servo.class, "claw_left");
-        srvR = ahwMap.servo.get(Servo.class, "claw_right");
+        /*
+        srvJewel = ahwMap.servo.get("jewel_thing");
+        srvL = ahwMap.servo.get("claw_left");
+        srvR = ahwMap.servo.get("claw_right");
+*/
+        imu = ahwMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+
+        imu.initialize(parameters);
 
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
