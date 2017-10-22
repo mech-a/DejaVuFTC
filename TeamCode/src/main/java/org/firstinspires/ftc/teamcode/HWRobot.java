@@ -21,7 +21,7 @@ public class HWRobot
     public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
-    public Orientation angles;
+
 
 
 
@@ -37,6 +37,8 @@ public class HWRobot
     public double ninetyDegreesInInches = 9*3.1415;
     public double turnAroundInInches = 18 *3.1415;
     int posFL, posFR, posBL, posBR;
+
+    double heading,roll,pitch;
 
     public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
             "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
@@ -66,6 +68,7 @@ public class HWRobot
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
+    public Orientation angles;
 
     // Initialize standard Hardware interfaces.
     public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
@@ -87,14 +90,22 @@ public class HWRobot
         srvR = ahwMap.servo.get("claw_right");
 */
         imu = ahwMap.get(BNO055IMU.class, "imu");
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
-
         imu.initialize(parameters);
+
+        /*
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
+        double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
+        */
+
+
 
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
@@ -142,11 +153,14 @@ public class HWRobot
 
     //Function to translate on the field (encoders)- currently reconstructed
     //TODO make repitition into own functions
+
     public void translate(String dir, double speed, double inches, boolean active){
         double inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
         decideDirection(dir);
 
         if(active) {
+            mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             getNewPositions(inchLocal);
 
             setDirection();
@@ -171,6 +185,8 @@ public class HWRobot
         decideDirection(dir);
 
         if(active) {
+            mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             getNewPositions(counts);
 
             setDirection();
@@ -181,7 +197,7 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
@@ -197,7 +213,7 @@ public class HWRobot
         decideDirection(direction);
 
         if(active) {
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             //while(angles.firstAngle)
 
         }
@@ -260,10 +276,10 @@ public class HWRobot
     }
 
     private void getNewPositions(double inches){
-        countTargets[0] = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
-        countTargets[1] = mtrFR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
-        countTargets[2] = mtrBL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
-        countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[0] = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
+        countTargets[1] = mtrFR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
+        countTargets[2] = mtrBL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
+        countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
     }
 
 

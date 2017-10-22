@@ -24,7 +24,7 @@ import java.util.Locale;
 
 
 /**
- * Autonomous made to test out translation and other functions related to movement.
+ * Autonomous made to test gyro and servos
  * Made By Gaurav
  */
 
@@ -32,14 +32,16 @@ import java.util.Locale;
 //@Disabled
 public class ServoGyro extends LinearOpMode {
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+    //private ElapsedTime runtime = new ElapsedTime();
     HWRobot robot = new HWRobot();
-
-    // The IMU sensor object
 
     // State used for updating telemetry
     Orientation angles;
-    //Acceleration gravity;
+
+    double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+    double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
+    double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
+
 
     @Override
     public void runOpMode() {
@@ -57,57 +59,11 @@ public class ServoGyro extends LinearOpMode {
         // Loop and update the dashboard
         while (opModeIsActive()) {
             angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            telemetry.addData("heading" , AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
+            telemetry.addData("heading" , heading);
+            telemetry.addData("roll" , roll);
+            telemetry.addData("pitch" , pitch);
             telemetry.update();
 
         }
     }
-
-    //----------------------------------------------------------------------------------------------
-    // Telemetry Configuration
-    //----------------------------------------------------------------------------------------------
-
-    /*
-
-    void composeTelemetry() {
-
-        // At the beginning of each telemetry update, grab a bunch of data
-        // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() {
-            @Override
-            public void run() {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                //angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                //gravity  = imu.getGravity();
-            }
-        });
-
-
-
-        telemetry.addLine().addData("heading", new Func<double>() {
-                    @Override public double value() {
-                        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-                        //return AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle))
-                        // return formatAngle(angles.angleUnit, angles.firstAngle);   //display heading (maybe yaw?)
-                    }
-                });
-    }
-
-
-        //----------------------------------------------------------------------------------------------
-        // Formatting
-        //----------------------------------------------------------------------------------------------
-
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees){
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
-
-*/
-
 }
