@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,6 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class HWRobot
 {
@@ -15,6 +20,9 @@ public class HWRobot
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
+    public BNO055IMU imu;
+    public Orientation angles;
+
 
 
     // Declare speeds and other vars
@@ -22,6 +30,13 @@ public class HWRobot
     public double powFR = 0;
     public double powBL = 0;
     public double powBR = 0;
+
+    int a = 1;
+    int b = 1;
+    String mvmtWay;
+    public double ninetyDegreesInInches = 9*3.1415;
+    public double turnAroundInInches = 18 *3.1415;
+    int posFL, posFR, posBL, posBR;
 
     public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
             "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
@@ -32,6 +47,13 @@ public class HWRobot
             "2ZbRIUimTFw4oTC5LJ/NXV2jSD+m7KnW7TCpC7n/7hRxyKR" +
             "mw+JKGoz5kJIfxhliqs1XD3MnD9KN5w6cEwEmg3uYUZ5Bx7bcuO" +
             "N/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw";
+
+    //TODO check if when you create an array & edit array value ex arr[0] that is defined as a variable, does editing the arr[0] value change the variable val?
+    /*private int countTargetFL,countTargetFR,countTargetBL,countTargetBR;
+    private int[] countTargets = {
+            countTargetFL, countTargetFR, countTargetBL, countTargetBR
+    };*/
+    private int[] countTargets = new int[4];
 
 
     //TODO check if counts per inch actually work
@@ -62,9 +84,25 @@ public class HWRobot
         mtrBR = ahwMap.dcMotor.get("br_drive");
 
         /*
+<<<<<<< HEAD
         srvJewel = ahwMap.servo.get("jewel_servo");
         srvL = ahwMap.servo.get("claw_left");
         srvR = ahwMap.servo.get("claw_right");
+=======
+        srvJewel = ahwMap.servo.get("jewel_thing");
+        srvL = ahwMap.servo.get("claw_left");
+        srvR = ahwMap.servo.get("claw_right");
+*/
+        imu = ahwMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+
+        imu.initialize(parameters);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
 
 */
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
@@ -114,38 +152,13 @@ public class HWRobot
     //Function to translate on the field (encoders)- currently reconstructed
     //TODO make repitition into own functions
     public void translate(String dir, double speed, double inches, boolean active){
-        double inchLocal;
-        int posFL, posFR, posBL, posBR;
-        int a = 1;
-        int b = 1;
-
-        inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
-
-        if(dir == "fwd" || dir == "forward") {
-            a = 1;
-            b = 1;
-        }
-        else if(dir == "bk" || dir == "backwards") {
-            a = -1;
-            b = -1;
-        }
-        else if(dir == "left") {
-            a = -1;
-            b = 1;
-        }
-        else if (dir == "right") {
-            a = 1;
-            b = -1;
-        }
-
-        int countTarget;
+        double inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
+        decideDirection(dir);
 
         if(active) {
-            countTarget = mtrFL.getCurrentPosition() + (int) (inchLocal * COUNTS_PER_INCH);
-            posFL = a * countTarget;
-            posFR = b * countTarget;
-            posBL = b * countTarget;
-            posBR = a * countTarget;
+            getNewPositions(inchLocal);
+
+            setDirection();
 
             mtrSetTargetPos(posFL,posFR,posBL,posBR);
 
@@ -154,47 +167,26 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+<<<<<<< HEAD
                 //posOutOfFinalTelemetry(countTarget);
+=======
+                posOutOfFinalTelemetry(countTargets);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
             }
 
             mtrSetSpeed(0);
 
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
     }
 
     public void translate(String dir, double speed, int counts, boolean active){
-        int posFL, posFR, posBL, posBR;
-        int a = 1;
-        int b = 1;
-
-
-        if(dir == "fwd" || dir == "forward") {
-            a = 1;
-            b = 1;
-        }
-        else if(dir == "bk" || dir == "backwards") {
-            a = -1;
-            b = -1;
-        }
-        else if(dir == "left") {
-            a = -1;
-            b = 1;
-        }
-        else if (dir == "right") {
-            a = 1;
-            b = -1;
-        }
-
-        int countTarget;
+        decideDirection(dir);
 
         if(active) {
-            countTarget = mtrFL.getCurrentPosition() + counts;
-            posFL = a * countTarget;
-            posFR = b * countTarget;
-            posBL = b * countTarget;
-            posBR = a * countTarget;
+            getNewPositions(counts);
+
+            setDirection();
 
             mtrSetTargetPos(posFL,posFR,posBL,posBR);
 
@@ -203,32 +195,101 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+<<<<<<< HEAD
                 //posOutOfFinalTelemetry(countTarget);
+=======
+                posOutOfFinalTelemetry(countTargets);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
             }
 
             mtrSetSpeed(0);
 
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
     }
 
 
-    //Function to rotate on the field (encoders)
-    public void rotateUsingGyro(){}
+    //Function to rotate on the field using encoders
+    public void rotate(String direction, double speed, String angle, boolean active){
+        decideDirection(direction);
 
+        if(active) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //while(angles.firstAngle)
 
+        }
 
+    }
 
+    private void decideDirection(String dir) {
+        if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
+            if (dir == "clockwise" || dir == "cw") {
+                a = 1;
+                b = -1;
+            }
+            else if (dir == "counterclockwise" || dir == "ccw") {
+                a = -1;
+                b = 1;
+            }
+            mvmtWay = "rotation";
+        }
+        else {
+            if(dir == "fwd" || dir == "forward") {
+                a = 1;
+                b = 1;
+            }
+            else if(dir == "bk" || dir == "backwards") {
+                a = -1;
+                b = -1;
+            }
+            else if(dir == "left") {
+                a = -1;
+                b = 1;
+            }
+            else if (dir == "right") {
+                a = 1;
+                b = -1;
+            }
+            mvmtWay = "translation";
+        }
+    }
 
+    private void setDirection(){
+        if(mvmtWay == "translation") {
+            posFL = a * countTargets[0];
+            posFR = b * countTargets[1];
+            posBL = b * countTargets[2];
+            posBR = a * countTargets[3];
+        }
+        else if(mvmtWay == "rotation") {
+            posFL = a * countTargets[0];
+            posFR = b * countTargets[1];
+            posBL = a * countTargets[2];
+            posBR = b * countTargets[3];
+        }
+    }
+
+    private void getNewPositions(int counts){
+        countTargets[0] = mtrFL.getCurrentPosition() + counts;
+        countTargets[1] = mtrFR.getCurrentPosition() + counts;
+        countTargets[2] = mtrBL.getCurrentPosition() + counts;
+        countTargets[3] = mtrBR.getCurrentPosition() + counts;
+    }
+
+    private void getNewPositions(double inches){
+        countTargets[0] = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[1] = mtrFR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[2] = mtrBL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+    }
 
     /*
 
-    private void posOutOfFinalTelemetry(int countTarget) {
-        telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTarget);
-        telemetry.addData("MtrFR", "Pos / Final", mtrFR.getCurrentPosition(), "/", countTarget);
-        telemetry.addData("MtrBL", "Pos / Final", mtrBL.getCurrentPosition(), "/", countTarget);
-        telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTarget);
+    private void posOutOfFinalTelemetry(int[] countTargets) {
+        telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTargets[0]);
+        telemetry.addData("MtrFR", "Pos / Final", mtrFR.getCurrentPosition(), "/", countTargets[1]);
+        telemetry.addData("MtrBL", "Pos / Final", mtrBL.getCurrentPosition(), "/", countTargets[2]);
+        telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTargets[3]);
         telemetry.update();
     }
     */
@@ -239,6 +300,8 @@ public class HWRobot
         mtrBL.setTargetPosition(posBL);
         mtrBR.setTargetPosition(posBR);
     }
+
+
 
     //private void determineValueOfATranslation
 

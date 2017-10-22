@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -30,11 +31,15 @@ public class Newforia extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+<<<<<<< HEAD
         robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS);
+=======
+        robot.init(hardwareMap, DcMotor.RunMode.RUN_USING_ENCODERS, telemetry);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        parameters.vuforiaLicenseKey= robot.vuforiaKey;
+        parameters.vuforiaLicenseKey = robot.vuforiaKey;
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -51,8 +56,10 @@ public class Newforia extends LinearOpMode {
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
         //robot.translate("left", 0.4, 12.0, opModeIsActive());
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        relicTrackables.activate();
         while(opModeIsActive()) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if(vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
             }
@@ -63,6 +70,6 @@ public class Newforia extends LinearOpMode {
             telemetry.update();
         }
 
-        
+
     }
 }
