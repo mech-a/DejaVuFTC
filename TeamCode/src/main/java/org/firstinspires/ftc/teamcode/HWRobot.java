@@ -46,11 +46,13 @@ public class HWRobot
     Telemetry telemetry = null;
 
     // Initialize standard Hardware interfaces.
-    public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
+    public void init(HardwareMap ahwMap, DcMotor.RunMode mode
+            //, Telemetry atelemetry
+                     ) {
 
         // Save reference to Hardware map.
         hwMap = ahwMap;
-        telemetry = atelemetry;
+        //telemetry = atelemetry;
 
 
         // Define and initialize hardware
@@ -59,10 +61,12 @@ public class HWRobot
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
 
-        srvJewel = ahwMap.servo.get(Servo.class, "jewel_thing");
-        srvL = ahwMap.servo.get(Servo.class, "claw_left");
-        srvR = ahwMap.servo.get(Servo.class, "claw_right");
+        /*
+        srvJewel = ahwMap.servo.get("jewel_servo");
+        srvL = ahwMap.servo.get("claw_left");
+        srvR = ahwMap.servo.get("claw_right");
 
+*/
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
@@ -150,7 +154,7 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
-                posOutOfFinalTelemetry(countTarget);
+                //posOutOfFinalTelemetry(countTarget);
             }
 
             mtrSetSpeed(0);
@@ -199,7 +203,7 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
-                posOutOfFinalTelemetry(countTarget);
+                //posOutOfFinalTelemetry(countTarget);
             }
 
             mtrSetSpeed(0);
@@ -218,6 +222,7 @@ public class HWRobot
 
 
 
+    /*
 
     private void posOutOfFinalTelemetry(int countTarget) {
         telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTarget);
@@ -226,6 +231,7 @@ public class HWRobot
         telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTarget);
         telemetry.update();
     }
+    */
 
     private void mtrSetTargetPos(int posFL, int posFR, int posBL, int posBR) {
         mtrFL.setTargetPosition(posFL);

@@ -19,8 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Made By Gaurav
  */
 
-@Autonomous(name="Testing Translation", group="Testing")
-@Disabled
+@Autonomous(name="Newforia", group="Testing")
+//@Disabled
 public class Newforia extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -30,7 +30,7 @@ public class Newforia extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -46,10 +46,10 @@ public class Newforia extends LinearOpMode {
         waitForStart();
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while opModeIsActive()
-        robot.translate("fwd", 0.6, 1120, opModeIsActive());
+        //robot.translate("fwd", 0.6, 1120, opModeIsActive());
 
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
-        robot.translate("left", 0.4, 12.0, opModeIsActive());
+        //robot.translate("left", 0.4, 12.0, opModeIsActive());
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while(opModeIsActive()) {

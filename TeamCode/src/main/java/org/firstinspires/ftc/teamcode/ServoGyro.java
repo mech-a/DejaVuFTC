@@ -43,7 +43,7 @@ public class ServoGyro extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS);
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -154,5 +154,5 @@ public class ServoGyro extends LinearOpMode {
 
 
 
-    }
+
 }

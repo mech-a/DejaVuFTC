@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="Testing Translation", group="Testing")
-@Disabled
+//@Disabled
 public class TestingTranslation extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -26,8 +26,8 @@ public class TestingTranslation extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
-
+        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS);
+        /*
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -39,7 +39,7 @@ public class TestingTranslation extends LinearOpMode {
 
 
 
-
+x
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -57,12 +57,15 @@ public class TestingTranslation extends LinearOpMode {
         telemetry.addData("Hue", hsvValues[0]);
         telemetry.addData("Saturation", hsvValues[1]);
         telemetry.addData("Value", hsvValues[2]);
+        */
+        waitForStart();
+        boolean active = opModeIsActive();
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while opModeIsActive()
-        robot.translate("fwd", 0.6, 1120, opModeIsActive());
+        robot.translate("fwd", 0.6, 1120, active);
 
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
-        robot.translate("left", 0.4, 12.0, opModeIsActive());
+        robot.translate("left", 0.4, 12.0, active);
 
 
 
