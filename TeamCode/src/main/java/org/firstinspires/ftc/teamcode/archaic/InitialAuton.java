@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,11 +17,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Trial autonomous aka kalie messing around w stuff
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous OPs")
-//@Disabled
+@Autonomous(name="Autonomous", group="Autonomous OPs")
+@Disabled
 public class InitialAuton extends LinearOpMode {
 
     // Declare OpMode members: motors, servos, sensors
+    //HWRobot robot = new HWRobot();
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
     private ColorSensor sensorColor;
@@ -54,7 +56,11 @@ public class InitialAuton extends LinearOpMode {
     }
 
     public void jewel (double servoPosition){
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/InitialAuton.java
+        //robot.srvJewel.setPosition(servoPosition);
+=======
         //jewelSrv.setPosition(servoPosition);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/archaic/InitialAuton.java
     }
 
     public void distance (int distance) {

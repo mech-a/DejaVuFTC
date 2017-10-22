@@ -71,11 +71,13 @@ public class HWRobot
     public Orientation angles;
 
     // Initialize standard Hardware interfaces.
-    public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
+    public void init(HardwareMap ahwMap, DcMotor.RunMode mode
+            //, Telemetry atelemetry
+                     ) {
 
         // Save reference to Hardware map.
         hwMap = ahwMap;
-        telemetry = atelemetry;
+        //telemetry = atelemetry;
 
 
         // Define and initialize hardware
@@ -85,6 +87,11 @@ public class HWRobot
         mtrBR = ahwMap.dcMotor.get("br_drive");
 
         /*
+<<<<<<< HEAD
+        srvJewel = ahwMap.servo.get("jewel_servo");
+        srvL = ahwMap.servo.get("claw_left");
+        srvR = ahwMap.servo.get("claw_right");
+=======
         srvJewel = ahwMap.servo.get("jewel_thing");
         srvL = ahwMap.servo.get("claw_left");
         srvR = ahwMap.servo.get("claw_right");
@@ -96,7 +103,9 @@ public class HWRobot
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         imu.initialize(parameters);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
 
+<<<<<<< HEAD
         /*
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -107,6 +116,9 @@ public class HWRobot
 
 
 
+=======
+*/
+>>>>>>> 9324a1e05658898ff56b60c9c4f11b35b96db125
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
@@ -172,7 +184,11 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+<<<<<<< HEAD
+                //posOutOfFinalTelemetry(countTarget);
+=======
                 posOutOfFinalTelemetry(countTargets);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
             }
 
             mtrSetSpeed(0);
@@ -197,8 +213,16 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
+<<<<<<< HEAD
             while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
+=======
+            while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+<<<<<<< HEAD
+                //posOutOfFinalTelemetry(countTarget);
+=======
+>>>>>>> 9324a1e05658898ff56b60c9c4f11b35b96db125
                 posOutOfFinalTelemetry(countTargets);
+>>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
             }
 
             mtrSetSpeed(0);
@@ -282,6 +306,7 @@ public class HWRobot
         countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
     }
 
+    /*
 
     private void posOutOfFinalTelemetry(int[] countTargets) {
         telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTargets[0]);
@@ -290,6 +315,7 @@ public class HWRobot
         telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTargets[3]);
         telemetry.update();
     }
+    */
 
     private void mtrSetTargetPos(int posFL, int posFR, int posBL, int posBR) {
         mtrFL.setTargetPosition(posFL);
