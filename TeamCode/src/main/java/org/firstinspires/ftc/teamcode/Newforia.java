@@ -63,6 +63,6 @@ public class Newforia extends LinearOpMode {
             telemetry.update();
         }
 
-        
+
     }
 }
