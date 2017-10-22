@@ -50,7 +50,7 @@ public class ServoGyro extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS);
+        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -170,6 +170,7 @@ public class ServoGyro extends LinearOpMode {
 
 
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 =======
@@ -177,4 +178,7 @@ public class ServoGyro extends LinearOpMode {
 >>>>>>> 9324a1e05658898ff56b60c9c4f11b35b96db125
 =======
 >>>>>>> parent of 9324a1e... Merge branch 'master' of https://github.com/V3SUV1US/DejaVuFTC
+=======
+    }
+>>>>>>> parent of 463352a... things i think
 }

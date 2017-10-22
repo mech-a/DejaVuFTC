@@ -65,13 +65,11 @@ public class HWRobot
     public Orientation angles;
 
     // Initialize standard Hardware interfaces.
-    public void init(HardwareMap ahwMap, DcMotor.RunMode mode
-            //, Telemetry atelemetry
-                     ) {
+    public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
 
         // Save reference to Hardware map.
         hwMap = ahwMap;
-        //telemetry = atelemetry;
+        telemetry = atelemetry;
 
 
         // Define and initialize hardware
@@ -80,6 +78,7 @@ public class HWRobot
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
 
+<<<<<<< HEAD
         /*
         srvJewel = ahwMap.servo.get("jewel_servo");
         srvL = ahwMap.servo.get("claw_left");
@@ -115,6 +114,12 @@ public class HWRobot
 =======
 */
 >>>>>>> 9324a1e05658898ff56b60c9c4f11b35b96db125
+=======
+        srvJewel = ahwMap.servo.get(Servo.class, "jewel_thing");
+        srvL = ahwMap.servo.get(Servo.class, "claw_left");
+        srvR = ahwMap.servo.get(Servo.class, "claw_right");
+
+>>>>>>> parent of 463352a... things i think
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
@@ -210,7 +215,7 @@ public class HWRobot
             mtrSetSpeed(speed);
 
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
-                //posOutOfFinalTelemetry(countTarget);
+                posOutOfFinalTelemetry(countTarget);
             }
 
             mtrSetSpeed(0);
@@ -269,6 +274,7 @@ public class HWRobot
             while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
 =======
             while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+<<<<<<< HEAD
                 //posOutOfFinalTelemetry(countTarget);
 <<<<<<< HEAD
 =======
@@ -277,6 +283,9 @@ public class HWRobot
 >>>>>>> 18bcdc468f7a255fda503bc18ad0e336e41bdad0
 =======
 >>>>>>> parent of 9324a1e... Merge branch 'master' of https://github.com/V3SUV1US/DejaVuFTC
+=======
+                posOutOfFinalTelemetry(countTarget);
+>>>>>>> parent of 463352a... things i think
             }
 
             mtrSetSpeed(0);
@@ -332,7 +341,6 @@ public class HWRobot
 =======
 >>>>>>> parent of 9324a1e... Merge branch 'master' of https://github.com/V3SUV1US/DejaVuFTC
 
-    /*
 
     private void posOutOfFinalTelemetry(int countTarget) {
         telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTarget);
@@ -341,7 +349,6 @@ public class HWRobot
         telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTarget);
         telemetry.update();
     }
-    */
 
     private void mtrSetTargetPos(int posFL, int posFR, int posBL, int posBR) {
         mtrFL.setTargetPosition(posFL);
