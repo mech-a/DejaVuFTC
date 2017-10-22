@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.archaic;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -54,7 +54,7 @@ public class InitialAuton extends LinearOpMode {
     }
 
     public void jewel (double servoPosition){
-        jewelSrv.setPosition(servoPosition);
+        //jewelSrv.setPosition(servoPosition);
     }
 
     public void distance (int distance) {
