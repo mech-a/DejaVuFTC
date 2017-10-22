@@ -34,5 +34,10 @@ public class JustTranslation extends LinearOpMode {
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
         robot.translate("left", 0.4, 12.0, opModeIsActive());
 
+        //Translate (rotate) clockwise at a speed of 0.2 ninety degrees while opmodeisactive
+        robot.translate("cw", 0.2, robot.ninetyDegreesInInches, opModeIsActive());
+
+
+
     }
 }

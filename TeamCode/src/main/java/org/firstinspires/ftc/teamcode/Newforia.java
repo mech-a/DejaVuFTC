@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Made By Gaurav
  */
 
-@TeleOp(name="Newforia", group="Testing")
+@Autonomous(name="Newforia", group="Testing")
 //@Disabled
 public class Newforia extends LinearOpMode {
     // Declare OpMode members.
@@ -52,8 +52,10 @@ public class Newforia extends LinearOpMode {
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
         //robot.translate("left", 0.4, 12.0, opModeIsActive());
 
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        relicTrackables.activate();
         while(opModeIsActive()) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if(vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
             }
