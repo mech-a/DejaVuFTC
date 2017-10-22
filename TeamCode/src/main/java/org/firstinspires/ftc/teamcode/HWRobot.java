@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class HWRobot
@@ -190,7 +193,14 @@ public class HWRobot
 
 
     //Function to rotate on the field using encoders
-    public void rotate(String direction, double speed, int counts, boolean active){
+    public void rotate(String direction, double speed, String angle, boolean active){
+        decideDirection(direction);
+
+        if(active) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            //while(angles.firstAngle)
+
+        }
 
     }
 

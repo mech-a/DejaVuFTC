@@ -36,7 +36,6 @@ public class ServoGyro extends LinearOpMode {
     HWRobot robot = new HWRobot();
 
     // The IMU sensor object
-    BNO055IMU imu;
 
     // State used for updating telemetry
     Orientation angles;
@@ -45,25 +44,8 @@ public class ServoGyro extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        //parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;  //if we want acceleration
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;     //what is this?
-        parameters.loggingTag          = "IMU";
-        //parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");   //this should be the right place
-        imu.initialize(parameters);
-
         // Set up our telemetry dashboard
-        composeTelemetry();
+        //composeTelemetry();
 
         // Wait until we're told to go
         waitForStart();
@@ -71,9 +53,13 @@ public class ServoGyro extends LinearOpMode {
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+
         // Loop and update the dashboard
         while (opModeIsActive()) {
+            angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            telemetry.addData("heading" , AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
             telemetry.update();
+
         }
     }
 
@@ -81,69 +67,38 @@ public class ServoGyro extends LinearOpMode {
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
+    /*
+
     void composeTelemetry() {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            //gravity  = imu.getGravity();
-        }
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                //angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                //gravity  = imu.getGravity();
+            }
         });
 
-        telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();              //display system status
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();              //display calibration status
+
+
+        telemetry.addLine().addData("heading", new Func<double>() {
+                    @Override public double value() {
+                        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+                        //return AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle))
+                        // return formatAngle(angles.angleUnit, angles.firstAngle);   //display heading (maybe yaw?)
                     }
                 });
-
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);   //display heading (maybe yaw?)
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);  //display roll
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);  //display pitch
-                    }
-                });
-
-/*        telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override
-                    public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel * gravity.xAccel
-                                        + gravity.yAccel * gravity.yAccel
-                                        + gravity.zAccel * gravity.zAccel));
-                    }
-                }); */
     }
 
-    //----------------------------------------------------------------------------------------------
-    // Formatting
-    //----------------------------------------------------------------------------------------------
+
+        //----------------------------------------------------------------------------------------------
+        // Formatting
+        //----------------------------------------------------------------------------------------------
 
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
@@ -153,7 +108,6 @@ public class ServoGyro extends LinearOpMode {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-
-
+*/
 
 }
