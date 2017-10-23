@@ -21,7 +21,6 @@ public class HolonomicDrive extends LinearOpMode{
     private double powBL = 0;
     private double powBR = 0;
     private double ch1,ch2,ch3,ch4;
-    private DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
 
 
     @Override
@@ -62,6 +61,8 @@ public class HolonomicDrive extends LinearOpMode{
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
+
+            
         }
     }
 

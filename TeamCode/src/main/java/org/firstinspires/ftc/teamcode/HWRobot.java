@@ -213,8 +213,7 @@ public class HWRobot
         decideDirection(direction);
 
         if(active) {
-            //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            //while(angles.firstAngle)
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         }
 
