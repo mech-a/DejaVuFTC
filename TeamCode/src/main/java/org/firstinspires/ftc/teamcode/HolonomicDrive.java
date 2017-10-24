@@ -21,8 +21,7 @@ public class HolonomicDrive extends LinearOpMode{
     private double powBL = 0;
     private double powBR = 0;
     private double ch1,ch2,ch3,ch4;
-    private double g2ch1, g2ch2, g2ch3, g2ch4;
-    double spdLinearUp = 0.4, spdLinearDown = -spdLinearUp;
+
 
     @Override
     public void runOpMode() {
@@ -53,11 +52,6 @@ public class HolonomicDrive extends LinearOpMode{
             ch3 = gamepad1.right_stick_x;
             ch4 = -gamepad1.left_stick_y;
 
-            g2ch1 = gamepad2.left_stick_x;
-            g2ch2 = -gamepad1.left_stick_y;
-            g2ch3 = gamepad1.right_stick_x;
-            g2ch4 = -gamepad1.left_stick_y;
-
             powFL = ch2 + ch1 + ch3;
             powFR = ch2 - ch1 - ch3;
             powBL = ch2 - ch1 + ch3;
@@ -68,29 +62,7 @@ public class HolonomicDrive extends LinearOpMode{
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
 
-            if(g2ch2 > 0.1) {
-                robot.mtrFL.setPower(spdLinearUp);
-            }
-            else if(g2ch2 < 0.1 && g2ch2 > -0.1) {
-                robot.mtrFL.setPower(0);
-            }
-            else if (g2ch2 < - 0.1) {
-                robot.mtrFL.setPower(spdLinearDown);
-            }
-
-            if(g2ch3 > 0.1) {
-                //robot..setPower(spdLinearUp);
-            }
-            else if(g2ch3 < 0.1 && g2ch3 > -0.1) {
-                robot.mtrFL.setPower(0);
-            }
-            else if (g2ch3 < - 0.1) {
-                robot.mtrFL.setPower(spdLinearDown);
-            }
-
-
-
-
+            
         }
     }
 
