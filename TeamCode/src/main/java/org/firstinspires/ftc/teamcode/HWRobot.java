@@ -65,6 +65,7 @@ public class HWRobot
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415) ;
     static final double     DISTANCE_MODIFIER       = 1.414 ;
 
+
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
@@ -210,15 +211,30 @@ public class HWRobot
 
 
     //Function to rotate on the field using encoders
-    public void rotate(String direction, double speed, String angle, boolean active){
+    public void rotate(String direction, double speed, double angle, boolean active){
+        // TODO change the line below
         decideDirection(direction);
 
         if(active) {
+            mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+            while(heading < angle) {
+
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+                // we are supposed to use heading here to move, but I just need to know the range of
+                // values that firstAngle can return
+
+            }
+
+
 
         }
 
     }
+
 
     private void decideDirection(String dir) {
         if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
@@ -296,6 +312,12 @@ public class HWRobot
         mtrFR.setTargetPosition(posFR);
         mtrBL.setTargetPosition(posBL);
         mtrBR.setTargetPosition(posBR);
+    }
+
+
+    // servos
+    public void jewelServoFlip(double position) {
+        srvJewel.setPosition(position);
     }
 
 
