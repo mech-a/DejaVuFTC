@@ -155,7 +155,8 @@ public class HWRobot
     //TODO make repitition into own functions
 
     public void translate(String dir, double speed, double inches, boolean active){
-        double inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
+        //double inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
+        double inchLocal = Math.floor(inches);
         decideDirection(dir);
 
         if(active) {
