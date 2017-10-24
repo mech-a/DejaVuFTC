@@ -28,17 +28,36 @@ public class JustTranslation extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
 
-        //Translate forward at a speed of 0.6 1120 *COUNTS* while opModeIsActive()
-        //robot.translate("fwd", 0.6, 1120, opModeIsActive());
+        //Translate forward at a speed of 0.6 1120 *COUNTS* while a
+        //robot.translate("fwd", 0.6, 1120, a);
 
-        //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
-        //robot.translate("left", 0.4, 12.0, opModeIsActive());
+        //Translate forward at a speed of 0.6 12 *INCHES* while a
+        //robot.translate("left", 0.4, 12.0, a);
 
-        //Translate (rotate) clockwise at a speed of 0.2 ninety degrees while opmodeisactive
-        //robot.translate("cw", 0.2, robot.ninetyDegreesInInches, opModeIsActive());
+        //Translate (rotate) clockwise using counts at a speed of 0.2 ninety degrees while a
+        //DO NOT USE THIS THERE IS A BUG
+        //robot.translate("cw", 0.2, robot.ninetyDegreesInInches, a);
 
-        robot.rotate("cw", 0.2, -90, opModeIsActive());
+        //Rotate clockwise using gyro 90 degrees at a speed of 0.2 while a
+        //robot.rotate("cw", 0.2, 90, a);
 
+        //Rotate counter clockwise 135 degrees at a speed of 0.3 while a
+        //robot.rotate("ccw", 0.3, 135, a);
+        boolean a = opModeIsActive();
+        waitForStart();
+
+        robot.translate("bk", 0.2, 1120, a);
+        sleep(250);
+        robot.translate("fwd", 0.2, 2 * 1120, a);
+        sleep(250);
+        robot.translate("cw", 0.2, robot.ninetyDegreesInInches, a);
+        sleep(250);
+        robot.translate("ccw", 0.2, robot.turnAroundInInches, a);
+        sleep(250);
+        robot.rotate("cw", 0.3, 90, a);
+        sleep(250);
+        robot.rotate("ccw", 0.4, 135, a);
+        sleep(250);
 
 
     }

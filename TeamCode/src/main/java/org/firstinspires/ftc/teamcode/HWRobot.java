@@ -40,6 +40,10 @@ public class HWRobot
 
     double heading,roll,pitch;
 
+    //double localSpeed, localSpeedFL, localSpeedFR, localSpeedBL, localSpeedBR;
+
+    boolean isGyroRotationHappening= false;
+
     public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
             "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
             "39rY/QC64WcjeCtnUDq0jj7yWEPkWZClL" +
@@ -51,6 +55,7 @@ public class HWRobot
             "N/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw";
 
     //TODO check if when you create an array & edit array value ex arr[0] that is defined as a variable, does editing the arr[0] value change the variable val?
+    //it doesnt
     /*private int countTargetFL,countTargetFR,countTargetBL,countTargetBR;
     private int[] countTargets = {
             countTargetFL, countTargetFR, countTargetBL, countTargetBR
@@ -139,18 +144,6 @@ public class HWRobot
 
 
 
-    public void mtrChangeMode(DcMotor.RunMode mode){
-        mtrFL.setMode(mode);
-        mtrFR.setMode(mode);
-        mtrBL.setMode(mode);
-        mtrBR.setMode(mode);
-    }
-    public void mtrSetSpeed(double speed){
-        mtrFL.setPower(speed);
-        mtrFR.setPower(speed);
-        mtrBL.setPower(speed);
-        mtrBR.setPower(speed);
-    }
 
     //Function to translate on the field (encoders)- currently reconstructed
     //TODO make repitition into own functions
@@ -183,6 +176,8 @@ public class HWRobot
         }
     }
 
+    //Rethink what would happen in rotation
+    //Fix function; look at how counts is modified & when moving backwards
     public void translate(String dir, double speed, int counts, boolean active){
         decideDirection(dir);
 
@@ -211,21 +206,27 @@ public class HWRobot
 
 
     //Function to rotate on the field using encoders
+    //Currently does not add to heading therefore if you want to turn 90 degrees when you are already 90
+    //You must pass in cw/ccw (dir) and then 180
+    //We'll make this addition some time
     public void rotate(String direction, double speed, double angle, boolean active){
         // TODO take out redundancy of setting power using thread
         // from -180 degrees -> 180 degrees
         decideDirection(direction);
+        double cwNegativeAngle = -angle;
+        isGyroRotationHappening = true;
+        mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if(active) {
             if (direction.equals("clockwise") || direction.equals("cw")) {
-                while(heading > angle) {
+                while(heading > cwNegativeAngle) {
 
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
                     mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                    setDirection();
+                    //setDirection();
 
                     mtrSetSpeed(speed);
 
@@ -239,7 +240,7 @@ public class HWRobot
 
                     mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                    setDirection();
+                    //setDirection();
 
                     mtrSetSpeed(speed);
 
@@ -247,13 +248,40 @@ public class HWRobot
 
             }
 
-            }
+        }
+        isGyroRotationHappening = false;
+        mtrSetSpeed(0);
+        mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            mtrSetSpeed(0);
+    }
+
+
+
+    public void mtrChangeMode(DcMotor.RunMode mode){
+        mtrFL.setMode(mode);
+        mtrFR.setMode(mode);
+        mtrBL.setMode(mode);
+        mtrBR.setMode(mode);
+    }
+
+    public void mtrSetSpeed(double speed){
+        if(isGyroRotationHappening == false) {
+            mtrFL.setPower(speed);
+            mtrFR.setPower(speed);
+            mtrBL.setPower(speed);
+            mtrBR.setPower(speed);
+        }
+
+        else if(isGyroRotationHappening == true) {
+            mtrFL.setPower(a * speed);
+            mtrFR.setPower(b * speed);
+            mtrBL.setPower(a * speed);
+            mtrBR.setPower(b * speed);
 
         }
 
-
+    }
 
     private void decideDirection(String dir) {
         if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
@@ -295,6 +323,14 @@ public class HWRobot
             posBL = b * countTargets[2];
             posBR = a * countTargets[3];
         }
+        /*
+        else if(mvmtWay == "rotation" && isGyroRotationHappening) {
+            localSpeedFL = a * localSpeed;
+            localSpeedFR = b * localSpeed;
+            localSpeedBL = a * localSpeed;
+            localSpeedBR = b * localSpeed;
+        }
+        */
         else if(mvmtWay == "rotation") {
             posFL = a * countTargets[0];
             posFR = b * countTargets[1];
