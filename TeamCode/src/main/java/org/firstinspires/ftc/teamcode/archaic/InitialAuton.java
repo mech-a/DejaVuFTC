@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous", group="Autonomous OPs")
-//@Disabled
+@Disabled
 public class InitialAuton extends LinearOpMode {
 
     // Declare OpMode members: motors, servos, sensors

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -23,6 +24,13 @@ public class HolonomicDrive extends LinearOpMode{
     private double ch1,ch2,ch3,ch4;
     private double g2ch1, g2ch2, g2ch3, g2ch4;
     double spdLinearUp = 0.4, spdLinearDown = -spdLinearUp;
+    double clawMid = 0.5;
+    double clawIncrement = 0.02;
+    double clawPos;
+    private boolean runSlow = false;
+    private double slowLimit = 0.5;
+    private double modifierValue;
+    private double modifierValueDefault = 1;
 
     @Override
     public void runOpMode() {
@@ -63,30 +71,61 @@ public class HolonomicDrive extends LinearOpMode{
             powBL = ch2 - ch1 + ch3;
             powBR = ch2 + ch1 - ch3;
 
+            if(gamepad1.left_trigger > 0.1) {
+                runSlow = !runSlow;
+            }
+
+            if(runSlow) {
+                runSlow = !runSlow;
+                if(modifierValue == modifierValueDefault) {
+                    modifierValue = slowLimit;
+                }
+                else if(modifierValue == slowLimit) {
+                    modifierValue = modifierValueDefault;
+                }
+            }
+
+            powFL *= modifierValue;
+            powFR *= modifierValue;
+            powBL *= modifierValue;
+            powBR *= modifierValue;
+
+            telemetry.addData("Speed Mod: ", modifierValue);
+
+
+            if(gamepad2.a) {
+                //robot.mtrLinear.setPower(spdLinearDown);
+            }
+            else if (gamepad2.y){
+                //robot.mtrLinear.setPower(spdLinearUp);
+            }
+            else {
+                //robot.mtrLinear.setPower(0.0);
+            }
+
+            if(gamepad2.b) {
+                clawPos += clawIncrement;
+            }
+            else if (gamepad2.x) {
+                clawPos -= clawIncrement;
+            }
+
+            clawPos = Range.clip(clawPos, -clawMid, clawMid);
+            robot.srvL.setPosition(clawMid + clawPos);
+            robot.srvR.setPosition(clawMid - clawPos);
+
+
+            telemetry.update();
             robot.mtrFL.setPower(powFL);
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
 
-            if(g2ch2 > 0.1) {
-                robot.mtrFL.setPower(spdLinearUp);
-            }
-            else if(g2ch2 < 0.1 && g2ch2 > -0.1) {
-                robot.mtrFL.setPower(0);
-            }
-            else if (g2ch2 < - 0.1) {
-                robot.mtrFL.setPower(spdLinearDown);
-            }
 
-            if(g2ch3 > 0.1) {
-                //robot..setPower(spdLinearUp);
-            }
-            else if(g2ch3 < 0.1 && g2ch3 > -0.1) {
-                robot.mtrFL.setPower(0);
-            }
-            else if (g2ch3 < - 0.1) {
-                robot.mtrFL.setPower(spdLinearDown);
-            }
+
+
+
+
 
 
 
