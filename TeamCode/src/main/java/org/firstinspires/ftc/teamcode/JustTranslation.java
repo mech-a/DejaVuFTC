@@ -29,13 +29,15 @@ public class JustTranslation extends LinearOpMode {
         robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while opModeIsActive()
-        robot.translate("fwd", 0.6, 1120, opModeIsActive());
+        //robot.translate("fwd", 0.6, 1120, opModeIsActive());
 
         //Translate forward at a speed of 0.6 12 *INCHES* while opModeIsActive()
-        robot.translate("left", 0.4, 12.0, opModeIsActive());
+        //robot.translate("left", 0.4, 12.0, opModeIsActive());
 
         //Translate (rotate) clockwise at a speed of 0.2 ninety degrees while opmodeisactive
-        robot.translate("cw", 0.2, robot.ninetyDegreesInInches, opModeIsActive());
+        //robot.translate("cw", 0.2, robot.ninetyDegreesInInches, opModeIsActive());
+
+        robot.rotate("cw", 0.2, -90, opModeIsActive());
 
 
 

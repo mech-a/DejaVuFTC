@@ -38,9 +38,9 @@ public class ServoGyro extends LinearOpMode {
     // State used for updating telemetry
     Orientation angles;
 
-    double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-    double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
-    double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
+
+    //double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
+    //double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
 
 
     @Override
@@ -59,9 +59,10 @@ public class ServoGyro extends LinearOpMode {
         // Loop and update the dashboard
         while (opModeIsActive()) {
             angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
             telemetry.addData("heading" , heading);
-            telemetry.addData("roll" , roll);
-            telemetry.addData("pitch" , pitch);
+            //telemetry.addData("roll" , roll);
+            //telemetry.addData("pitch" , pitch);
             telemetry.update();
 
         }
