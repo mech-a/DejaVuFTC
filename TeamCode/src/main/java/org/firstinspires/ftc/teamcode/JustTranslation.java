@@ -46,6 +46,7 @@ public class JustTranslation extends LinearOpMode {
         boolean a = opModeIsActive();
         waitForStart();
 
+        /*
         robot.translate("bk", 0.2, 1120, a);
         sleep(250);
         robot.translate("fwd", 0.2, 2 * 1120, a);
@@ -54,6 +55,7 @@ public class JustTranslation extends LinearOpMode {
         sleep(250);
         robot.translate("ccw", 0.2, robot.turnAroundInInches, a);
         sleep(250);
+        */
         robot.rotate("cw", 0.3, 90, a);
         sleep(250);
         robot.rotate("ccw", 0.4, 135, a);

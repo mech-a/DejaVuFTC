@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -216,19 +217,23 @@ public class HWRobot
         double cwNegativeAngle = -angle;
         isGyroRotationHappening = true;
         mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        heading = Math.floor(heading);
+        heading = Range.clip(heading, -180.0, 180.0);
 
         if(active) {
             if (direction.equals("clockwise") || direction.equals("cw")) {
                 while(heading > cwNegativeAngle) {
-
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
                     mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                    //setDirection();
 
                     mtrSetSpeed(speed);
+                    telemetry.addData("heading", heading);
+                    telemetry.update();
 
                 }
 
@@ -239,10 +244,11 @@ public class HWRobot
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
                     mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                    //setDirection();
+                    
 
                     mtrSetSpeed(speed);
+                    telemetry.addData("heading", heading);
+                    telemetry.update();
 
                 }
 
