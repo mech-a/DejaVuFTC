@@ -212,28 +212,47 @@ public class HWRobot
 
     //Function to rotate on the field using encoders
     public void rotate(String direction, double speed, double angle, boolean active){
-        // TODO change the line below
+        // TODO take out redundancy of setting power using thread
+        // from -180 degrees -> 180 degrees
         decideDirection(direction);
 
         if(active) {
-            mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+            if (direction.equals("clockwise") || direction.equals("cw")) {
+                while(heading > angle) {
 
-            while(heading < angle) {
+                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
-                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-                // we are supposed to use heading here to move, but I just need to know the range of
-                // values that firstAngle can return
+                    mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                    setDirection();
+
+                    mtrSetSpeed(speed);
+
+                }
+
+            } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
+                while(heading < angle) {
+
+                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+                    mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                    setDirection();
+
+                    mtrSetSpeed(speed);
+
+                }
 
             }
 
+            }
 
+            mtrSetSpeed(0);
 
         }
 
-    }
 
 
     private void decideDirection(String dir) {
