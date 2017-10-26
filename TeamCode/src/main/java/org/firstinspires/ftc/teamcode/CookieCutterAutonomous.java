@@ -35,11 +35,12 @@ public class CookieCutterAutonomous extends LinearOpMode {
 
         waitForStart();
 
-
+        //Finds Vumark
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(robot.relicTemplate);
         pictograph = robot.getVuMark(vuMark, a);
         sleep(100);
 
+        //Translates into position for jewel
         robot.translate("right", 0.2, 5000, a);
         robot.srvJewel.setPosition(0.5);
         robot.refreshHSV();
@@ -58,6 +59,7 @@ public class CookieCutterAutonomous extends LinearOpMode {
 
         //TODO implement while loop checking for color of tape underneath robot to stop, then make additional counts a value * 1,2,3 for better movement
 
+        //Decide how far to go for cryptobox
         if(pictograph.equals("RIGHT")) {
             robot.translate("fwd", 0.2, 500, a);
         }
@@ -68,10 +70,12 @@ public class CookieCutterAutonomous extends LinearOpMode {
             robot.translate("fwd", 0.2,  3 * 500, a);
         }
 
+        //Rotate and release jewel
         robot.rotate("cw", 0.2, 90, a);
+        robot.translate("fwd", 0.1, 1120, a);
         robot.srvL.setPosition(0.75);
         robot.srvR.setPosition(0.25);
 
-        
+
     }
 }
