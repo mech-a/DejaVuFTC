@@ -29,32 +29,20 @@ public class ColorSensorVal extends LinearOpMode {
         robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
 
 
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
-
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
 
         while(opModeIsActive()) {
-            Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR),
-                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
-                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+            robot.refreshHSV();
 
             telemetry.addData("Alpha", robot.sensorColor.alpha());
             telemetry.addData("Red  ", robot.sensorColor.red());
             telemetry.addData("Green", robot.sensorColor.green());
             telemetry.addData("Blue ", robot.sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.addData("Saturation", hsvValues[1]);
-            telemetry.addData("Value", hsvValues[2]);
+            telemetry.addData("Hue", robot.hsv[0]);
+            telemetry.addData("Saturation", robot.hsv[1]);
+            telemetry.addData("Value", robot.hsv[2]);
 
         }
     }

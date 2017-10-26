@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,11 +11,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class HWRobot
 {
@@ -22,6 +29,7 @@ public class HWRobot
     public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
+    public VuforiaLocalizer vuforia;
 
 
 
@@ -70,12 +78,17 @@ public class HWRobot
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415) ;
     static final double     DISTANCE_MODIFIER       = 1.414 ;
+    
+    public float hsv[] = {0F, 0F, 0F};
+    final double SCALE_FACTOR = 255;
 
 
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
     public Orientation angles;
+    public VuforiaTrackable relicTemplate;
+
 
     // Initialize standard Hardware interfaces.
     public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
@@ -97,12 +110,12 @@ public class HWRobot
         srvR = ahwMap.servo.get("claw_right");
 */
         imu = ahwMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        imu.initialize(parameters);
+        BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
+        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        gyroParameters.loggingEnabled      = true;
+        gyroParameters.loggingTag          = "IMU";
+        imu.initialize(gyroParameters);
 
         /*
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -111,6 +124,18 @@ public class HWRobot
         double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
         double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
         */
+
+        int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        vuforiaParameters.vuforiaLicenseKey = vuforiaKey;
+
+        vuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(vuforiaParameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
 
 
@@ -141,11 +166,80 @@ public class HWRobot
         mtrBR.setMode(mode);
 
     }
+    
+    //Sensor Functions
+    public void refreshHSV() {
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsv);
+    }
+
+    public String getVuMark(RelicRecoveryVuMark vuMark, boolean active) {
+        String type = "";
+        if(active) {
+            if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                type = "UNKNOWN";
+            }
+            else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                type = "LEFT";
+            }
+            else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                type = "CENTER";
+            }
+            else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                type ="RIGHT";
+            }
+        }
+        return type;
+    }
+    
 
 
 
 
 
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    //MOTOR FUNCTIONS
+    
+    
     //Function to translate on the field (encoders)- currently reconstructed
     //TODO make repitition into own functions
 
@@ -244,7 +338,7 @@ public class HWRobot
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
                     mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    
+
 
                     mtrSetSpeed(speed);
                     telemetry.addData("heading", heading);

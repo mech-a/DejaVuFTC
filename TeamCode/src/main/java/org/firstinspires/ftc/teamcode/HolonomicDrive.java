@@ -23,9 +23,9 @@ public class HolonomicDrive extends LinearOpMode{
     private double powBR = 0;
     private double ch1,ch2,ch3,ch4;
     private double g2ch1, g2ch2, g2ch3, g2ch4;
-    double spdLinearUp = 0.4, spdLinearDown = -spdLinearUp;
+    double spdLinearUp = 0.8, spdLinearDown = -spdLinearUp;
     double clawMid = 0.5;
-    double clawIncrement = 0.02;
+    double clawIncrement = 0.01;
     double clawPos;
     private boolean runSlow = false;
     private double slowLimit = 0.5;
@@ -34,22 +34,6 @@ public class HolonomicDrive extends LinearOpMode{
 
     @Override
     public void runOpMode() {
-        /*//robot.init(hardwareMap);
-        mtrFL = hardwareMap.dcMotor.get("fl_drive");
-        mtrFR = hardwareMap.dcMotor.get("fr_drive");
-        mtrBL = hardwareMap.dcMotor.get("bl_drive");
-        mtrBR = hardwareMap.dcMotor.get("br_drive");
-
-        mtrFL.setDirection(DcMotor.Direction.REVERSE);
-        mtrFR.setDirection(DcMotor.Direction.FORWARD);
-        mtrBL.setDirection(DcMotor.Direction.REVERSE);
-        mtrBR.setDirection(DcMotor.Direction.FORWARD);
-
-        mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-*/
 
         robot.init(hardwareMap, DcMotor.RunMode.RUN_WITHOUT_ENCODER, telemetry);
         prompt(telemetry, "Init", "HW initialized");
@@ -109,6 +93,7 @@ public class HolonomicDrive extends LinearOpMode{
             else if (gamepad2.x) {
                 clawPos -= clawIncrement;
             }
+            telemetry.addData("ClawPos Data", clawPos);
 
             clawPos = Range.clip(clawPos, -clawMid, clawMid);
             robot.srvL.setPosition(clawMid + clawPos);
@@ -120,16 +105,7 @@ public class HolonomicDrive extends LinearOpMode{
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
-
-
-
-
-
-
-
-
-
-
+            sleep(50);
         }
     }
 
