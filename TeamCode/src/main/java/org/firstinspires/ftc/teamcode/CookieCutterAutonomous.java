@@ -26,7 +26,7 @@ public class CookieCutterAutonomous extends LinearOpMode {
     HWRobot robot = new HWRobot();
     private String pictograph;
     private int cryptoboxAdditionalCounts = 0;
-
+    int countsPerInch = 252;
 
     @Override
     public void runOpMode() {

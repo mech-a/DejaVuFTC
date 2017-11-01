@@ -25,7 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
-    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR,mtrLinear;
     public Servo srvL, srvR, srvJewel;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
@@ -39,6 +39,7 @@ public class HWRobot
     public double powFR = 0;
     public double powBL = 0;
     public double powBR = 0;
+    public double powLin = 0;
 
     int a = 1;
     int b = 1;
@@ -103,12 +104,13 @@ public class HWRobot
         mtrFR = ahwMap.dcMotor.get("fr_drive");
         mtrBL = ahwMap.dcMotor.get("bl_drive");
         mtrBR = ahwMap.dcMotor.get("br_drive");
+        mtrLinear = ahwMap.dcMotor.get("linear_motor");
 
-        /*
-        srvJewel = ahwMap.servo.get("jewel_thing");
-        srvL = ahwMap.servo.get("claw_left");
-        srvR = ahwMap.servo.get("claw_right");
-*/
+
+        srvJewel = ahwMap.servo.get("jewel_servo");
+        srvL = ahwMap.servo.get("left_linear_lift");
+        srvR = ahwMap.servo.get("right_linear_lift");
+
         imu = ahwMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
         gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -146,24 +148,28 @@ public class HWRobot
         mtrFR.setDirection(DcMotor.Direction.FORWARD);
         mtrBL.setDirection(DcMotor.Direction.REVERSE);
         mtrBR.setDirection(DcMotor.Direction.FORWARD);
+        mtrLinear.setDirection(DcMotor.Direction.FORWARD);
 
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set power for all motors.
         mtrFL.setPower(powFL);
         mtrFR.setPower(powFR);
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
+        mtrLinear.setPower(powLin);
 
         // Set all motors to run with given mode
         mtrFL.setMode(mode);
         mtrFR.setMode(mode);
         mtrBL.setMode(mode);
         mtrBR.setMode(mode);
+        mtrLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
     

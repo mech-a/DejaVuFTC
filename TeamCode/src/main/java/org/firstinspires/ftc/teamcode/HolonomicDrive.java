@@ -55,12 +55,13 @@ public class HolonomicDrive extends LinearOpMode{
             powBL = ch2 - ch1 + ch3;
             powBR = ch2 + ch1 - ch3;
 
+            //TODO make better solution for speed switching
             if(gamepad1.left_trigger > 0.1) {
-                runSlow = !runSlow;
+                runSlow = true;
             }
 
             if(runSlow) {
-                runSlow = !runSlow;
+                runSlow = false;
                 if(modifierValue == modifierValueDefault) {
                     modifierValue = slowLimit;
                 }
@@ -78,13 +79,13 @@ public class HolonomicDrive extends LinearOpMode{
 
 
             if(gamepad2.a) {
-                //robot.mtrLinear.setPower(spdLinearDown);
+                robot.mtrLinear.setPower(spdLinearDown);
             }
             else if (gamepad2.y){
-                //robot.mtrLinear.setPower(spdLinearUp);
+                robot.mtrLinear.setPower(spdLinearUp);
             }
             else {
-                //robot.mtrLinear.setPower(0.0);
+                robot.mtrLinear.setPower(0.0);
             }
 
             if(gamepad2.b) {
