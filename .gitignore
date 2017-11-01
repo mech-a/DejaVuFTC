@@ -1,10 +1,28 @@
+# built application files
+*.apk
+*.ap_
 
-FtcRobotController/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
-#doc/
-*.iml
-.idea/
-.gradle/
-build/
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
 local.properties
-TeamCode/build
-.idea/workspace.xml
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Android Studio
+*.iml
+.idea
+.gradle
+build/
+
+*ASUS_PC_01*
+
