@@ -31,7 +31,7 @@ public class Newforia extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RUN_USING_ENCODERS, telemetry);
+        //robot.init(hardwareMap, DcMotor.RunMode.RUN_USING_ENCODERS, telemetry);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 

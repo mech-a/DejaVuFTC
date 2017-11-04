@@ -37,8 +37,11 @@ public class CookieCutterAutonomous extends LinearOpMode {
 
         //Finds Vumark
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(robot.relicTemplate);
-        pictograph = robot.getVuMark(vuMark, a);
-        sleep(100);
+        pictograph = robot.getVuMark(a);
+        telemetry.addData("Pictograph", pictograph);
+        telemetry.update();
+        sleep(1000);
+        /*
 
         //Translates into position for jewel
         robot.translate("right", 0.2, 5000, a);
@@ -76,6 +79,7 @@ public class CookieCutterAutonomous extends LinearOpMode {
         robot.srvL.setPosition(0.75);
         robot.srvR.setPosition(0.25);
 
-
+*/
     }
+
 }

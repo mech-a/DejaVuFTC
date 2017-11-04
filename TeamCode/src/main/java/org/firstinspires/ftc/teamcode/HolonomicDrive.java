@@ -23,13 +23,13 @@ public class HolonomicDrive extends LinearOpMode{
     private double powBR = 0;
     private double ch1,ch2,ch3,ch4;
     private double g2ch1, g2ch2, g2ch3, g2ch4;
-    double spdLinearUp = 0.8, spdLinearDown = -spdLinearUp;
+    double spdLinearUp = 1, spdLinearDown = -spdLinearUp;
     double clawMid = 0.5;
     double clawIncrement = 0.01;
     double clawPos;
     private boolean runSlow = false;
     private double slowLimit = 0.5;
-    private double modifierValue;
+    private double modifierValue = 1;
     private double modifierValueDefault = 1;
 
     @Override
@@ -55,8 +55,9 @@ public class HolonomicDrive extends LinearOpMode{
             powBL = ch2 - ch1 + ch3;
             powBR = ch2 + ch1 - ch3;
 
+
             //TODO make better solution for speed switching
-            if(gamepad1.left_trigger > 0.1) {
+            if(gamepad1.left_bumper) {
                 runSlow = true;
             }
 
@@ -70,10 +71,12 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
 
+
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
             powBR *= modifierValue;
+
 
             telemetry.addData("Speed Mod: ", modifierValue);
 
@@ -88,10 +91,10 @@ public class HolonomicDrive extends LinearOpMode{
                 robot.mtrLinear.setPower(0.0);
             }
 
-            if(gamepad2.b) {
+            if(gamepad2.x) {
                 clawPos += clawIncrement;
             }
-            else if (gamepad2.x) {
+            else if (gamepad2.b) {
                 clawPos -= clawIncrement;
             }
             telemetry.addData("ClawPos Data", clawPos);
@@ -106,7 +109,7 @@ public class HolonomicDrive extends LinearOpMode{
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
-            sleep(50);
+            sleep(10);
         }
     }
 

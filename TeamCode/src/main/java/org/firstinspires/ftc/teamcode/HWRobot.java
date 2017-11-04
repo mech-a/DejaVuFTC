@@ -127,16 +127,16 @@ public class HWRobot
         double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
         */
 
-        int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        vuforiaParameters.vuforiaLicenseKey = vuforiaKey;
+        parameters.vuforiaLicenseKey = vuforiaKey;
 
-        vuforiaParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(vuforiaParameters);
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
 
@@ -144,10 +144,10 @@ public class HWRobot
         sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
 
         // Set directions for motors.
-        mtrFL.setDirection(DcMotor.Direction.REVERSE);
-        mtrFR.setDirection(DcMotor.Direction.FORWARD);
-        mtrBL.setDirection(DcMotor.Direction.REVERSE);
-        mtrBR.setDirection(DcMotor.Direction.FORWARD);
+        mtrFL.setDirection(DcMotor.Direction.FORWARD);
+        mtrFR.setDirection(DcMotor.Direction.REVERSE);
+        mtrBL.setDirection(DcMotor.Direction.FORWARD);
+        mtrBR.setDirection(DcMotor.Direction.REVERSE);
         mtrLinear.setDirection(DcMotor.Direction.FORWARD);
 
         //zero power behavior
@@ -163,6 +163,8 @@ public class HWRobot
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
         mtrLinear.setPower(powLin);
+        srvL.setPosition(0.6);
+        srvR.setPosition(0.4);
 
         // Set all motors to run with given mode
         mtrFL.setMode(mode);
@@ -181,9 +183,11 @@ public class HWRobot
                 hsv);
     }
 
-    public String getVuMark(RelicRecoveryVuMark vuMark, boolean active) {
+    public String getVuMark(boolean active) {
         String type = "";
+
         if(active) {
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 type = "UNKNOWN";
             }
