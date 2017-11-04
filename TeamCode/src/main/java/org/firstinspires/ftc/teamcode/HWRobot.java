@@ -188,6 +188,9 @@ public class HWRobot
 
         if(active) {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            for(int i = 1; i < 5; i++) {
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            }
             if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 type = "UNKNOWN";
             }
