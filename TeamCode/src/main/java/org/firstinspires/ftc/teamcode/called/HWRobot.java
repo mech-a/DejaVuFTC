@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.called;
 
 import android.graphics.Color;
 
@@ -23,6 +23,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 
 public class HWRobot
 {
@@ -32,8 +36,6 @@ public class HWRobot
     public ColorSensor sensorColor;
     public BNO055IMU imu;
     public VuforiaLocalizer vuforia;
-
-
 
 
     // Declare speeds and other vars
@@ -51,6 +53,9 @@ public class HWRobot
     int posFL, posFR, posBL, posBR;
 
     double heading,roll,pitch;
+
+    public static int COUNTS_PER_INCH = 252;
+    int moveToColumn = 7;
 
     //double localSpeed, localSpeedFL, localSpeedFR, localSpeedBL, localSpeedBR;
 
@@ -75,12 +80,14 @@ public class HWRobot
     private int[] countTargets = new int[4];
 
 
+    /*
     //TODO check if counts per inch actually work
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415) ;
     static final double     DISTANCE_MODIFIER       = 1.414 ;
+    */
     
     public float hsv[] = {0F, 0F, 0F};
     final double SCALE_FACTOR = 255;
@@ -91,59 +98,51 @@ public class HWRobot
     Telemetry telemetry = null;
     public Orientation angles;
     public VuforiaTrackable relicTemplate;
+    
+    public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
+        telemetry = atelemetry;
+        hwMap = ahwMap;
+}
 
 
     // Initialize standard Hardware interfaces.
-    public void init(HardwareMap ahwMap, DcMotor.RunMode mode, Telemetry atelemetry) {
+    public void init(String hw) {
+        switch(hw.toLowerCase()){
+            case "motors": case "motor": case "mtr": case "mtrs":
+                initMotors();
+                break;
+            case "servos": case "servo":
+                initServos();
+                break;
+            case "imu":
+                initImu();
+                break;
+            case "vuforia":
+                initVuforia();
+                break;
+            case "sensors":case "sensor":
+                initSensors();
+                break;
+            case "all":
+                initMotors();
+                initServos();
+                initImu();
+                initVuforia();
+                initSensors();
+                break;
+            default:
+                telemetry.addData("err:", "unknown initialization");
+                telemetry.update();
+        }
+    }
 
-        // Save reference to Hardware map.
-        hwMap = ahwMap;
-        telemetry = atelemetry;
-
-
+    private void initMotors() {
         // Define and initialize hardware
-        mtrFL = ahwMap.dcMotor.get("fl_drive");
-        mtrFR = ahwMap.dcMotor.get("fr_drive");
-        mtrBL = ahwMap.dcMotor.get("bl_drive");
-        mtrBR = ahwMap.dcMotor.get("br_drive");
-        mtrLinear = ahwMap.dcMotor.get("linear_motor");
-
-
-        srvJewel = ahwMap.servo.get("jewel_servo");
-        srvL = ahwMap.servo.get("left_linear_lift");
-        srvR = ahwMap.servo.get("right_linear_lift");
-
-        imu = ahwMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
-        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        gyroParameters.loggingEnabled      = true;
-        gyroParameters.loggingTag          = "IMU";
-        imu.initialize(gyroParameters);
-
-        /*
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-        double roll = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.secondAngle);
-        double pitch = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.thirdAngle);
-        */
-
-        //int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = vuforiaKey;
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-
-
-        sensorColor = ahwMap.get(ColorSensor.class, "sensor_color_distance");
+        mtrFL = hwMap.dcMotor.get("fl_drive");
+        mtrFR = hwMap.dcMotor.get("fr_drive");
+        mtrBL = hwMap.dcMotor.get("bl_drive");
+        mtrBR = hwMap.dcMotor.get("br_drive");
+        mtrLinear = hwMap.dcMotor.get("linear_motor");
 
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.FORWARD);
@@ -165,16 +164,55 @@ public class HWRobot
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
         mtrLinear.setPower(powLin);
-        srvL.setPosition(0.6);
-        srvR.setPosition(0.4);
 
         // Set all motors to run with given mode
-        mtrFL.setMode(mode);
-        mtrFR.setMode(mode);
-        mtrBL.setMode(mode);
-        mtrBR.setMode(mode);
+        mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+    }
+
+    private void initServos() {
+        //srv fetch + def
+        //srvJewel = hwMap.servo.get("jewel_servo");
+        srvL = hwMap.servo.get("left_linear_lift");
+        srvR = hwMap.servo.get("right_linear_lift");
+
+        //set pos
+        srvL.setPosition(0.6);
+        srvR.setPosition(0.4);
+        //srvJewel.setPosition();
+    }
+
+    private void initImu() {
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
+        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        gyroParameters.loggingEnabled      = true;
+        gyroParameters.loggingTag          = "IMU";
+        imu.initialize(gyroParameters);
+        //TODO using angles while opmode is not active could cause problems
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    }
+
+    private void initVuforia() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = vuforiaKey;
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+    }
+
+    private void initSensors() {
+        sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
     }
     
     //Sensor Functions
@@ -203,11 +241,67 @@ public class HWRobot
                 type = "CENTER";
             }
             else if(vuMark == RelicRecoveryVuMark.RIGHT) {
-                type ="RIGHT";
+                type = "RIGHT";
             }
         }
         return type;
     }
+
+    public void moveForCrypto(String vuf, boolean active) {
+        if(vuf.equals("LEFT")) {
+            translate("left", 0.2, COUNTS_PER_INCH * moveToColumn, active);
+            //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
+        }
+        else if(vuf.equals("CENTER")) {
+            translate("fwd", 0.1, COUNTS_PER_INCH * moveToColumn, active);
+        }
+        else if(vuf.equals("RIGHT")) {
+            translate("right", 0.2, COUNTS_PER_INCH * moveToColumn, active);
+        }
+        else if(vuf.equals("UNKNOWN")) {
+            telemetry.addData("unkn read:", "going for center");
+            telemetry.update();
+        }
+    }
+
+    public void knockOffJewel(String team, boolean active) {
+        float hue = hsv[1];
+        if(team.equals("red")) {
+            //if the ball is blue, hit it off
+            //assuming the color sensor is reading the most back (southern) one
+            if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
+                //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
+                translate("back", 0.1, COUNTS_PER_INCH, active);
+                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+            }
+            //if the ball is red, hit the northern (other) ball
+            else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
+                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+                translate("back", 0.1, COUNTS_PER_INCH, active);
+            }
+
+        }
+        else if (team.equals("blue")) {
+            //if the ball is blue, hit off the other ball
+            if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
+                //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
+                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+                translate("back", 0.1, COUNTS_PER_INCH, active);
+
+            }
+            //if the ball is red, hit off that ball
+            else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
+                translate("back", 0.1, COUNTS_PER_INCH, active);
+                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+            }
+
+        }
+        else {
+            telemetry.addData("unknown team", "");
+            telemetry.update();
+        }
+    }
+
     
 
 
@@ -259,14 +353,12 @@ public class HWRobot
     //TODO make repitition into own functions
 
     public void translate(String dir, double speed, double inches, boolean active){
-        //double inchLocal = Math.floor(inches * DISTANCE_MODIFIER);
-        double inchLocal = Math.floor(inches);
         decideDirection(dir);
 
         if(active) {
             mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            getNewPositions(inchLocal);
+            getNewPositions(inches);
 
             setDirection();
 
@@ -313,6 +405,8 @@ public class HWRobot
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
+
 
 
     //Function to rotate on the field using encoders
@@ -462,10 +556,10 @@ public class HWRobot
     }
 
     private void getNewPositions(double inches){
-        countTargets[0] = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
-        countTargets[1] = mtrFR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
-        countTargets[2] = mtrBL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
-        countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH * DISTANCE_MODIFIER);
+        countTargets[0] = mtrFL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[1] = mtrFR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[2] = mtrBL.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        countTargets[3] = mtrBR.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
     }
 
 
@@ -488,6 +582,11 @@ public class HWRobot
     // servos
     public void jewelServoFlip(double position) {
         srvJewel.setPosition(position);
+    }
+
+    public void releaseClaw() {
+        srvL.setPosition(1);
+        srvR.setPosition(0);
     }
 
 

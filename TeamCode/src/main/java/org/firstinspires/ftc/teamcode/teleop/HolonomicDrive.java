@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 /**
  * Created by gbhat on 8/20/2017.
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp(name="Holonomic Drive", group="DriveOPs")
 //@Disabled
 public class HolonomicDrive extends LinearOpMode{
-    HWRobot robot = new HWRobot();
+    HWRobot robot = new HWRobot(telemetry, hardwareMap);
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
@@ -35,7 +34,7 @@ public class HolonomicDrive extends LinearOpMode{
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, DcMotor.RunMode.RUN_WITHOUT_ENCODER, telemetry);
+        robot.init("motors"); robot.init("servos");
         prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 
