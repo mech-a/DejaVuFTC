@@ -17,14 +17,14 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 public class JustTranslation extends LinearOpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    HWRobot robot = new HWRobot();
+    HWRobot robot = new HWRobot(telemetry,hardwareMap);
     int countsPerInch = 252;
     int inToSZ = 20;
 
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.init("motors");
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while a
         //robot.translate("fwd", 0.6, 1120, a);
@@ -45,8 +45,13 @@ public class JustTranslation extends LinearOpMode{
         waitForStart();
 
 
+        //Code used in competition
         robot.translate("fwd", 0.2, countsPerInch * inToSZ, a);
         sleep(250);
+
+
+
+
 //        robot.translate("fwd", 0.2, 2 * 1120, a);
 //        sleep(250);
 //        robot.translate("cw", 0.2, robot.ninetyDegreesInInches, a);
