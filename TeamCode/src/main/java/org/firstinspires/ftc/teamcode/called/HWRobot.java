@@ -100,12 +100,18 @@ public class HWRobot
     Telemetry telemetry = null;
     public Orientation angles;
     public VuforiaTrackable relicTemplate;
-    
+
+    /*
     public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
         telemetry = atelemetry;
         hwMap = ahwMap;
 }
+*/
 
+    public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap) {
+        telemetry = atelemetry;
+        hwMap = ahwMap;
+    }
 
     // Initialize standard Hardware interfaces.
     public void init(String hw) {
@@ -371,7 +377,7 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && (mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy())) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
@@ -567,10 +573,10 @@ public class HWRobot
 
 
     private void posOutOfFinalTelemetry(int[] countTargets) {
-        telemetry.addData("MtrFL", "Pos / Final", mtrFL.getCurrentPosition(), "/", countTargets[0]);
-        telemetry.addData("MtrFR", "Pos / Final", mtrFR.getCurrentPosition(), "/", countTargets[1]);
-        telemetry.addData("MtrBL", "Pos / Final", mtrBL.getCurrentPosition(), "/", countTargets[2]);
-        telemetry.addData("MtrBR", "Pos / Final", mtrBR.getCurrentPosition(), "/", countTargets[3]);
+        telemetry.addData("MtrFL", mtrFL.getCurrentPosition());
+        telemetry.addData("MtrFR", mtrFR.getCurrentPosition());
+        telemetry.addData("MtrBL", mtrBL.getCurrentPosition());
+        telemetry.addData("MtrBR", mtrBR.getCurrentPosition());
         telemetry.update();
     }
 
@@ -588,8 +594,8 @@ public class HWRobot
     }
 
     public void releaseClaw() {
-        srvL.setPosition(1);
-        srvR.setPosition(0);
+        srvL.setPosition(0);
+        srvR.setPosition(1);
     }
 
 

@@ -7,7 +7,9 @@ package org.firstinspires.ftc.teamcode.called;
  */
 
 public class RobotValues {
-    public static int COUNTS_PER_INCH = 252;
+    //SRV L CLOSED IS 1, OPENED 0
+    //SRV R CLOSED IS 0, OPENED 1
+    public static int COUNTS_PER_INCH = 126;
 
     //Static vars for movement in autons; used for both back autons
 

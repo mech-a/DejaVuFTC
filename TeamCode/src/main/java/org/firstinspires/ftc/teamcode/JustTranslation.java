@@ -17,14 +17,14 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 public class JustTranslation extends LinearOpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    HWRobot robot = new HWRobot(telemetry,hardwareMap);
+    HWRobot robot = new HWRobot();
     int countsPerInch = 252;
     int inToSZ = 20;
 
 
     @Override
     public void runOpMode() {
-        robot.init("motors");
+        robot.getOpModeData(telemetry,hardwareMap);robot.init("motors");
 
         //Translate forward at a speed of 0.6 1120 *COUNTS* while a
         //robot.translate("fwd", 0.6, 1120, a);
@@ -46,8 +46,8 @@ public class JustTranslation extends LinearOpMode{
 
 
         //Code used in competition
-        robot.translate("fwd", 0.2, countsPerInch * inToSZ, a);
-        sleep(250);
+        //robot.translate("fwd", 0.2, countsPerInch * inToSZ, a);
+        //sleep(250);
 
 
 
@@ -62,22 +62,22 @@ public class JustTranslation extends LinearOpMode{
         // kalie u did rotate(cw, 0.3, and countsPerInch *InToSZ <- ?? u did rotate) - gaurav
         //robot.translate("fwd", 0.3, countsPerInch * inToSZ, a);
         //sleep(250);
-//        robot.mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        robot.mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        robot.mtrFL.setTargetPosition(6000);
-//        robot.mtrFR.setTargetPosition(6000);
-//        robot.mtrBL.setTargetPosition(6000);
-//        robot.mtrBR.setTargetPosition(6000);
+        robot.mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*
+        robot.mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.mtrFL.setTargetPosition(1120);
+        robot.mtrFR.setTargetPosition(1120);
+        robot.mtrBL.setTargetPosition(1120);
+        robot.mtrBR.setTargetPosition(1120);
+
+
         robot.mtrFL.setPower(0.2);
         robot.mtrFR.setPower(0.2);
         robot.mtrBL.setPower(0.2);
@@ -88,7 +88,9 @@ public class JustTranslation extends LinearOpMode{
             telemetry.addData("MTRBL", robot.mtrBL.getCurrentPosition());
             telemetry.addData("MTRBR", robot.mtrBR.getCurrentPosition());
             telemetry.update();
-        }*/
+        }
+
+        robot.mtrSetSpeed(0);
 
     }
 }

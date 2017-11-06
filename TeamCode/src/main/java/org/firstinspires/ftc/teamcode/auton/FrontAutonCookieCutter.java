@@ -53,7 +53,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_G
 public class FrontAutonCookieCutter extends LinearOpMode {
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot(telemetry, hardwareMap);
+    HWRobot r = new HWRobot();
     boolean a;
     double heading = 0;
     String vuf = null;
@@ -63,7 +63,7 @@ public class FrontAutonCookieCutter extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.init("all");
+        r.getOpModeData(telemetry,hardwareMap);r.init("all");
         a = opModeIsActive();
         getHeading();
 

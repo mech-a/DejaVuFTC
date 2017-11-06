@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 @TeleOp(name="Holonomic Drive", group="DriveOPs")
 //@Disabled
 public class HolonomicDrive extends LinearOpMode{
-    HWRobot robot = new HWRobot(telemetry, hardwareMap);
+    HWRobot robot = new HWRobot();
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
@@ -34,7 +34,7 @@ public class HolonomicDrive extends LinearOpMode{
     @Override
     public void runOpMode() {
 
-        robot.init("motors"); robot.init("servos");
+        robot.getOpModeData(telemetry,hardwareMap);robot.init("motors"); robot.init("servos");
         prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 

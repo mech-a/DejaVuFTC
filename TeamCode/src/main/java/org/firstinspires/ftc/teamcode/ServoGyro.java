@@ -36,7 +36,7 @@ public class ServoGyro extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.getOpModeData(telemetry,hardwareMap);robot.init("imu");
         // Set up our telemetry dashboard
         //composeTelemetry();
 

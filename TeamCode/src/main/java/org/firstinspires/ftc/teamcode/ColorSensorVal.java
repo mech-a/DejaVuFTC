@@ -22,7 +22,7 @@ public class ColorSensorVal extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, DcMotor.RunMode.RESET_ENCODERS, telemetry);
+        robot.getOpModeData(telemetry,hardwareMap);robot.init("sensors");
 
 
         waitForStart();

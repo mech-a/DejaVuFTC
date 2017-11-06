@@ -24,7 +24,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
     //TODO implement a handler class for all autons ex auton(String team, String direction) that can be called instead big block
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot(telemetry, hardwareMap);
+    HWRobot r = new HWRobot();
     //RobotValues v = new RobotValues();
     boolean a = false;
     String vuf = null;
@@ -39,7 +39,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        r.init("all");
+        r.getOpModeData(telemetry,hardwareMap);r.init("all");
         a = opModeIsActive();
         getHeading();
         //telemetry.addData("current heading:", heading);

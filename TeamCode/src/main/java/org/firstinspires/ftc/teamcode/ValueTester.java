@@ -41,17 +41,17 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @TeleOp(name="Values", group="Internal")
-@Disabled
+//@Disabled
 public class ValueTester extends LinearOpMode {
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot(telemetry, hardwareMap);
+    HWRobot r = new HWRobot();
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        r.init("servos");
+        r.getOpModeData(telemetry,hardwareMap);r.init("servos");
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
