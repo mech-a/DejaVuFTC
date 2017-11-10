@@ -35,6 +35,7 @@ public class RobotValues {
     public static int COUNTS_TO_VUFORIA_FRONT = 24;
 
     //Static vars for detecting jewel colors
+    public static final double SCALE_FACTOR = 255;
     //Do remember that for red, it ranges from 340 -> 360 -> 15 like a unit circle
         public static float BLUE_LOWER_LIMIT = 215;
         public static float BLUE_UPPER_LIMIT = 270;

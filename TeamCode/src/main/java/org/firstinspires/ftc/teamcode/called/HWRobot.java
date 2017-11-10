@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.called;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -29,12 +30,14 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DISTANCE_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
 
 public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR,mtrLinear;
     public Servo srvL, srvR, srvJewel;
+    public CRServo srvIntakeL, srvIntakeR;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
     public VuforiaLocalizer vuforia;
@@ -47,12 +50,12 @@ public class HWRobot
     public double powBR = 0;
     public double powLin = 0;
 
+    int posFL, posFR, posBL, posBR;
+
     int a = 1;
     int b = 1;
     String mvmtWay;
-    public double ninetyDegreesInInches = 9*3.1415;
-    public double turnAroundInInches = 18 *3.1415;
-    int posFL, posFR, posBL, posBR;
+
 
     double heading,roll,pitch;
 
@@ -92,14 +95,15 @@ public class HWRobot
     */
     
     public float hsv[] = {0F, 0F, 0F};
-    final double SCALE_FACTOR = 255;
+
 
 
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
     public Orientation angles;
-    public VuforiaTrackable relicTemplate;
+    VuforiaTrackables relicTrackables;
+    VuforiaTrackable relicTemplate;
 
     /*
     public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
@@ -187,6 +191,8 @@ public class HWRobot
         //srvJewel = hwMap.servo.get("jewel_servo");
         srvL = hwMap.servo.get("left_linear_lift");
         srvR = hwMap.servo.get("right_linear_lift");
+        srvIntakeL = hwMap.crservo.get("left_intake");
+        srvIntakeR = hwMap.crservo.get("right_intake");
 
         //set pos
         srvL.setPosition(0.6);
@@ -214,8 +220,8 @@ public class HWRobot
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
     }
 
@@ -233,6 +239,7 @@ public class HWRobot
 
     public String getVuMark(boolean active) {
         String type = "";
+        relicTrackables.activate();
 
         if(active) {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -503,30 +510,30 @@ public class HWRobot
 
     private void decideDirection(String dir) {
         if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
-            if (dir == "clockwise" || dir == "cw") {
+            if (dir.equals("clockwise") || dir.equals("cw")) {
                 a = 1;
                 b = -1;
             }
-            else if (dir == "counterclockwise" || dir == "ccw") {
+            else if (dir.equals("counterclockwise") || dir.equals("ccw")) {
                 a = -1;
                 b = 1;
             }
             mvmtWay = "rotation";
         }
         else {
-            if(dir == "fwd" || dir == "forward") {
+            if(dir.equals("fwd") || dir.equals("forward")) {
                 a = 1;
                 b = 1;
             }
-            else if(dir == "bk" || dir == "backwards") {
+            else if(dir.equals("bk") || dir.equals("backwards") || dir.equals("back")) {
                 a = -1;
                 b = -1;
             }
-            else if(dir == "left") {
+            else if(dir.equals("left")) {
                 a = -1;
                 b = 1;
             }
-            else if (dir == "right") {
+            else if (dir.equals("right")) {
                 a = 1;
                 b = -1;
             }
@@ -596,6 +603,12 @@ public class HWRobot
     public void releaseClaw() {
         srvL.setPosition(0);
         srvR.setPosition(1);
+    }
+
+    public double getHeading() {
+        double heading;
+        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        return heading;
     }
 
 

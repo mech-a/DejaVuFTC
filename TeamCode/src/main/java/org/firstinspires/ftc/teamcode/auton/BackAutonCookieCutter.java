@@ -52,8 +52,10 @@ public class BackAutonCookieCutter extends LinearOpMode {
 
         //Release servo latch and read the color sensor
         r.jewelServoFlip(JEWEL_SERVO_DOWN);
+        sleep(2000);
         r.refreshHSV();
         //knock off jewel
+        sleep(500);
         r.knockOffJewel(TEAM,a);
         r.jewelServoFlip(JEWEL_SERVO_UP);
 
@@ -66,7 +68,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
         r.rotate(directionToRotateForCryptobox, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
 
         r.moveForCrypto(vuf, a);
-        //TODO fully implemenet a function that allows the robot to go in a direction and stay at an angle
+        //TODO fully implement a function that allows the robot to go in a direction and stay at an angle
         /*ex
         while(x){
         if(heading > desired angle) {
