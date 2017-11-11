@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.called;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Hardware;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
@@ -27,7 +32,10 @@ public class AutonHandler {
     private double heading;
     boolean b = true;
 
-    public void auton(String team, String area, boolean a) {
+    public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
+        r.getOpModeData(telemetry, hwMap); r.init("all");
+
+
         if(team.toLowerCase().equals("red")) {
             direction = "fwd";
             blueTeam = false;
@@ -39,7 +47,8 @@ public class AutonHandler {
 
 
         if(area.equals("back")) {
-            //Release servo latch and read the color sensor
+
+            /*//Release servo latch and read the color sensor
             r.jewelServoFlip(JEWEL_SERVO_DOWN);
 
             try {
@@ -57,9 +66,9 @@ public class AutonHandler {
             }
             r.knockOffJewel(team ,a);
             r.jewelServoFlip(JEWEL_SERVO_UP);
+*/
 
 
-            //
             r.translate(direction, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             vuf = r.getVuMark(a);
 
@@ -74,6 +83,7 @@ public class AutonHandler {
         }
 
         else if (area.toLowerCase().equals("front")) {
+            /*
             r.jewelServoFlip(JEWEL_SERVO_DOWN);
             r.refreshHSV();
             //knock off jewel
@@ -87,6 +97,7 @@ public class AutonHandler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            */
 
             vuf = r.getVuMark(a);
             if(blueTeam) {

@@ -27,12 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.refrence;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
@@ -41,48 +40,27 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Copy Me Linear
  */
 
-@TeleOp(name="Values", group="Internal")
+@TeleOp(name="Newforia with HWMap", group="Internal")
 //@Disabled
-public class ValueTester extends LinearOpMode {
+public class NewforiaWHWmap extends LinearOpMode {
 
     // Declare OpMode members.
     HWRobot r = new HWRobot();
-    double currentPowerL = 0;
-    double currentPowerR = 0;
+    String vuf;
+    boolean active = true;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry,hardwareMap);r.init("servos");
-
+        r.getOpModeData(telemetry,hardwareMap);r.init("all");
         waitForStart();
-
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad1.left_bumper) {
-                currentPowerL+=0.01;
-            }
-            else if(gamepad1.left_bumper && gamepad1.a) {
-                currentPowerL-=0.01;
-            }
-
-            if (gamepad1.right_bumper) {
-                currentPowerR+=0.01;
-            }
-            else if(gamepad1.right_bumper && gamepad1.a) {
-                currentPowerR-=0.01;
-            }
-            currentPowerL = Range.clip(currentPowerL , -1, 1);
-            currentPowerR = Range.clip(currentPowerR , -1 , 1);
-
-            r.srvIntakeL.setPower(currentPowerL);
-            r.srvIntakeR.setPower(-currentPowerR);
-
-            telemetry.addData("srvL pos", currentPowerL);
-            telemetry.addData("srvR pos", currentPowerR);
+            vuf = r.getVuMark(active);
+            telemetry.addData("vuf", vuf);
             telemetry.update();
-            sleep(50);
+            sleep(200);
         }
     }
 }

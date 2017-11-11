@@ -102,8 +102,8 @@ public class HWRobot
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
     public Orientation angles;
-    VuforiaTrackables relicTrackables;
-    VuforiaTrackable relicTemplate;
+    public VuforiaTrackables relicTrackables;
+    public VuforiaTrackable relicTemplate;
 
     /*
     public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
@@ -239,9 +239,9 @@ public class HWRobot
 
     public String getVuMark(boolean active) {
         String type = "";
-        relicTrackables.activate();
 
         if(active) {
+            relicTrackables.activate();
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             for(int i = 1; i < 5; i++) {
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);

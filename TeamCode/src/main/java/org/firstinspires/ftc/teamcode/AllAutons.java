@@ -42,11 +42,11 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @TeleOp(name="CopyMe", group="Internal")
-@Disabled
+//@Disabled
 public class AllAutons extends LinearOpMode {
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot();
+    //HWRobot r = new HWRobot();
     AutonHandler a = new AutonHandler();
     boolean active;
     String team;
@@ -56,7 +56,7 @@ public class AllAutons extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry,hardwareMap);r.init("all");
+        //r.getOpModeData(telemetry,hardwareMap);r.init("all");
         active = opModeIsActive();
         waitForStart();
 
@@ -88,8 +88,8 @@ public class AllAutons extends LinearOpMode {
 
             if(run){
                 run = false;
-                prompt(team, area);
-                a.auton(team,area,active);
+                //prompt(team, area);
+                a.auton(team,area,telemetry,hardwareMap,active);
             }
 
         }

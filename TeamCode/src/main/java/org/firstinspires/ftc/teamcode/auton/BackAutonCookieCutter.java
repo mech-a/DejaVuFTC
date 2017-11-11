@@ -33,13 +33,13 @@ public class BackAutonCookieCutter extends LinearOpMode {
 
 
 
-    String directionToRotateForCryptobox = null;
+    //String directionToRotateForCryptobox = null;
 
     double heading = 0;
 
     @Override
     public void runOpMode() {
-        r.getOpModeData(telemetry,hardwareMap);r.init("all");
+        /*r.getOpModeData(telemetry,hardwareMap);r.init("all");
         a = opModeIsActive();
         getHeading();
         //telemetry.addData("current heading:", heading);
@@ -57,7 +57,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
         //knock off jewel
         sleep(500);
         r.knockOffJewel(TEAM,a);
-        r.jewelServoFlip(JEWEL_SERVO_UP);
+        r.jewelServoFlip(JEWEL_SERVO_UP);*/
 
 
         //
@@ -65,7 +65,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
         vuf = r.getVuMark(a);
 
         r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
-        r.rotate(directionToRotateForCryptobox, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
+        r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
 
         r.moveForCrypto(vuf, a);
         //TODO fully implement a function that allows the robot to go in a direction and stay at an angle

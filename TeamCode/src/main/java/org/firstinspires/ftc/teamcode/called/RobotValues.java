@@ -17,19 +17,19 @@ public class RobotValues {
     public static double JEWEL_SERVO_UP = 1;
 
     //counts to vuf + crypto = 36 * countsPerInch
-    public static double SPEED_TO_VUFORIA = 0;
-    public static int COUNTS_TO_VUFORIA = 22 * COUNTS_PER_INCH;
+    public static double SPEED_TO_VUFORIA = 0.2;
+    public static int COUNTS_TO_VUFORIA = 12 * COUNTS_PER_INCH;
 
-    public static double SPEED_TO_CRYPTO = 0;
-    public static int COUNT_TO_CRYPTO = 14 * COUNTS_PER_INCH;
+    public static double SPEED_TO_CRYPTO = 0.2;
+    public static int COUNT_TO_CRYPTO = 12 * COUNTS_PER_INCH;
 
-    public static double SPEED_TO_TURN = 0;
+    public static double SPEED_TO_TURN = 0.2;
     public static double DEGREES_TO_TURN_FOR_CRYPTO = 90;
 
     //actual dist is 7.63 ; test and check
     public static int DISTANCE_BETWEEN_COLUMNS= 7;
 
-    public static double SPEED_TO_PLACE_GLYPH = 0;
+    public static double SPEED_TO_PLACE_GLYPH = 0.2;
     public static int COUNTS_TO_PLACE_GLYPH = 6 * COUNTS_PER_INCH;
 
     public static int COUNTS_TO_VUFORIA_FRONT = 24;
