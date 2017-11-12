@@ -27,13 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.called.AutonHandler;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 
@@ -41,48 +41,62 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Copy Me Linear
  */
 
-@TeleOp(name="Values", group="Internal")
+@TeleOp(name="CopyMe", group="Internal")
 //@Disabled
-public class ValueTester extends LinearOpMode {
+public class AllAutons extends LinearOpMode {
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot();
-    double currentPowerL = 0;
-    double currentPowerR = 0;
+    //HWRobot r = new HWRobot();
+    AutonHandler a = new AutonHandler();
+    boolean active;
+    String team;
+    String area;
+    boolean run = false;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry,hardwareMap);r.init("servos");
-
+        //r.getOpModeData(telemetry,hardwareMap);r.init("all");
+        active = opModeIsActive();
         waitForStart();
+
 
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad1.left_bumper) {
-                currentPowerL+=0.01;
-            }
-            else if(gamepad1.left_bumper && gamepad1.a) {
-                currentPowerL-=0.01;
-            }
 
-            if (gamepad1.right_bumper) {
-                currentPowerR+=0.01;
+            if(gamepad1.left_bumper && gamepad1.a) {
+                team = "blue";
+                area = "back";
+                run = true;
+            }
+            else if (gamepad1.left_bumper && gamepad1.y) {
+                team = "blue";
+                area = "front";
+                run = true;
             }
             else if(gamepad1.right_bumper && gamepad1.a) {
-                currentPowerR-=0.01;
+                team = "red";
+                area = "back";
+                run = true;
             }
-            currentPowerL = Range.clip(currentPowerL , -1, 1);
-            currentPowerR = Range.clip(currentPowerR , -1 , 1);
+            else if(gamepad1.right_bumper && gamepad1.y) {
+                team = "red";
+                area = "front";
+                run = true;
+            }
 
-            r.srvIntakeL.setPower(currentPowerL);
-            r.srvIntakeR.setPower(-currentPowerR);
+            if(run){
+                run = false;
+                //prompt(team, area);
+                a.auton(team,area,telemetry,hardwareMap,active);
+            }
 
-            telemetry.addData("srvL pos", currentPowerL);
-            telemetry.addData("srvR pos", currentPowerR);
-            telemetry.update();
-            sleep(50);
         }
+    }
+
+    public void prompt(String cmd, Object data) {
+        telemetry.addData(cmd, data);
+        telemetry.update();
     }
 }
