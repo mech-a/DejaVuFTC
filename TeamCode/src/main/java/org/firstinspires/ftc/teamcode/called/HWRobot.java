@@ -26,8 +26,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.DISTANCE_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
@@ -265,14 +265,14 @@ public class HWRobot
     //TODO moveForCrypto Values
     public void moveForCrypto(String vuf, boolean active) {
         if(vuf.equals("LEFT")) {
-            translate("left", 0.2, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
+            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
             //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
         }
         else if(vuf.equals("CENTER")) {
             //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("RIGHT")) {
-            translate("right", 0.2, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
+            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("UNKNOWN")) {
             telemetry.addData("unkn read:", "going for center");

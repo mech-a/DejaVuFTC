@@ -21,18 +21,19 @@ public class RobotValues {
     public static int COUNTS_TO_VUFORIA = 12 * COUNTS_PER_INCH;
 
     public static double SPEED_TO_CRYPTO = 0.2;
-    public static int COUNT_TO_CRYPTO = 12 * COUNTS_PER_INCH;
+    public static int COUNT_TO_CRYPTO = 24 * COUNTS_PER_INCH;
 
     public static double SPEED_TO_TURN = 0.2;
     public static double DEGREES_TO_TURN_FOR_CRYPTO = 90;
 
-    //actual dist is 7.63 ; test and check
-    public static int DISTANCE_BETWEEN_COLUMNS= 7;
+    //actual dist is 7.63 ; test and check; currently 7.5inches
+    public static int COUNTS_BETWEEN_COLUMNS = 945;
 
     public static double SPEED_TO_PLACE_GLYPH = 0.2;
     public static int COUNTS_TO_PLACE_GLYPH = 6 * COUNTS_PER_INCH;
 
-    public static int COUNTS_TO_VUFORIA_FRONT = 24;
+    public static int COUNTS_TO_VUFORIA_FRONT = 24 * COUNTS_PER_INCH;
+    public static int COUNTS_TO_CRYPTO_FRONT = 12 * COUNTS_PER_INCH;
 
     //Static vars for detecting jewel colors
     public static final double SCALE_FACTOR = 255;

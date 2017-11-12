@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.Hardware;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
@@ -28,7 +29,7 @@ public class AutonHandler {
     boolean blueTeam;
     String vuf;
     String direction;
-    String rtn;
+
     private double heading;
     boolean b = true;
 
@@ -46,9 +47,9 @@ public class AutonHandler {
         }
 
 
-        if(area.equals("back")) {
+        if(area.toLowerCase().equals("back")) {
 
-            /*//Release servo latch and read the color sensor
+            //Release servo latch and read the color sensor
             r.jewelServoFlip(JEWEL_SERVO_DOWN);
 
             try {
@@ -66,7 +67,7 @@ public class AutonHandler {
             }
             r.knockOffJewel(team ,a);
             r.jewelServoFlip(JEWEL_SERVO_UP);
-*/
+
 
 
             r.translate(direction, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
@@ -83,7 +84,7 @@ public class AutonHandler {
         }
 
         else if (area.toLowerCase().equals("front")) {
-            /*
+
             r.jewelServoFlip(JEWEL_SERVO_DOWN);
             r.refreshHSV();
             //knock off jewel
@@ -97,9 +98,17 @@ public class AutonHandler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            */
 
             vuf = r.getVuMark(a);
+
+            r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
             if(blueTeam) {
                 r.rotate("ccw", 0.2, 179, a);
             }
