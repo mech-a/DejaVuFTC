@@ -47,7 +47,7 @@ public class GlyphMover extends LinearOpMode {
 
 
     // Declare OpMode members.
-    DcMotor mtrFL, mtrFR;
+    DcMotor mtrFL, mtrFR, mtrBL, mtrBR;;
 
     double pow = 0.5;
 
@@ -61,15 +61,23 @@ public class GlyphMover extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         mtrFL = hardwareMap.dcMotor.get("fl_drive");
         mtrFR = hardwareMap.dcMotor.get("fr_drive");
+        mtrBL = hardwareMap.dcMotor.get("bl_drive");
+        mtrBR = hardwareMap.dcMotor.get("br_drive");
 
         mtrFL.setDirection(DcMotor.Direction.FORWARD);
         mtrFR.setDirection(DcMotor.Direction.REVERSE);
+        mtrBL.setDirection(DcMotor.Direction.FORWARD);
+        mtrBR.setDirection(DcMotor.Direction.REVERSE);
 
         mtrFL.setPower(pow);
         mtrFR.setPower(pow);
+        mtrBL.setPower(pow);
+        mtrBR.setPower(pow);
 
         mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
