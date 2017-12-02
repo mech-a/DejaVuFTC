@@ -49,17 +49,8 @@ public class HolonomicDrive extends LinearOpMode{
             speedSwitch();
             linearSlide();
             extruderControl();
+            resets();
 
-            if(gamepad2.dpad_up) {
-                robot.resets("reverse");
-
-            }
-            else if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                robot.resets("normal")
-            }
-            else if (gamepad2.dpad_down) {
-                robot.resets("stop");
-            }
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
@@ -136,6 +127,18 @@ public class HolonomicDrive extends LinearOpMode{
         }
         else {
             robot.extrudeGlyphs("stop");
+        }
+    }
+
+    private void resets() {
+        if(gamepad2.dpad_up) {
+            robot.resets("reverse");
+        }
+        else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+            robot.resets("normal");
+        }
+        else if (gamepad2.dpad_down) {
+            robot.resets("stop");
         }
     }
 }
