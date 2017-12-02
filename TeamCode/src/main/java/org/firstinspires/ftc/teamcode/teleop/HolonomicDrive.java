@@ -54,7 +54,12 @@ public class HolonomicDrive extends LinearOpMode{
                 robot.resets("reverse");
 
             }
-            else if robot.
+            else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+                robot.resets("normal")
+            }
+            else if (gamepad2.dpad_down) {
+                robot.resets("stop");
+            }
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
