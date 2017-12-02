@@ -297,7 +297,7 @@ public class HWRobot
     }
 
     public void knockOffJewel(String team, boolean active) {
-        float hue = hsv[1];
+        float hue = hsv[0];
         if(team.equals("red")) {
             //if the ball is blue, hit it off
             //assuming the color sensor is reading the most back (southern) one
