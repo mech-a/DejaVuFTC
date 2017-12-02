@@ -9,8 +9,8 @@ package org.firstinspires.ftc.teamcode.called;
 public class RobotValues {
     //SRV L CLOSED IS 1, OPENED 0
     //SRV R CLOSED IS 0, OPENED 1
-    //COUNTSPERINCH should be 252 now
-    public static int COUNTS_PER_INCH = 126;
+    //COUNTSPERINCH should be 252 now, 126 previously w true holo
+    public static int COUNTS_PER_INCH = 252;
 
     //CPI for neverest 60
 
@@ -23,6 +23,16 @@ public class RobotValues {
 
     //speed for conveyor
     public static double SPEED_FOR_CONVEYORS = 0.6;
+
+    //counts per 6inch neverest 60
+    public static int SIX_INCHES_NV60 = 5040;
+
+    //neverest 60 speed
+    public static double NV60_SPEED = 0.6;
+
+    //extruder servo speed
+    public static double EXTRUDER_SPEED = 1.0;
+
     //counts to vuf + crypto = 36 * countsPerInch
     public static double SPEED_TO_VUFORIA = 0.2;
     public static int COUNTS_TO_VUFORIA = 12 * COUNTS_PER_INCH;

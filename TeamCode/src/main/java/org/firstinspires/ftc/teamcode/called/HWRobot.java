@@ -28,9 +28,12 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDER_SPEED;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEYORS;
 
 public class HWRobot
@@ -331,10 +334,14 @@ public class HWRobot
         }
     }
 
-    public void intakeStatus(String status) {
+    public void conveyorStatus(String status) {
         if(status.toLowerCase().equals("start")) {
             mtrConveyorL.setPower(SPEED_FOR_CONVEYORS);
             mtrConveyorR.setPower(SPEED_FOR_CONVEYORS);
+        }
+        else if (status.toLowerCase().equals("reverse")) {
+            mtrConveyorL.setPower(-SPEED_FOR_CONVEYORS);
+            mtrConveyorR.setPower(-SPEED_FOR_CONVEYORS);
         }
         else {
             mtrConveyorL.setPower(0);
@@ -342,7 +349,60 @@ public class HWRobot
         }
     }
 
-    public void move
+    public void moveSlide(String dir) {
+        int finalCounts = 0;
+        if (dir.toLowerCase().equals("up")) {
+            finalCounts = SIX_INCHES_NV60;
+        } else if(dir.toLowerCase().equals("down")) {
+            finalCounts = -SIX_INCHES_NV60;
+        }
+        mtrLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrLinear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrLinear.setPower(NV60_SPEED);
+        mtrLinear.setTargetPosition(finalCounts);
+        while(mtrLinear.isBusy()) {}
+        mtrLinear.setPower(0);
+    }
+
+    public void extrudeGlyphs(String order) {
+        if(order.toLowerCase().equals("both")) {
+            srvTL.setPower(EXTRUDER_SPEED);
+            srvTR.setPower(EXTRUDER_SPEED);
+            srvBL.setPower(EXTRUDER_SPEED);
+            srvBR.setPower(EXTRUDER_SPEED);
+        }
+        else if(order.toLowerCase().equals("top")) {
+            srvTL.setPower(EXTRUDER_SPEED);
+            srvTR.setPower(EXTRUDER_SPEED);
+            srvBL.setPower(0);
+            srvBR.setPower(0);
+        }
+        else if(order.toLowerCase().equals("bottom")) {
+            srvTL.setPower(0);
+            srvTR.setPower(0);
+            srvBL.setPower(EXTRUDER_SPEED);
+            srvBR.setPower(EXTRUDER_SPEED);
+        }
+        else if(order.toLowerCase().equals("both")) {
+            srvTL.setPower(0);
+            srvTR.setPower(0);
+            srvBL.setPower(0);
+            srvBR.setPower(0);
+        }
+    }
+
+    public void resets(String kind) {
+        String normKind = kind.toLowerCase();
+        if(normKind.equals("reverse")) {
+            conveyorStatus("reverse");
+        }
+        else if(normKind.equals("normal")) {
+            conveyorStatus("start");
+        }
+        else if(normKind.equals("stop")) {
+            conveyorStatus("else aka zero out");
+        }
+    }
 
     
 

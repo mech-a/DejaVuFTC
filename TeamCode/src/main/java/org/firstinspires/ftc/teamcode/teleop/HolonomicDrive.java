@@ -34,7 +34,10 @@ public class HolonomicDrive extends LinearOpMode{
     @Override
     public void runOpMode() {
 
-        robot.getOpModeData(telemetry,hardwareMap);robot.init("motors"); robot.init("servos");
+        robot.getOpModeData(telemetry,hardwareMap);
+        robot.init("motors");
+        robot.init("servos");
+        robot.conveyorStatus("start");
         prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 
@@ -44,35 +47,18 @@ public class HolonomicDrive extends LinearOpMode{
 
             //TODO make better solution for speed switching
             speedSwitch();
+            linearSlide();
+            extruderControl();
 
+            if(gamepad2.dpad_up) {
+                robot.resets("reverse");
 
+            }
+            else if robot.
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
             powBR *= modifierValue;
-
-
-            telemetry.addData("Speed Mod: ", modifierValue);
-
-
-            if(gamepad2.a) {
-                robot.mtrLinear.setPower(spdLinearDown);
-            }
-            else if (gamepad2.y){
-                robot.mtrLinear.setPower(spdLinearUp);
-            }
-            else {
-                robot.mtrLinear.setPower(0.0);
-            }
-
-            if(gamepad2.x) {
-                clawPos += clawIncrement;
-            }
-            else if (gamepad2.b) {
-                clawPos -= clawIncrement;
-            }
-            telemetry.addData("ClawPos Data", clawPos);
-
 
 
             telemetry.update();
@@ -121,6 +107,30 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit) {
                 modifierValue = modifierValueDefault;
             }
+        }
+    }
+
+    private void linearSlide() {
+        String dir = null;
+        if (gamepad2.y) {
+            robot.moveSlide("up");
+        } else if (gamepad2.a) {
+            robot.moveSlide("down");
+        }
+    }
+
+    private void extruderControl() {
+        if (gamepad2.x) {
+            robot.extrudeGlyphs("both");
+        }
+        else if (gamepad2.b) {
+            robot.extrudeGlyphs("top");
+        }
+        else if (gamepad2.right_stick_button) {
+            robot.extrudeGlyphs("bottom");
+        }
+        else {
+            robot.extrudeGlyphs("stop");
         }
     }
 }
