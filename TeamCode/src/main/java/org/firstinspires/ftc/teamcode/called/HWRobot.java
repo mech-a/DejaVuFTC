@@ -31,13 +31,14 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEYORS;
 
 public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
-    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR,mtrLinear;
-    public Servo srvL, srvR, srvJewel;
-    public CRServo srvIntakeL, srvIntakeR;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrLinear, mtrConveyorL, mtrConveyorR;
+    public Servo srvJewel;
+    public CRServo srvTL, srvTR, srvBL, srvBR;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
     public VuforiaLocalizer vuforia;
@@ -49,6 +50,8 @@ public class HWRobot
     public double powBL = 0;
     public double powBR = 0;
     public double powLin = 0;
+    public double powConL = 0;
+    public double powConR = 0;
 
     int posFL, posFR, posBL, posBR;
 
@@ -155,13 +158,17 @@ public class HWRobot
         mtrBL = hwMap.dcMotor.get("bl_drive");
         mtrBR = hwMap.dcMotor.get("br_drive");
         mtrLinear = hwMap.dcMotor.get("linear_motor");
+        mtrConveyorL = hwMap.dcMotor.get("left_conveyor");
+        mtrConveyorR = hwMap.dcMotor.get("right_conveyor");
 
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.FORWARD);
         mtrFR.setDirection(DcMotor.Direction.REVERSE);
         mtrBL.setDirection(DcMotor.Direction.FORWARD);
         mtrBR.setDirection(DcMotor.Direction.REVERSE);
-        mtrLinear.setDirection(DcMotor.Direction.FORWARD);
+        mtrLinear.setDirection(DcMotor.Direction.REVERSE);
+        mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
+        mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
 
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -169,6 +176,8 @@ public class HWRobot
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrConveyorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrConveyorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set power for all motors.
         mtrFL.setPower(powFL);
@@ -176,6 +185,8 @@ public class HWRobot
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
         mtrLinear.setPower(powLin);
+        mtrConveyorL.setPower(powConL);
+        mtrConveyorR.setPower(powConR);
 
         // Set all motors to run with given mode
         mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -183,20 +194,22 @@ public class HWRobot
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
     private void initServos() {
         //srv fetch + def
         //srvJewel = hwMap.servo.get("jewel_servo");
-        srvL = hwMap.servo.get("left_linear_lift");
-        srvR = hwMap.servo.get("right_linear_lift");
-        srvIntakeL = hwMap.crservo.get("left_intake");
-        srvIntakeR = hwMap.crservo.get("right_intake");
+        srvTL = hwMap.crservo.get("extruder_top_left");
+        srvTR = hwMap.crservo.get("extruder_top_right");
+        srvBL = hwMap.crservo.get("extruder_bottom_left");
+        srvBR = hwMap.crservo.get("extruder_bottom_right");
+
 
         //set pos
-        srvL.setPosition(0.6);
-        srvR.setPosition(0.4);
+
         //srvJewel.setPosition();
     }
 
@@ -317,6 +330,19 @@ public class HWRobot
             telemetry.update();
         }
     }
+
+    public void intakeStatus(String status) {
+        if(status.toLowerCase().equals("start")) {
+            mtrConveyorL.setPower(SPEED_FOR_CONVEYORS);
+            mtrConveyorR.setPower(SPEED_FOR_CONVEYORS);
+        }
+        else {
+            mtrConveyorL.setPower(0);
+            mtrConveyorL.setPower(0);
+        }
+    }
+
+    public void move
 
     
 
@@ -600,10 +626,11 @@ public class HWRobot
         srvJewel.setPosition(position);
     }
 
+    /*
     public void releaseClaw() {
         srvL.setPosition(0);
         srvR.setPosition(1);
-    }
+    }*/
 
     public double getHeading() {
         double heading;

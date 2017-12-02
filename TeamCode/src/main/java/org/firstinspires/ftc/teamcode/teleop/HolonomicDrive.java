@@ -39,36 +39,11 @@ public class HolonomicDrive extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()) {
-            ch1 = gamepad1.left_stick_x;
-            ch2 = -gamepad1.left_stick_y;
-            ch3 = gamepad1.right_stick_x;
-            ch4 = -gamepad1.left_stick_y;
-
-            g2ch1 = gamepad2.left_stick_x;
-            g2ch2 = -gamepad1.left_stick_y;
-            g2ch3 = gamepad1.right_stick_x;
-            g2ch4 = -gamepad1.left_stick_y;
-
-            powFL = ch2 + ch1 + ch3;
-            powFR = ch2 - ch1 - ch3;
-            powBL = ch2 - ch1 + ch3;
-            powBR = ch2 + ch1 - ch3;
-
+            setChannels();
+            setPowers();
 
             //TODO make better solution for speed switching
-            if(gamepad1.left_bumper) {
-                runSlow = true;
-            }
-
-            if(runSlow) {
-                runSlow = false;
-                if(modifierValue == modifierValueDefault) {
-                    modifierValue = slowLimit;
-                }
-                else if(modifierValue == slowLimit) {
-                    modifierValue = modifierValueDefault;
-                }
-            }
+            speedSwitch();
 
 
             powFL *= modifierValue;
@@ -98,9 +73,6 @@ public class HolonomicDrive extends LinearOpMode{
             }
             telemetry.addData("ClawPos Data", clawPos);
 
-            clawPos = Range.clip(clawPos, -clawMid, clawMid);
-            robot.srvL.setPosition(clawMid + clawPos);
-            robot.srvR.setPosition(clawMid - clawPos);
 
 
             telemetry.update();
@@ -108,13 +80,48 @@ public class HolonomicDrive extends LinearOpMode{
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
             robot.mtrBR.setPower(powBR);
-            sleep(10);
+            sleep(50);
         }
     }
 
     private void prompt(Telemetry telemetry, String prefix, String cmd) {
         telemetry.addData(prefix, cmd);
         telemetry.update();
+    }
+    private void setChannels() {
+        ch1 = gamepad1.left_stick_x;
+        ch2 = -gamepad1.left_stick_y;
+        ch3 = gamepad1.right_stick_x;
+        ch4 = -gamepad1.left_stick_y;
+
+        g2ch1 = gamepad2.left_stick_x;
+        g2ch2 = -gamepad1.left_stick_y;
+        g2ch3 = gamepad1.right_stick_x;
+        g2ch4 = -gamepad1.left_stick_y;
+    }
+
+    private void setPowers() {
+        powFL = ch2 + ch1 + ch3;
+        powFR = ch2 - ch1 - ch3;
+        powBL = ch2 - ch1 + ch3;
+        powBR = ch2 + ch1 - ch3;
+
+    }
+
+    private void speedSwitch() {
+        if(gamepad1.left_bumper) {
+            runSlow = true;
+        }
+
+        if(runSlow) {
+            runSlow = false;
+            if(modifierValue == modifierValueDefault) {
+                modifierValue = slowLimit;
+            }
+            else if(modifierValue == slowLimit) {
+                modifierValue = modifierValueDefault;
+            }
+        }
     }
 }
 
