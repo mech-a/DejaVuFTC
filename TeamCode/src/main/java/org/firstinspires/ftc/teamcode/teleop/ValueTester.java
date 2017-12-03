@@ -76,8 +76,8 @@ public class ValueTester extends LinearOpMode {
             currentPowerL = Range.clip(currentPowerL , -1, 1);
             currentPowerR = Range.clip(currentPowerR , -1 , 1);
 
-            r.srvIntakeL.setPower(currentPowerL);
-            r.srvIntakeR.setPower(-currentPowerR);
+            //r.srvIntakeL.setPower(currentPowerL);
+            //r.srvIntakeR.setPower(-currentPowerR);
 
             telemetry.addData("srvL pos", currentPowerL);
             telemetry.addData("srvR pos", currentPowerR);

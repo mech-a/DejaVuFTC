@@ -166,10 +166,10 @@ public class HWRobot
         mtrConveyorR = hwMap.dcMotor.get("right_conveyor");
 */
         // Set directions for motors.
-        mtrFL.setDirection(DcMotor.Direction.FORWARD);
-        mtrFR.setDirection(DcMotor.Direction.REVERSE);
-        mtrBL.setDirection(DcMotor.Direction.FORWARD);
-        mtrBR.setDirection(DcMotor.Direction.REVERSE);
+        mtrFL.setDirection(DcMotor.Direction.REVERSE);
+        mtrFR.setDirection(DcMotor.Direction.FORWARD);
+        mtrBL.setDirection(DcMotor.Direction.REVERSE);
+        mtrBR.setDirection(DcMotor.Direction.FORWARD);
         /*
         mtrLinear.setDirection(DcMotor.Direction.REVERSE);
         mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
@@ -284,17 +284,17 @@ public class HWRobot
         return type;
     }
 
-    //TODO moveForCrypto Values
+    //TODO moveForCrypto CHANGE DIRECTION LATER AFTER THIS COMPEITTION
     public void moveForCrypto(String vuf, boolean active) {
         if(vuf.equals("LEFT")) {
-            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
             //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
         }
         else if(vuf.equals("CENTER")) {
             //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("RIGHT")) {
-            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("UNKNOWN")) {
             telemetry.addData("unkn read:", "going for center");
@@ -413,16 +413,16 @@ public class HWRobot
 
     public void driveMotorPolarity(String polarity) {
         if(polarity.toLowerCase().equals("normal")) {
-            mtrFL.setDirection(DcMotor.Direction.FORWARD);
-            mtrFR.setDirection(DcMotor.Direction.REVERSE);
-            mtrBL.setDirection(DcMotor.Direction.FORWARD);
-            mtrBR.setDirection(DcMotor.Direction.REVERSE);
-        }
-        else if (polarity.toLowerCase().equals("reverse")) {
             mtrFL.setDirection(DcMotor.Direction.REVERSE);
             mtrFR.setDirection(DcMotor.Direction.FORWARD);
             mtrBL.setDirection(DcMotor.Direction.REVERSE);
             mtrBR.setDirection(DcMotor.Direction.FORWARD);
+        }
+        else if (polarity.toLowerCase().equals("reverse")) {
+            mtrFL.setDirection(DcMotor.Direction.FORWARD);
+            mtrFR.setDirection(DcMotor.Direction.REVERSE);
+            mtrBL.setDirection(DcMotor.Direction.FORWARD);
+            mtrBR.setDirection(DcMotor.Direction.REVERSE);
         }
     }
 

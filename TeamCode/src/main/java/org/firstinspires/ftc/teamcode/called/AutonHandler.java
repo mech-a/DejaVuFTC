@@ -35,7 +35,7 @@ public class AutonHandler {
 
     public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
         r.getOpModeData(telemetry, hwMap); r.init("all");
-        r.driveMotorPolarity("reverse");
+        //r.driveMotorPolarity("reverse");
 
 
         if(team.toLowerCase().equals("red")) {
@@ -51,39 +51,39 @@ public class AutonHandler {
         if(area.toLowerCase().equals("back")) {
 
             //Release servo latch and read the color sensor
-            r.jewelServoFlip(JEWEL_SERVO_DOWN);
+//            r.jewelServoFlip(JEWEL_SERVO_DOWN);
+//
+//            rsleep(2000);
+//
+//            r.refreshHSV();
+//            //knock off jewel
+//
+//            r.knockOffJewel(team ,a);
+//            rsleep(250);
+//            r.jewelServoFlip(JEWEL_SERVO_UP);
 
-            rsleep(2000);
-
-            r.refreshHSV();
-            //knock off jewel
-
-            r.knockOffJewel(team ,a);
-            rsleep(250);
-            r.jewelServoFlip(JEWEL_SERVO_UP);
 
 
-
-            r.translate("back", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+            r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             vuf = r.getVuMark(a);
 
-            r.translate("back", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+            r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
             r.rotate(rotation, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
 
             r.moveForCrypto(vuf, a);
 
-            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
 
             fullExtrudeGlyph();
         }
 
         else if (area.toLowerCase().equals("front")) {
 
-            r.jewelServoFlip(JEWEL_SERVO_DOWN);
-            r.refreshHSV();
-            //knock off jewel
-            r.knockOffJewel(team,a);
-            r.jewelServoFlip(JEWEL_SERVO_UP);
+//            r.jewelServoFlip(JEWEL_SERVO_DOWN);
+//            r.refreshHSV();
+//            //knock off jewel
+//            r.knockOffJewel(team,a);
+//            r.jewelServoFlip(JEWEL_SERVO_UP);
 
             r.translate("back", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
 

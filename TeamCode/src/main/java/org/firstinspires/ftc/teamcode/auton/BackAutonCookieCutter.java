@@ -80,7 +80,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
 
         r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
 
-        r.releaseClaw();
+        //r.releaseClaw();
     }
 
     private void getHeading() {

@@ -27,18 +27,20 @@ public class HolonomicDrive extends LinearOpMode{
     double clawIncrement = 0.01;
     double clawPos;
     private boolean runSlow = false;
-    private double slowLimit = 0.5;
-    private double modifierValue = 1;
-    private double modifierValueDefault = 1;
+    private boolean runFast = false;
+    private double slowLimit = 0.25;
+    private double fastLimit = 0.75;
+    private double modifierValueDefault = 0.5;
+    private double modifierValue = modifierValueDefault;
 
     @Override
     public void runOpMode() {
 
         robot.getOpModeData(telemetry,hardwareMap);
-        robot.init("motors");
+       // robot.init("motors");
         //robot.init("servos");
         //robot.conveyorStatus("start");
-        prompt(telemetry, "Init", "HW initialized");
+        //prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 
         while(opModeIsActive()) {
@@ -52,17 +54,22 @@ public class HolonomicDrive extends LinearOpMode{
             extruderControl();
             resets();*/
 
+            /*
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
             powBR *= modifierValue;
+*/
 
+            telemetry.addData("modifier value", modifierValue);
+            //telemetry.addData("RunSlow", runSlow);
 
             telemetry.update();
+            /*
             robot.mtrFL.setPower(powFL);
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
-            robot.mtrBR.setPower(powBR);
+            robot.mtrBR.setPower(powBR);*/
             sleep(50);
         }
     }
@@ -95,13 +102,28 @@ public class HolonomicDrive extends LinearOpMode{
         if(gamepad1.left_bumper) {
             runSlow = true;
         }
+        else if(gamepad2.right_bumper) {
+            runFast = true;
+        }
 
         if(runSlow) {
+            runFast = false;
             runSlow = false;
             if(modifierValue == modifierValueDefault) {
                 modifierValue = slowLimit;
             }
-            else if(modifierValue == slowLimit) {
+            else if(modifierValue == slowLimit || modifierValue == fastLimit) {
+                modifierValue = modifierValueDefault;
+            }
+        }
+
+        if(runFast) {
+            runFast = false;
+            runSlow = false;
+            if(modifierValue == modifierValueDefault) {
+                modifierValue = fastLimit;
+            }
+            else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
         }

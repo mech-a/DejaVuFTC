@@ -102,8 +102,8 @@ public class CookieCutterAutonomous extends LinearOpMode {
         }
 
         robot.translate("fwd", 0.15, countsPerInch * 9, a);
-        robot.srvL.setPosition(0);
-        robot.srvR.setPosition(1);
+        //robot.srvL.setPosition(0);
+        //robot.srvR.setPosition(1);
 
 
         /*

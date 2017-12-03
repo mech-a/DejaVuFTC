@@ -10,7 +10,8 @@ public class RobotValues {
     //SRV L CLOSED IS 1, OPENED 0
     //SRV R CLOSED IS 0, OPENED 1
     //COUNTSPERINCH should be 252 now, 126 previously w true holo
-    public static int COUNTS_PER_INCH = 252;
+    //UPDATE: counts per inch is 45 due to bad gear ratios
+    public static int COUNTS_PER_INCH = 45;
 
     //CPI for neverest 60
 
