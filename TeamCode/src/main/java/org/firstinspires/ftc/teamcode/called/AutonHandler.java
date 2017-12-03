@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
@@ -27,8 +28,9 @@ public class AutonHandler {
     HWRobot r = new HWRobot();
 
     boolean blueTeam = false;
-    String vuf;
-    String rotation;
+    String vuf = null;
+    String rotation = null;
+    String frontDirection = null;
 
     private double heading;
     boolean b = true;
@@ -41,10 +43,12 @@ public class AutonHandler {
         if(team.toLowerCase().equals("red")) {
             rotation = "ccw";
             blueTeam = false;
+            frontDirection = "right";
         }
         else if(team.toLowerCase().equals("blue")) {
             rotation = "cw";
             blueTeam = true;
+            frontDirection = "left";
         }
 
 
@@ -65,14 +69,34 @@ public class AutonHandler {
 
 
             r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+            rsleep(500);
+
             vuf = r.getVuMark(a);
+            rsleep(500);
 
             r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+            rsleep(500);
+
             r.rotate(rotation, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
 
-            r.moveForCrypto(vuf, a);
+            rsleep(500);
+
+            if(vuf.toLowerCase().equals("left")) {
+                r.moveForCrypto("right", a);
+            }
+            else if(vuf.toLowerCase().equals("right")) {
+                r.moveForCrypto("left", a);
+            }
+            else if(vuf.toLowerCase().equals("center")) {
+                //going for center
+            }
+            else {
+                //going for center
+            }
+            rsleep(500);
 
             r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            rsleep(500);
 
             fullExtrudeGlyph();
         }
@@ -85,23 +109,31 @@ public class AutonHandler {
 //            r.knockOffJewel(team,a);
 //            r.jewelServoFlip(JEWEL_SERVO_UP);
 
-            r.translate("back", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
+            r.translate("back", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA_FRONT, a);
+            rsleep(500);
+            vuf = r.getVuMark(a);
+            rsleep(500);
+            r.translate("back", SPEED_TO_CRYPTO, COUNTS_TO_CRYPTO_FRONT, a);
+            rsleep(500);
+
+            r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
 
             rsleep(500);
 
-            vuf = r.getVuMark(a);
-
-            if(blueTeam) {
-                r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
+            //TODO Intentionally inverted
+            if(vuf.toLowerCase().equals("left")) {
+                r.moveForCrypto("right", a);
+            }
+            else if(vuf.toLowerCase().equals("right")) {
+                r.moveForCrypto("left", a);
+            }
+            else if(vuf.toLowerCase().equals("center")) {
+                //going for center
             }
             else {
-                r.translate("right", 0.2, 12* COUNTS_PER_INCH, a);
+                //going for center
             }
 
-            rsleep(500);
-
-
-            r.moveForCrypto(vuf, a);
 
             rsleep(700);
 
@@ -114,11 +146,7 @@ public class AutonHandler {
     private void fullExtrudeGlyph() {
         r.moveSlide("up");
         r.extrudeGlyphs("top");
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        rsleep(1000);
         r.extrudeGlyphs("stop");
     }
 

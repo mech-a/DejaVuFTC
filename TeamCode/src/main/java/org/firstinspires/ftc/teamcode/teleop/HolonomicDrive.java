@@ -36,11 +36,12 @@ public class HolonomicDrive extends LinearOpMode{
     @Override
     public void runOpMode() {
 
+        //TODO for linear, implement multithreading or make a system where the code checks if the motor is at a certain position, if not make it move anditerate this over and over, with a small delay
         robot.getOpModeData(telemetry,hardwareMap);
-       // robot.init("motors");
-        //robot.init("servos");
-        //robot.conveyorStatus("start");
-        //prompt(telemetry, "Init", "HW initialized");
+        robot.init("motors");
+        robot.init("servos");
+        robot.conveyorStatus("start");
+        prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 
         while(opModeIsActive()) {
@@ -49,27 +50,27 @@ public class HolonomicDrive extends LinearOpMode{
 
             //TODO make better solution for speed switching
             speedSwitch();
-            /*
+
             linearSlide();
             extruderControl();
-            resets();*/
+            resets();
 
-            /*
+
             powFL *= modifierValue;
             powFR *= modifierValue;
             powBL *= modifierValue;
             powBR *= modifierValue;
-*/
+
 
             telemetry.addData("modifier value", modifierValue);
             //telemetry.addData("RunSlow", runSlow);
 
             telemetry.update();
-            /*
+
             robot.mtrFL.setPower(powFL);
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
-            robot.mtrBR.setPower(powBR);*/
+            robot.mtrBR.setPower(powBR);
             sleep(50);
         }
     }
