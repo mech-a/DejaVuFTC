@@ -36,8 +36,8 @@ public class HolonomicDrive extends LinearOpMode{
 
         robot.getOpModeData(telemetry,hardwareMap);
         robot.init("motors");
-        robot.init("servos");
-        robot.conveyorStatus("start");
+        //robot.init("servos");
+        //robot.conveyorStatus("start");
         prompt(telemetry, "Init", "HW initialized");
         waitForStart();
 
@@ -47,9 +47,10 @@ public class HolonomicDrive extends LinearOpMode{
 
             //TODO make better solution for speed switching
             speedSwitch();
+            /*
             linearSlide();
             extruderControl();
-            resets();
+            resets();*/
 
             powFL *= modifierValue;
             powFR *= modifierValue;

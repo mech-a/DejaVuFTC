@@ -26,23 +26,24 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA
 public class AutonHandler {
     HWRobot r = new HWRobot();
 
-    boolean blueTeam;
+    boolean blueTeam = false;
     String vuf;
-    String direction;
+    String rotation;
 
     private double heading;
     boolean b = true;
 
     public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
         r.getOpModeData(telemetry, hwMap); r.init("all");
+        r.driveMotorPolarity("reverse");
 
 
         if(team.toLowerCase().equals("red")) {
-            direction = "fwd";
+            rotation = "ccw";
             blueTeam = false;
         }
         else if(team.toLowerCase().equals("blue")) {
-            direction = "backwards";
+            rotation = "cw";
             blueTeam = true;
         }
 
@@ -52,35 +53,28 @@ public class AutonHandler {
             //Release servo latch and read the color sensor
             r.jewelServoFlip(JEWEL_SERVO_DOWN);
 
-            try {
-                sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            rsleep(2000);
 
             r.refreshHSV();
             //knock off jewel
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             r.knockOffJewel(team ,a);
+            rsleep(250);
             r.jewelServoFlip(JEWEL_SERVO_UP);
 
 
 
-            r.translate(direction, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+            r.translate("back", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             vuf = r.getVuMark(a);
 
-            r.translate(direction, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
-            r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
+            r.translate("back", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+            r.rotate(rotation, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
 
             r.moveForCrypto(vuf, a);
 
             r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
 
-            r.releaseClaw();
+            fullExtrudeGlyph();
         }
 
         else if (area.toLowerCase().equals("front")) {
@@ -91,32 +85,48 @@ public class AutonHandler {
             r.knockOffJewel(team,a);
             r.jewelServoFlip(JEWEL_SERVO_UP);
 
-            r.translate(direction, 0.2, COUNTS_TO_VUFORIA_FRONT, a);
+            r.translate("back", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
 
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            rsleep(500);
 
             vuf = r.getVuMark(a);
 
-            r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
             if(blueTeam) {
-                r.rotate("ccw", 0.2, 179, a);
+                r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
             }
+            else {
+                r.translate("right", 0.2, 12* COUNTS_PER_INCH, a);
+            }
+
+            rsleep(500);
+
 
             r.moveForCrypto(vuf, a);
 
-            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
-            r.releaseClaw();
+            rsleep(700);
+
+            r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
+            rsleep(500);
+            fullExtrudeGlyph();
+        }
+    }
+
+    private void fullExtrudeGlyph() {
+        r.moveSlide("up");
+        r.extrudeGlyphs("top");
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        r.extrudeGlyphs("stop");
+    }
+
+    private void rsleep(long milliseconds) {
+        try {
+            sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

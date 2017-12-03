@@ -160,46 +160,52 @@ public class HWRobot
         mtrFR = hwMap.dcMotor.get("fr_drive");
         mtrBL = hwMap.dcMotor.get("bl_drive");
         mtrBR = hwMap.dcMotor.get("br_drive");
+        /*
         mtrLinear = hwMap.dcMotor.get("linear_motor");
         mtrConveyorL = hwMap.dcMotor.get("left_conveyor");
         mtrConveyorR = hwMap.dcMotor.get("right_conveyor");
-
+*/
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.FORWARD);
         mtrFR.setDirection(DcMotor.Direction.REVERSE);
         mtrBL.setDirection(DcMotor.Direction.FORWARD);
         mtrBR.setDirection(DcMotor.Direction.REVERSE);
+        /*
         mtrLinear.setDirection(DcMotor.Direction.REVERSE);
         mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
         mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
-
+*/
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*
         mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrConveyorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrConveyorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+*/
         // Set power for all motors.
         mtrFL.setPower(powFL);
         mtrFR.setPower(powFR);
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
+        /*
         mtrLinear.setPower(powLin);
         mtrConveyorL.setPower(powConL);
         mtrConveyorR.setPower(powConR);
+*/
 
         // Set all motors to run with given mode
         mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*
         mtrLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+*/
     }
 
     private void initServos() {
@@ -297,6 +303,7 @@ public class HWRobot
     }
 
     public void knockOffJewel(String team, boolean active) {
+
         float hue = hsv[0];
         if(team.equals("red")) {
             //if the ball is blue, hit it off
@@ -383,7 +390,7 @@ public class HWRobot
             srvBL.setPower(EXTRUDER_SPEED);
             srvBR.setPower(EXTRUDER_SPEED);
         }
-        else if(order.toLowerCase().equals("both")) {
+        else if(order.toLowerCase().equals("stop")) {
             srvTL.setPower(0);
             srvTR.setPower(0);
             srvBL.setPower(0);
@@ -401,6 +408,21 @@ public class HWRobot
         }
         else if(normKind.equals("stop")) {
             conveyorStatus("else aka zero out");
+        }
+    }
+
+    public void driveMotorPolarity(String polarity) {
+        if(polarity.toLowerCase().equals("normal")) {
+            mtrFL.setDirection(DcMotor.Direction.FORWARD);
+            mtrFR.setDirection(DcMotor.Direction.REVERSE);
+            mtrBL.setDirection(DcMotor.Direction.FORWARD);
+            mtrBR.setDirection(DcMotor.Direction.REVERSE);
+        }
+        else if (polarity.toLowerCase().equals("reverse")) {
+            mtrFL.setDirection(DcMotor.Direction.REVERSE);
+            mtrFR.setDirection(DcMotor.Direction.FORWARD);
+            mtrBL.setDirection(DcMotor.Direction.REVERSE);
+            mtrBR.setDirection(DcMotor.Direction.FORWARD);
         }
     }
 
