@@ -35,7 +35,6 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEYORS;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.vuforiaKey;
 
 public class HWRobot
 {
@@ -73,10 +72,22 @@ public class HWRobot
 
     boolean isGyroRotationHappening= false;
 
-
+    public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
+            "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
+            "39rY/QC64WcjeCtnUDq0jj7yWEPkWZClL" +
+            "RC2KVwsjQPUe/mjwl6y51KfIKgSulpN63f" +
+            "EYOBdY5ZR4fNswicR46PElRn4NaKqkV6fr9cLS62V8O" +
+            "a8ow88oUK3xga8OJkNYf+3VoIQ7dj/RxiKzQCBJRt" +
+            "2ZbRIUimTFw4oTC5LJ/NXV2jSD+m7KnW7TCpC7n/7hRxyKR" +
+            "mw+JKGoz5kJIfxhliqs1XD3MnD9KN5w6cEwEmg3uYUZ5Bx7bcuO" +
+            "N/uEaqifBnmwpdI0Vjklr67kMVYb27z1NsC+OB7moGIPdjhKho6nhwLy9XyMPw";
 
     //TODO check if when you create an array & edit array value ex arr[0] that is defined as a variable, does editing the arr[0] value change the variable val?
-
+    //it doesnt
+    /*private int countTargetFL,countTargetFR,countTargetBL,countTargetBR;
+    private int[] countTargets = {
+            countTargetFL, countTargetFR, countTargetBL, countTargetBR
+    };*/
     private int[] countTargets = new int[4];
 
 
@@ -149,52 +160,52 @@ public class HWRobot
         mtrFR = hwMap.dcMotor.get("fr_drive");
         mtrBL = hwMap.dcMotor.get("bl_drive");
         mtrBR = hwMap.dcMotor.get("br_drive");
-        /*
-        mtrLinear = hwMap.dcMotor.get("linear_motor");
+
+        //mtrLinear = hwMap.dcMotor.get("linear_motor");
         mtrConveyorL = hwMap.dcMotor.get("left_conveyor");
         mtrConveyorR = hwMap.dcMotor.get("right_conveyor");
-*/
+
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.REVERSE);
         mtrFR.setDirection(DcMotor.Direction.FORWARD);
         mtrBL.setDirection(DcMotor.Direction.REVERSE);
         mtrBR.setDirection(DcMotor.Direction.FORWARD);
-        /*
-        mtrLinear.setDirection(DcMotor.Direction.REVERSE);
+
+        //mtrLinear.setDirection(DcMotor.Direction.REVERSE);
         mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
         mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
-*/
+
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        /*
-        mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrConveyorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrConveyorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-*/
+
         // Set power for all motors.
         mtrFL.setPower(powFL);
         mtrFR.setPower(powFR);
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
-        /*
-        mtrLinear.setPower(powLin);
+
+        //mtrLinear.setPower(powLin);
         mtrConveyorL.setPower(powConL);
         mtrConveyorR.setPower(powConR);
-*/
+
 
         // Set all motors to run with given mode
         mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        /*
-        mtrLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        mtrLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-*/
+
     }
 
     private void initServos() {
@@ -275,17 +286,17 @@ public class HWRobot
 
     //TODO moveForCrypto CHANGE DIRECTION LATER AFTER THIS COMPEITTION
     public void moveForCrypto(String vuf, boolean active) {
-        if(vuf.toLowerCase().equals("left")) {
-            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+        if(vuf.equals("LEFT")) {
+            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
             //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
         }
-        else if(vuf.toLowerCase().equals("center")) {
+        else if(vuf.equals("CENTER")) {
             //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
         }
-        else if(vuf.toLowerCase().equals("right")) {
-            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+        else if(vuf.equals("RIGHT")) {
+            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
         }
-        else if(vuf.toLowerCase().equals("unknown")) {
+        else if(vuf.equals("UNKNOWN")) {
             telemetry.addData("unkn read:", "going for center");
             telemetry.update();
         }

@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
+import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
+
 /**
  * Created by gbhat on 8/20/2017.
  */
@@ -28,6 +31,9 @@ public class HolonomicDrive extends LinearOpMode{
     double clawPos;
     private boolean runSlow = false;
     private boolean runFast = false;
+    private boolean linearRun = false;
+    private boolean linUp = false;
+    private boolean linDown = false;
     private double slowLimit = 0.25;
     private double fastLimit = 0.75;
     private double modifierValueDefault = 0.5;
@@ -36,25 +42,73 @@ public class HolonomicDrive extends LinearOpMode{
     @Override
     public void runOpMode() {
 
-        //TODO for linear, implement multithreading or make a system where the code checks if the motor is at a certain position, if not make it move anditerate this over and over, with a small delay
         robot.getOpModeData(telemetry,hardwareMap);
         robot.init("motors");
         robot.init("servos");
         robot.conveyorStatus("start");
         prompt(telemetry, "Init", "HW initialized");
+        /*
+        robot.mtrConveyorL = hardwareMap.dcMotor.get("left_conveyor");
+        robot.mtrConveyorR = hardwareMap.dcMotor.get("right_conveyor");
+        robot.mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
+        robot.mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
+        robot.mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        */
         waitForStart();
 
         while(opModeIsActive()) {
+            /*
+            double speed = NV60_SPEED;
+            if(gamepad1.a) {
+                speed *= -1;
+                sleep(500);
+            }
+            robot.mtrConveyorL.setPower(speed);
+            robot.mtrConveyorR.setPower(speed);
+            */
+
             setChannels();
             setPowers();
 
             //TODO make better solution for speed switching
             speedSwitch();
 
-            linearSlide();
-            extruderControl();
+            //linearSlide();
+            //extruderControl();
             resets();
 
+            if(gamepad1.y) {
+                robot.mtrLinear.setPower(NV60_SPEED);
+                linearRun = true;
+                linUp = true;
+                linDown = false;
+            }
+            if(gamepad1.a) {
+                robot.mtrLinear.setPower(-NV60_SPEED);
+                linearRun = true;
+                linDown = true;
+                linUp = false;
+            }
+
+            if(linearRun) {
+                if(linUp) {
+                    if(robot.mtrLinear.getCurrentPosition() >= SIX_INCHES_NV60) {
+                        robot.mtrLinear.setPower(0);
+                        robot.mtrLinear.setMode(DcMotor.RunMode.RESET_ENCODERS);
+                        linUp = false;
+                        linearRun = false;
+                    }
+                }
+                else if (linDown) {
+                    if(robot.mtrLinear.getCurrentPosition() <= -SIX_INCHES_NV60) {
+                        robot.mtrLinear.setPower(0);
+                        robot.mtrLinear.setMode(DcMotor.RunMode.RESET_ENCODERS);
+                        linDown = false;
+                        linearRun = false;
+                    }
+                }
+            }
 
             powFL *= modifierValue;
             powFR *= modifierValue;
@@ -66,12 +120,12 @@ public class HolonomicDrive extends LinearOpMode{
             //telemetry.addData("RunSlow", runSlow);
 
             telemetry.update();
-
+            /*
             robot.mtrFL.setPower(powFL);
             robot.mtrFR.setPower(powFR);
             robot.mtrBL.setPower(powBL);
-            robot.mtrBR.setPower(powBR);
-            sleep(50);
+            robot.mtrBR.setPower(powBR);*/
+            //sleep(125);
         }
     }
 
@@ -103,7 +157,7 @@ public class HolonomicDrive extends LinearOpMode{
         if(gamepad1.left_bumper) {
             runSlow = true;
         }
-        else if(gamepad2.right_bumper) {
+        else if(gamepad1.right_bumper) {
             runFast = true;
         }
 

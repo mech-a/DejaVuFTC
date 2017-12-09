@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.called.HWRobot;
@@ -46,41 +47,47 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 public class ValueTester extends LinearOpMode {
 
     // Declare OpMode members.
-    HWRobot r = new HWRobot();
-    double currentPowerL = 0;
-    double currentPowerR = 0;
+    //HWRobot r = new HWRobot();
+    double currentPosArm = 0;
+    double currentPosHitter = 0;
+
+    public Servo srvArmLeftJewel, srvHitterLeftJewel;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry,hardwareMap);r.init("servos");
-
+        //r.getOpModeData(telemetry,hardwareMap);r.init("servos");
+        srvArmLeftJewel = hardwareMap.servo.get("arm_left_jewel");
+        srvHitterLeftJewel = hardwareMap.servo.get("hitter_left_jewel");
         waitForStart();
 
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad1.left_bumper) {
-                currentPowerL+=0.01;
+            if (gamepad1.left_bumper && gamepad1.a) {
+                currentPosArm+=0.01;
             }
-            else if(gamepad1.left_bumper && gamepad1.a) {
-                currentPowerL-=0.01;
+            else if(gamepad1.left_bumper) {
+                currentPosArm-=0.01;
             }
 
-            if (gamepad1.right_bumper) {
-                currentPowerR+=0.01;
+            if (gamepad1.right_bumper && gamepad1.a) {
+                currentPosHitter+=0.01;
             }
-            else if(gamepad1.right_bumper && gamepad1.a) {
-                currentPowerR-=0.01;
+            else if(gamepad1.right_bumper) {
+                currentPosHitter-=0.01;
             }
-            currentPowerL = Range.clip(currentPowerL , -1, 1);
-            currentPowerR = Range.clip(currentPowerR , -1 , 1);
+            currentPosArm = Range.clip(currentPosArm, -1, 1);
+            currentPosHitter = Range.clip(currentPosHitter, -1, 1);
+
+            srvArmLeftJewel.setPosition((currentPosArm));
+            srvHitterLeftJewel.setPosition(currentPosHitter);
 
             //r.srvIntakeL.setPower(currentPowerL);
             //r.srvIntakeR.setPower(-currentPowerR);
 
-            telemetry.addData("srvL pos", currentPowerL);
-            telemetry.addData("srvR pos", currentPowerR);
+            telemetry.addData("srvArm pos", currentPosArm);
+            telemetry.addData("srvHitter pos", currentPosHitter);
             telemetry.update();
             sleep(50);
         }

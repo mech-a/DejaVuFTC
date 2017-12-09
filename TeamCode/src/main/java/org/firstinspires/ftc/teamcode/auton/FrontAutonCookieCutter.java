@@ -36,9 +36,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
+//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
+//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_DOWN;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
@@ -77,7 +77,7 @@ public class FrontAutonCookieCutter extends LinearOpMode {
         r.knockOffJewel(TEAM,a);
         r.jewelServoFlip(JEWEL_SERVO_UP);
 
-        r.translate("fwd", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
+        //r.translate("fwd", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
         sleep(500);
         vuf = r.getVuMark(a);
 

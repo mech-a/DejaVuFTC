@@ -10,7 +10,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
+//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_DOWN;
@@ -28,9 +28,8 @@ public class AutonHandler {
     HWRobot r = new HWRobot();
 
     boolean blueTeam = false;
-    String vuf = null;
-    String rotation = null;
-    String frontDirection = null;
+    String vuf;
+    String rotation;
 
     private double heading;
     boolean b = true;
@@ -43,12 +42,10 @@ public class AutonHandler {
         if(team.toLowerCase().equals("red")) {
             rotation = "ccw";
             blueTeam = false;
-            frontDirection = "right";
         }
         else if(team.toLowerCase().equals("blue")) {
             rotation = "cw";
             blueTeam = true;
-            frontDirection = "left";
         }
 
 
@@ -70,34 +67,16 @@ public class AutonHandler {
 
             r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             rsleep(500);
-
             vuf = r.getVuMark(a);
             rsleep(500);
-
             r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
             rsleep(500);
-
             r.rotate(rotation, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
-
             rsleep(500);
-
-            if(vuf.toLowerCase().equals("left")) {
-                r.moveForCrypto("right", a);
-            }
-            else if(vuf.toLowerCase().equals("right")) {
-                r.moveForCrypto("left", a);
-            }
-            else if(vuf.toLowerCase().equals("center")) {
-                //going for center
-            }
-            else {
-                //going for center
-            }
+            r.moveForCrypto(vuf, a);
             rsleep(500);
-
             r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
             rsleep(500);
-
             fullExtrudeGlyph();
         }
 
@@ -109,31 +88,25 @@ public class AutonHandler {
 //            r.knockOffJewel(team,a);
 //            r.jewelServoFlip(JEWEL_SERVO_UP);
 
-            r.translate("back", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA_FRONT, a);
+            r.translate("back", 0.2, COUNTS_TO_VUFORIA, a);
+
             rsleep(500);
+
             vuf = r.getVuMark(a);
             rsleep(500);
-            r.translate("back", SPEED_TO_CRYPTO, COUNTS_TO_CRYPTO_FRONT, a);
+            r.translate("back", 0.2, COUNTS_TO_CRYPTO_FRONT, a);
             rsleep(500);
-
-            r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
-
-            rsleep(500);
-
-            //TODO Intentionally inverted
-            if(vuf.toLowerCase().equals("left")) {
-                r.moveForCrypto("right", a);
-            }
-            else if(vuf.toLowerCase().equals("right")) {
-                r.moveForCrypto("left", a);
-            }
-            else if(vuf.toLowerCase().equals("center")) {
-                //going for center
+            if(blueTeam) {
+                r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
             }
             else {
-                //going for center
+                r.translate("right", 0.2, 12* COUNTS_PER_INCH, a);
             }
 
+            rsleep(500);
+
+
+            r.moveForCrypto(vuf, a);
 
             rsleep(700);
 
@@ -146,7 +119,11 @@ public class AutonHandler {
     private void fullExtrudeGlyph() {
         r.moveSlide("up");
         r.extrudeGlyphs("top");
-        rsleep(1000);
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         r.extrudeGlyphs("stop");
     }
 
