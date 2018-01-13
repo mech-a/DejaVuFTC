@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 @TeleOp(name="claw stuff", group="Internal")
-@Disabled
+//@Disabled
 public class TestBench extends LinearOpMode {
 
     // Declare OpMode members.
@@ -51,6 +51,8 @@ public class TestBench extends LinearOpMode {
     double powClawL = 0;
     double powClawR = 0;
     double powLift = 0;
+    double clawSpeed = 0.5;
+    double liftSpeed = 1;
 
 
     @Override
@@ -81,18 +83,13 @@ public class TestBench extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if(gamepad1.a) {
-                powClawL = 0.25;
-                powClawR = 0.25;
-            }
-            else {
-                powClawL = 0;
-                powClawR = 0;
-            }
-
             if(gamepad1.a && gamepad1.left_bumper) {
-                powClawL = -0.25;
-                powClawR = -0.25;
+                powClawL = -clawSpeed;
+                powClawR = -clawSpeed;
+            }
+            else if (gamepad1.a) {
+                powClawL = clawSpeed;
+                powClawR = clawSpeed;
             }
             else {
                 powClawL = 0;
@@ -100,18 +97,15 @@ public class TestBench extends LinearOpMode {
             }
 
             if(gamepad1.x) {
-                powLift = -0.25;
+                powLift = -liftSpeed;
+            }
+            else if (gamepad1.y) {
+                powLift = liftSpeed;
             }
             else {
                 powLift = 0;
             }
 
-            if(gamepad1.y) {
-                powLift = 0.25;
-            }
-            else {
-                powLift = 0;
-            }
 
 
             telemetry.addData("Pow ClawL:", powClawL);

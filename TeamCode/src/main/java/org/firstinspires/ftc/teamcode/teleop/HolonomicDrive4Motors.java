@@ -14,7 +14,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
  * Created by gbhat on 8/20/2017.
  */
 
-@TeleOp(name="Holonomic Drive 2", group="DriveOPs")
+@TeleOp(name="Holonomic Drive 4 Motors", group="DriveOPs")
 //@Disabled
 public class HolonomicDrive4Motors extends LinearOpMode{
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
