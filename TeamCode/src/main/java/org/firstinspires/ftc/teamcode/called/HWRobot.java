@@ -24,11 +24,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDER_SPEED;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_SOUTH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
@@ -39,9 +41,8 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEY
 public class HWRobot
 {
     /* Declare all motors, sensors, etc. */
-    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrLinear, mtrConveyorL, mtrConveyorR;
-    public Servo srvJewel;
-    public CRServo srvTL, srvTR, srvBL, srvBR;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrLinear, mtrClawL, mtrClawR;
+    public Servo srvJewelHitter, srvJewelArm;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
     public VuforiaLocalizer vuforia;
@@ -161,9 +162,9 @@ public class HWRobot
         mtrBL = hwMap.dcMotor.get("bl_drive");
         mtrBR = hwMap.dcMotor.get("br_drive");
 
-        //mtrLinear = hwMap.dcMotor.get("linear_motor");
-        mtrConveyorL = hwMap.dcMotor.get("left_conveyor");
-        mtrConveyorR = hwMap.dcMotor.get("right_conveyor");
+        mtrLinear = hwMap.dcMotor.get("linear_motor");
+        mtrClawL = hwMap.dcMotor.get("left_claw");
+        mtrClawR = hwMap.dcMotor.get("right_claw");
 
         // Set directions for motors.
         mtrFL.setDirection(DcMotor.Direction.REVERSE);
@@ -171,9 +172,9 @@ public class HWRobot
         mtrBL.setDirection(DcMotor.Direction.REVERSE);
         mtrBR.setDirection(DcMotor.Direction.FORWARD);
 
-        //mtrLinear.setDirection(DcMotor.Direction.REVERSE);
-        mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
-        mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
+        mtrLinear.setDirection(DcMotor.Direction.REVERSE);
+        mtrClawL.setDirection(DcMotor.Direction.REVERSE);
+        mtrClawR.setDirection(DcMotor.Direction.FORWARD);
 
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -181,9 +182,9 @@ public class HWRobot
         mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrConveyorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        mtrConveyorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrClawL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrClawR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set power for all motors.
         mtrFL.setPower(powFL);
@@ -191,9 +192,9 @@ public class HWRobot
         mtrBL.setPower(powBL);
         mtrBR.setPower(powBR);
 
-        //mtrLinear.setPower(powLin);
-        mtrConveyorL.setPower(powConL);
-        mtrConveyorR.setPower(powConR);
+        mtrLinear.setPower(powLin);
+        mtrClawL.setPower(powConL);
+        mtrClawR.setPower(powConR);
 
 
         // Set all motors to run with given mode
@@ -203,23 +204,20 @@ public class HWRobot
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         mtrLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrClawL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrClawR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
     private void initServos() {
         //srv fetch + def
-        //srvJewel = hwMap.servo.get("jewel_servo");
-        srvTL = hwMap.crservo.get("extruder_top_left");
-        srvTR = hwMap.crservo.get("extruder_top_right");
-        srvBL = hwMap.crservo.get("extruder_bottom_left");
-        srvBR = hwMap.crservo.get("extruder_bottom_right");
-
+        srvJewelArm = hwMap.servo.get("arm_jewel");
+        srvJewelHitter = hwMap.servo.get("hitter_jewel");
 
         //set pos
+        srvJewelArm.setPosition(ARM_JEWEL_UP);
+        srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
 
-        //srvJewel.setPosition();
     }
 
     private void initImu() {
@@ -343,16 +341,16 @@ public class HWRobot
 
     public void conveyorStatus(String status) {
         if(status.toLowerCase().equals("start")) {
-            mtrConveyorL.setPower(SPEED_FOR_CONVEYORS);
-            mtrConveyorR.setPower(SPEED_FOR_CONVEYORS);
+            mtrClawL.setPower(SPEED_FOR_CONVEYORS);
+            mtrClawR.setPower(SPEED_FOR_CONVEYORS);
         }
         else if (status.toLowerCase().equals("reverse")) {
-            mtrConveyorL.setPower(-SPEED_FOR_CONVEYORS);
-            mtrConveyorR.setPower(-SPEED_FOR_CONVEYORS);
+            mtrClawL.setPower(-SPEED_FOR_CONVEYORS);
+            mtrClawR.setPower(-SPEED_FOR_CONVEYORS);
         }
         else {
-            mtrConveyorL.setPower(0);
-            mtrConveyorL.setPower(0);
+            mtrClawL.setPower(0);
+            mtrClawL.setPower(0);
         }
     }
 
@@ -371,6 +369,7 @@ public class HWRobot
         mtrLinear.setPower(0);
     }
 
+    /*
     public void extrudeGlyphs(String order) {
         if(order.toLowerCase().equals("both")) {
             srvTL.setPower(EXTRUDER_SPEED);
@@ -397,6 +396,7 @@ public class HWRobot
             srvBR.setPower(0);
         }
     }
+    */
 
     public void resets(String kind) {
         String normKind = kind.toLowerCase();

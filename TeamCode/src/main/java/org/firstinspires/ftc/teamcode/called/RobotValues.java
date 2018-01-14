@@ -18,8 +18,12 @@ public class RobotValues {
 
     //Static vars for movement in autons; used for both back autons
 
-    public static double JEWEL_SERVO_DOWN = 0;
-    public static double JEWEL_SERVO_UP = 1;
+    public static double ARM_JEWEL_DOWN = 0.93;
+    public static double ARM_JEWEL_UP = 0.3;
+    public static double HITTER_JEWEL_MIDDLE = 0.5;
+    //south points to back of robot, north front
+    public static double HITTER_JEWEL_SOUTH = 0;
+    public static double HITTER_JEWEL_NORTH = 1;
 
 
     //speed for conveyor
