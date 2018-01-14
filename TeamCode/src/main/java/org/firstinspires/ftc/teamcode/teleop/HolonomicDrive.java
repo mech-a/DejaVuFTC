@@ -38,6 +38,9 @@ public class HolonomicDrive extends LinearOpMode{
     private double fastLimit = 0.75;
     private double modifierValueDefault = 0.5;
     private double modifierValue = modifierValueDefault;
+    double powClawL = 0;
+    double powClawR = 0;
+    double clawSpeed = 0.5;
 
     @Override
     public void runOpMode() {
@@ -70,6 +73,7 @@ public class HolonomicDrive extends LinearOpMode{
 
             setChannels();
             setPowers();
+            setClawPowers();
 
             //TODO make better solution for speed switching
             speedSwitch();
@@ -109,6 +113,11 @@ public class HolonomicDrive extends LinearOpMode{
                     }
                 }
             }
+
+
+
+
+
 
             powFL *= modifierValue;
             powFR *= modifierValue;
@@ -192,7 +201,7 @@ public class HolonomicDrive extends LinearOpMode{
             robot.moveSlide("down");
         }
     }
-
+    /*
     private void extruderControl() {
         if (gamepad2.x) {
             robot.extrudeGlyphs("both");
@@ -206,6 +215,28 @@ public class HolonomicDrive extends LinearOpMode{
         else {
             robot.extrudeGlyphs("stop");
         }
+    }
+    */
+
+    private void setClawSpeeds() {
+        if(gamepad2.b) {
+            powClawL = -clawSpeed;
+            powClawR = -clawSpeed;
+        }
+        else if (gamepad2.x) {
+            powClawL = clawSpeed;
+            powClawR = clawSpeed;
+        }
+        else {
+            powClawL = 0;
+            powClawR = 0;
+        }
+    }
+
+    private void setClawPowers() {
+        setClawSpeeds();
+        robot.mtrClawL.setPower(powClawL);
+        robot.mtrClawR.setPower(powClawR);
     }
 
     private void resets() {
