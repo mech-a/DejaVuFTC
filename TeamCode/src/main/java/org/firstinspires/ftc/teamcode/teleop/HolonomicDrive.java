@@ -219,13 +219,13 @@ public class HolonomicDrive extends LinearOpMode{
     */
 
     private void setClawSpeeds() {
-        if(gamepad2.b) {
-            powClawL = -clawSpeed;
-            powClawR = -clawSpeed;
-        }
-        else if (gamepad2.x) {
+        if(gamepad2.x) {
             powClawL = clawSpeed;
             powClawR = clawSpeed;
+        }
+        else if (gamepad2.b) {
+            powClawL = -clawSpeed;
+            powClawR = -clawSpeed;
         }
         else {
             powClawL = 0;
