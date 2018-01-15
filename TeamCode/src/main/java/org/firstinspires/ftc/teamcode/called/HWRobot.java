@@ -704,10 +704,11 @@ public class HWRobot
 
 
     // servos
+    /*
     public void jewelServoFlip(double position) {
         srvJewel.setPosition(position);
     }
-
+*/
     /*
     public void releaseClaw() {
         srvL.setPosition(0);

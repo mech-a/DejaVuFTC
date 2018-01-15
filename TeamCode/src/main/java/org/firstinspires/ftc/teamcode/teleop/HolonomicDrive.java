@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
+import static com.sun.tools.doclint.Entity.le;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 
@@ -38,6 +39,7 @@ public class HolonomicDrive extends LinearOpMode{
     double powClawL = 0;
     double powClawR = 0;
     double clawSpeed = 0.5;
+    private int slideLevel = 1;
 
     @Override
     public void runOpMode() {
@@ -57,13 +59,16 @@ public class HolonomicDrive extends LinearOpMode{
             //TODO make better solution for speed switching
             speedSwitch();
 
+            linearSlideButtons();
+            linearSlideControl();
+            
             modifyDriveValues();
 
             telemetry.addData("modifier value", modifierValue);
 
 
             setDriveMotorPowers();
-            sleep(125);
+            sleep(50);
             telemetry.update();
         }
     }
@@ -99,11 +104,13 @@ public class HolonomicDrive extends LinearOpMode{
     private void speedSwitch() {
         if(gamepad1.left_bumper) {
             runSlow = true;
+            sleep(100);
         }
         else if(gamepad1.right_bumper) {
             runFast = true;
+            sleep(100);
         }
-        sleep(100);
+
 
         if(runSlow) {
             runFast = false;
@@ -114,8 +121,9 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
-
+            sleep(250);
         }
+
         else if(runFast) {
             runFast = false;
             runSlow = false;
@@ -125,34 +133,77 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
+            sleep(250);
         }
-        sleep(250);
-    }
 
-    private void linearSlide() {
-        String dir = null;
-        if (gamepad2.y) {
-            robot.moveSlide("up");
-        } else if (gamepad2.a) {
-            robot.moveSlide("down");
+    }
+    
+    private void linearSlideButtons(){
+        if(gamepad2.y) {
+            linearRun = true;
+            linUp = true;
+            linDown = false;
+        }
+        if(gamepad2.a) {
+            linearRun = true;
+            linDown = true;
+            linUp = false;
+        }
+        if(gamepad2.left_stick_button) {
+            robot.mtrLinear.setPower(0);
+            linearRun = false;
+            linDown = false;
+            linUp = false;
         }
     }
-    /*
-    private void extruderControl() {
-        if (gamepad2.x) {
-            robot.extrudeGlyphs("both");
+    
+    private void linearSlideControl(){
+        if(linearRun) {
+            if(linUp) {
+                robot.mtrLinear.setPower(NV60_SPEED);
+                if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SIX_INCHES_NV60) {
+                    robot.mtrLinear.setPower(0);
+                    linearRun = false;
+                    linDown = false;
+                    linUp = false;
+                    if(slideLevel<3) {
+                        slideLevel++;
+                    }
+                }
+            }
+            else if(linDown) {
+                robot.mtrLinear.setPower(-NV60_SPEED);
+                if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SIX_INCHES_NV60 ) {
+                    robot.mtrLinear.setPower(0);
+                    linearRun = false;
+                    linDown = false;
+                    linUp = false;
+                    if(slideLevel > 1) {
+                        slideLevel--;
+                    }
+                }
+            }
+
+            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+                linearRun = false;
+                linDown = false;
+                linUp = false;
+            }
+
         }
-        else if (gamepad2.b) {
-            robot.extrudeGlyphs("top");
-        }
-        else if (gamepad2.right_stick_button) {
-            robot.extrudeGlyphs("bottom");
-        }
-        else {
-            robot.extrudeGlyphs("stop");
+
+        if(!linearRun) {
+            if(gamepad2.dpad_up) {
+                robot.mtrLinear.setPower(NV60_SPEED);
+            }
+            else if(gamepad2.dpad_down) {
+                robot.mtrLinear.setPower(-NV60_SPEED);
+            }
+            else {
+                robot.mtrLinear.setPower(0);
+            }
         }
     }
-    */
 
     //sets 2 buttons to extrude or intake glyphs
     private void setClawSpeeds() {

@@ -33,7 +33,7 @@ public class RobotValues {
     public static int SIX_INCHES_NV60 = 5040;
 
     //neverest 60 speed
-    public static double NV60_SPEED = 0.3;
+    public static double NV60_SPEED = 1;
 
     //extruder servo speed
     public static double EXTRUDER_SPEED = 1.0;
