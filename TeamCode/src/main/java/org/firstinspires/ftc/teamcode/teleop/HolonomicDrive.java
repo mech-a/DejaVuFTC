@@ -26,9 +26,6 @@ public class HolonomicDrive extends LinearOpMode{
     private double ch1,ch2,ch3,ch4;
     private double g2ch1, g2ch2, g2ch3, g2ch4;
     double spdLinearUp = 1, spdLinearDown = -spdLinearUp;
-    double clawMid = 0.5;
-    double clawIncrement = 0.01;
-    double clawPos;
     private boolean runSlow = false;
     private boolean runFast = false;
     private boolean linearRun = false;
@@ -44,97 +41,30 @@ public class HolonomicDrive extends LinearOpMode{
 
     @Override
     public void runOpMode() {
-
         robot.getOpModeData(telemetry,hardwareMap);
         robot.init("motors");
         robot.init("servos");
-        robot.conveyorStatus("start");
         prompt(telemetry, "Init", "HW initialized");
-        /*
-        robot.mtrConveyorL = hardwareMap.dcMotor.get("left_conveyor");
-        robot.mtrConveyorR = hardwareMap.dcMotor.get("right_conveyor");
-        robot.mtrConveyorL.setDirection(DcMotor.Direction.FORWARD);
-        robot.mtrConveyorR.setDirection(DcMotor.Direction.REVERSE);
-        robot.mtrConveyorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.mtrConveyorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        */
+
         waitForStart();
 
         while(opModeIsActive()) {
-            /*
-            double speed = NV60_SPEED;
-            if(gamepad1.a) {
-                speed *= -1;
-                sleep(500);
-            }
-            robot.mtrConveyorL.setPower(speed);
-            robot.mtrConveyorR.setPower(speed);
-            */
-
             setChannels();
             setPowers();
+            setClawSpeeds();
             setClawPowers();
 
             //TODO make better solution for speed switching
             speedSwitch();
 
-            //linearSlide();
-            //extruderControl();
-            resets();
-
-            if(gamepad1.y) {
-                robot.mtrLinear.setPower(NV60_SPEED);
-                linearRun = true;
-                linUp = true;
-                linDown = false;
-            }
-            if(gamepad1.a) {
-                robot.mtrLinear.setPower(-NV60_SPEED);
-                linearRun = true;
-                linDown = true;
-                linUp = false;
-            }
-
-            if(linearRun) {
-                if(linUp) {
-                    if(robot.mtrLinear.getCurrentPosition() >= SIX_INCHES_NV60) {
-                        robot.mtrLinear.setPower(0);
-                        robot.mtrLinear.setMode(DcMotor.RunMode.RESET_ENCODERS);
-                        linUp = false;
-                        linearRun = false;
-                    }
-                }
-                else if (linDown) {
-                    if(robot.mtrLinear.getCurrentPosition() <= -SIX_INCHES_NV60) {
-                        robot.mtrLinear.setPower(0);
-                        robot.mtrLinear.setMode(DcMotor.RunMode.RESET_ENCODERS);
-                        linDown = false;
-                        linearRun = false;
-                    }
-                }
-            }
-
-
-
-
-
-
-            powFL *= modifierValue;
-            powFR *= modifierValue;
-            powBL *= modifierValue;
-            powBR *= modifierValue;
-
+            modifyDriveValues();
 
             telemetry.addData("modifier value", modifierValue);
-            //telemetry.addData("RunSlow", runSlow);
 
+
+            setDriveMotorPowers();
+            sleep(125);
             telemetry.update();
-            /*
-            robot.mtrFL.setPower(powFL);
-            robot.mtrFR.setPower(powFR);
-            robot.mtrBL.setPower(powBL);
-            robot.mtrBR.setPower(powBR);*/
-            //sleep(125);
         }
     }
 
@@ -142,6 +72,8 @@ public class HolonomicDrive extends LinearOpMode{
         telemetry.addData(prefix, cmd);
         telemetry.update();
     }
+
+    //Sets Gamepad info to channels
     private void setChannels() {
         ch1 = gamepad1.left_stick_x;
         ch2 = -gamepad1.left_stick_y;
@@ -154,6 +86,7 @@ public class HolonomicDrive extends LinearOpMode{
         g2ch4 = -gamepad1.left_stick_y;
     }
 
+    //Sets how channels determine motor powers (mecanum in this case)
     private void setPowers() {
         powFL = ch2 + ch1 + ch3;
         powFR = ch2 - ch1 - ch3;
@@ -162,6 +95,7 @@ public class HolonomicDrive extends LinearOpMode{
 
     }
 
+    //Toggles between modifier values that affect how fast or slow the robot runs
     private void speedSwitch() {
         if(gamepad1.left_bumper) {
             runSlow = true;
@@ -169,6 +103,7 @@ public class HolonomicDrive extends LinearOpMode{
         else if(gamepad1.right_bumper) {
             runFast = true;
         }
+        sleep(100);
 
         if(runSlow) {
             runFast = false;
@@ -179,9 +114,9 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
-        }
 
-        if(runFast) {
+        }
+        else if(runFast) {
             runFast = false;
             runSlow = false;
             if(modifierValue == modifierValueDefault) {
@@ -191,6 +126,7 @@ public class HolonomicDrive extends LinearOpMode{
                 modifierValue = modifierValueDefault;
             }
         }
+        sleep(250);
     }
 
     private void linearSlide() {
@@ -218,6 +154,7 @@ public class HolonomicDrive extends LinearOpMode{
     }
     */
 
+    //sets 2 buttons to extrude or intake glyphs
     private void setClawSpeeds() {
         if(gamepad2.x) {
             powClawL = clawSpeed;
@@ -233,8 +170,8 @@ public class HolonomicDrive extends LinearOpMode{
         }
     }
 
+    //sets powers going to claws
     private void setClawPowers() {
-        setClawSpeeds();
         robot.mtrClawL.setPower(powClawL);
         robot.mtrClawR.setPower(powClawR);
     }
@@ -249,6 +186,22 @@ public class HolonomicDrive extends LinearOpMode{
         else if (gamepad2.dpad_down) {
             robot.resets("stop");
         }
+    }
+
+    //modifies drive values
+    private void modifyDriveValues() {
+        powFL *= modifierValue;
+        powFR *= modifierValue;
+        powBL *= modifierValue;
+        powBR *= modifierValue;
+    }
+
+    //sets final power going to motor
+    private void setDriveMotorPowers(){
+        robot.mtrFL.setPower(powFL);
+        robot.mtrFR.setPower(powFR);
+        robot.mtrBL.setPower(powBL);
+        robot.mtrBR.setPower(powBR);
     }
 }
 
