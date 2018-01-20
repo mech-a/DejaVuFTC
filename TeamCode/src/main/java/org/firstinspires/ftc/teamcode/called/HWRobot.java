@@ -30,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDER_SPEED;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_NORTH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_SOUTH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
@@ -307,14 +308,12 @@ public class HWRobot
             //if the ball is blue, hit it off
             //assuming the color sensor is reading the most back (southern) one
             if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
-                //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
-                translate("back", 0.1, COUNTS_PER_INCH, active);
-                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+                //do action to hit off
+                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
             }
             //if the ball is red, hit the northern (other) ball
             else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                translate("fwd", 0.1, COUNTS_PER_INCH, active);
-                translate("back", 0.1, COUNTS_PER_INCH, active);
+                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
             }
 
         }
@@ -322,14 +321,12 @@ public class HWRobot
             //if the ball is blue, hit off the other ball
             if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
                 //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
-                translate("fwd", 0.1, COUNTS_PER_INCH, active);
-                translate("back", 0.1, COUNTS_PER_INCH, active);
+                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
 
             }
             //if the ball is red, hit off that ball
             else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                translate("back", 0.1, COUNTS_PER_INCH, active);
-                translate("fwd", 0.1, COUNTS_PER_INCH, active);
+                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
             }
 
         }
@@ -426,49 +423,7 @@ public class HWRobot
         }
     }
 
-    
 
-
-
-
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    
     //MOTOR FUNCTIONS
     

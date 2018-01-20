@@ -64,4 +64,7 @@ public class RobotValues {
         public static float BLUE_UPPER_LIMIT = 270;
         public static float RED_LOWER_LIMIT = 15;
         public static float RED_UPPER_LIMIT = 340;
+
+    public static double INTAKE_CLAW_POWER = 0.5;
+    public static double EXTRUDE_CLAW_POWER = -INTAKE_CLAW_POWER;
 }

@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.util.Hardware;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import static java.lang.Thread.sleep;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_DOWN;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
@@ -13,8 +15,9 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORI
 //import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_DOWN;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_UP;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDE_CLAW_POWER;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_MIDDLE;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_NORTH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_TURN;
@@ -24,84 +27,70 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA
  * Created by gbhat on 11/9/2017.
  */
 
+//TODO make ramp speed functions; reduces slippage
 public class AutonHandler {
     HWRobot r = new HWRobot();
 
     boolean blueTeam = false;
     String vuf;
-    String rotation;
-
-    private double heading;
-    boolean b = true;
+    String generalDirection;
+    String teamString;
 
     public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
         r.getOpModeData(telemetry, hwMap); r.init("all");
-        //r.driveMotorPolarity("reverse");
-
 
         if(team.toLowerCase().equals("red")) {
-            rotation = "ccw";
             blueTeam = false;
+            generalDirection = "fwd";
         }
         else if(team.toLowerCase().equals("blue")) {
-            rotation = "cw";
             blueTeam = true;
+            generalDirection = "bk";
         }
 
 
         if(area.toLowerCase().equals("back")) {
-
-            //Release servo latch and read the color sensor
-//            r.jewelServoFlip(JEWEL_SERVO_DOWN);
-//
-//            rsleep(2000);
-//
-//            r.refreshHSV();
-//            //knock off jewel
-//
-//            r.knockOffJewel(team ,a);
-//            rsleep(250);
-//            r.jewelServoFlip(JEWEL_SERVO_UP);
+            teamString = (blueTeam) ? "blue" : "red";
+            jewel(teamString, a);
 
 
-
-            r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+            r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             rsleep(500);
             vuf = r.getVuMark(a);
             rsleep(500);
-            r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+            r.translate(generalDirection, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
             rsleep(500);
-            r.rotate(rotation, SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
+            r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
             rsleep(500);
             r.moveForCrypto(vuf, a);
             rsleep(500);
-            r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            r.translate(generalDirection, SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
             rsleep(500);
-            fullExtrudeGlyph();
+            extrudeGlyph();
         }
 
         else if (area.toLowerCase().equals("front")) {
+            teamString = (blueTeam) ? "blue" : "red";
+            jewel(teamString, a);
 
-//            r.jewelServoFlip(JEWEL_SERVO_DOWN);
-//            r.refreshHSV();
-//            //knock off jewel
-//            r.knockOffJewel(team,a);
-//            r.jewelServoFlip(JEWEL_SERVO_UP);
-
-            r.translate("back", 0.2, COUNTS_TO_VUFORIA, a);
-
+            r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
             rsleep(500);
-
             vuf = r.getVuMark(a);
             rsleep(500);
-            r.translate("back", 0.2, COUNTS_TO_CRYPTO_FRONT, a);
+            r.translate(generalDirection, 0.2, COUNTS_TO_CRYPTO_FRONT, a);
             rsleep(500);
+            r.rotate("ccw",0.2,90,a);
+            rsleep(500);
+            r.translate("fwd", 0.2, 12*COUNTS_PER_INCH, a);
+
+            //TODO not sure if it'll move 90degrees more or not move
             if(blueTeam) {
-                r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
+                r.rotate("ccw",0.2,90,a);
             }
             else {
-                r.translate("right", 0.2, 12* COUNTS_PER_INCH, a);
+                r.rotate("cw",0.2,90,a);
             }
+            //String quickdir = (blueTeam) ? "ccw" : "cw";
 
             rsleep(500);
 
@@ -110,21 +99,18 @@ public class AutonHandler {
 
             rsleep(700);
 
-            r.translate("back", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
+            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
             rsleep(500);
-            fullExtrudeGlyph();
+            extrudeGlyph();
         }
     }
 
-    private void fullExtrudeGlyph() {
-        r.moveSlide("up");
-        r.extrudeGlyphs("top");
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        r.extrudeGlyphs("stop");
+    private void extrudeGlyph() {
+        r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
+        r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
+        rsleep(500);
+        r.mtrClawL.setPower(0);
+        r.mtrClawL.setPower(0);
     }
 
     private void rsleep(long milliseconds) {
@@ -133,6 +119,22 @@ public class AutonHandler {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void jewel(String teamColor, boolean active) {
+        r.srvJewelArm.setPosition(ARM_JEWEL_DOWN/2);
+        r.srvJewelHitter.setPosition(HITTER_JEWEL_MIDDLE);
+        rsleep(250);
+        r.srvJewelArm.setPosition(ARM_JEWEL_DOWN);
+        rsleep(500);
+        r.knockOffJewel(teamColor, active);
+        rsleep(500);
+        r.srvJewelHitter.setPosition(HITTER_JEWEL_MIDDLE);
+        rsleep(250);
+        r.srvJewelArm.setPosition(ARM_JEWEL_UP/2);
+        r.srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+        rsleep(250);
+        r.srvJewelArm.setPosition(ARM_JEWEL_UP);
     }
 
 }
