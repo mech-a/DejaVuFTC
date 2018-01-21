@@ -26,7 +26,7 @@ public class HolonomicDrive extends LinearOpMode{
     private double powBR = 0;
     private double ch1,ch2,ch3,ch4;
     private double g2ch1, g2ch2, g2ch3, g2ch4;
-    double spdLinearUp = 1, spdLinearDown = -spdLinearUp;
+    //double spdLinearUp = 1, spdLinearDown = -spdLinearUp;
     private boolean runSlow = false;
     private boolean runFast = false;
     private boolean linearRun = false;
@@ -36,6 +36,7 @@ public class HolonomicDrive extends LinearOpMode{
     private double fastLimit = 0.75;
     private double modifierValueDefault = 0.5;
     private double modifierValue = modifierValueDefault;
+    //private double modifierValue = 1;
     double powClawL = 0;
     double powClawR = 0;
     double clawSpeed = 0.5;
@@ -66,6 +67,7 @@ public class HolonomicDrive extends LinearOpMode{
 
             telemetry.addData("modifier value", modifierValue);
 
+            telemetry.addData("MTRLin Pos:", robot.mtrLinear);
 
             setDriveMotorPowers();
             sleep(50);
@@ -161,6 +163,7 @@ public class HolonomicDrive extends LinearOpMode{
         if(linearRun) {
             if(linUp) {
                 robot.mtrLinear.setPower(NV60_SPEED);
+                telemetry.update();
                 if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SIX_INCHES_NV60) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;

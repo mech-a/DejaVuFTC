@@ -11,8 +11,6 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_DOWN;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.JEWEL_SERVO_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_TURN;

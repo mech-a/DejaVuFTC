@@ -27,65 +27,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
-
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
 
 
 /**
  * Copy Me Linear
  */
 
-@TeleOp(name="Front Auton Cookie Cutter", group="testing")
-@Disabled
-public class FrontAutonCookieCutter extends LinearOpMode {
+@TeleOp(name="MultiTester", group="Internal")
+//@Disabled
+public class MultiTest extends LinearOpMode {
 
     // Declare OpMode members.
     HWRobot r = new HWRobot();
     boolean a;
-    double heading = 0;
-    String vuf = null;
-    static String TEAM = "";
 
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry,hardwareMap);r.init("all");
-        a = opModeIsActive();
-        getHeading();
-
+        r.getOpModeData(telemetry,hardwareMap);
+        r.init("all");
         waitForStart();
-        //TODO finish front auton
+
         // run until the end of the match (driver presses STOP)
-        //Release servo latch and read the color sensor
-        //r.jewelServoFlip(JEWEL_SERVO_DOWN);
-        r.refreshHSV();
-        //knock off jewel
-        r.knockOffJewel(TEAM,a);
-        //r.jewelServoFlip(JEWEL_SERVO_UP);
+        while (opModeIsActive()) {
+            a = opModeIsActive();
 
-        //r.translate("fwd", 0.2, COUNTS_TO_VUFORIA_FRONT, a);
-        sleep(500);
-        vuf = r.getVuMark(a);
+            if(gamepad1.left_bumper) {
+                r.rotate("ccw", 0.2,90,a);
+            }
+            else if(gamepad1.right_bumper) {
+                r.rotate("cw", 0.2, 90,a);
+            }
 
-        r.moveForCrypto(vuf, a);
 
-        r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
-        //r.releaseClaw();
-    }
 
-    private void getHeading() {
-        heading = AngleUnit.DEGREES.fromUnit(r.angles.angleUnit, r.angles.firstAngle);
+
+        }
     }
 }

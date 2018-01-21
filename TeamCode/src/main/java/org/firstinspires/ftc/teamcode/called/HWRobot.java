@@ -284,6 +284,7 @@ public class HWRobot
     }
 
     //TODO moveForCrypto CHANGE DIRECTION LATER AFTER THIS COMPEITTION
+    //TODO moveForCrypto to not strafe; rotate and move
     public void moveForCrypto(String vuf, boolean active) {
         if(vuf.equals("LEFT")) {
             translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
