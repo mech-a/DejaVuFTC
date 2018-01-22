@@ -162,8 +162,6 @@ public class HolonomicDrive extends LinearOpMode{
     private void linearSlideControl(){
         if(linearRun) {
             if(linUp) {
-                robot.mtrLinear.setPower(NV60_SPEED);
-                telemetry.update();
                 if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SIX_INCHES_NV60) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
@@ -173,9 +171,11 @@ public class HolonomicDrive extends LinearOpMode{
                         slideLevel++;
                     }
                 }
+                else {
+                    robot.mtrLinear.setPower(NV60_SPEED);
+                }
             }
             else if(linDown) {
-                robot.mtrLinear.setPower(-NV60_SPEED);
                 if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SIX_INCHES_NV60 ) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
@@ -184,6 +184,9 @@ public class HolonomicDrive extends LinearOpMode{
                     if(slideLevel > 1) {
                         slideLevel--;
                     }
+                }
+                else {
+                    robot.mtrLinear.setPower(-NV60_SPEED);
                 }
             }
 
@@ -196,10 +199,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up) {
+            if(gamepad2.dpad_up && slideLevel != 3) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down) {
+            else if(gamepad2.dpad_down && slideLevel != 1) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
