@@ -199,10 +199,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && slideLevel != 3) {
+            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SIX_INCHES_NV60 * 3) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && slideLevel != 1) {
+            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
