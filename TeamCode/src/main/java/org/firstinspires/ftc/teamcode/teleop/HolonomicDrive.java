@@ -141,6 +141,10 @@ public class HolonomicDrive extends LinearOpMode{
     }
     
     private void linearSlideButtons(){
+        //we want to have a couple different things in the linear slide;
+        //we want manual control, automatic control that can go up and down
+        //we use the booleans below to indicate what mode the slide should be doing
+
         if(gamepad2.y) {
             linearRun = true;
             linUp = true;
@@ -151,6 +155,7 @@ public class HolonomicDrive extends LinearOpMode{
             linDown = true;
             linUp = false;
         }
+        //this is a force manual
         if(gamepad2.left_stick_button) {
             robot.mtrLinear.setPower(0);
             linearRun = false;
@@ -160,6 +165,10 @@ public class HolonomicDrive extends LinearOpMode{
     }
     
     private void linearSlideControl(){
+        //the slide only needs to go up 12 inches but this means 3 levels of the slide
+        //1) at ground 2) 6 inches up 3) 12 inches up
+        //we want this system to be smart - we want to go to every 6 inch increment
+        //we use slidelevel to signify which counts we want to go to
         if(linearRun) {
             if(linUp) {
                 if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SIX_INCHES_NV60) {

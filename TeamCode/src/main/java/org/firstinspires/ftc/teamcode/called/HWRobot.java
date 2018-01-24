@@ -284,18 +284,17 @@ public class HWRobot
         return type;
     }
 
-    //TODO moveForCrypto CHANGE DIRECTION LATER AFTER THIS COMPEITTION
     //TODO moveForCrypto to not strafe; rotate and move
     public void moveForCrypto(String vuf, boolean active) {
         if(vuf.equals("LEFT")) {
-            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
             //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
         }
         else if(vuf.equals("CENTER")) {
             //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("RIGHT")) {
-            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("UNKNOWN")) {
             telemetry.addData("unkn read:", "going for center");
