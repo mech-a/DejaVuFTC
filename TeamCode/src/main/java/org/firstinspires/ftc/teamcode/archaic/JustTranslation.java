@@ -12,13 +12,13 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Made By Gaurav
  */
 
-@Autonomous(name="Back", group="Comp")
+@Autonomous(name="translate ting", group="Comp")
 //@Disabled
 public class JustTranslation extends LinearOpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     HWRobot robot = new HWRobot();
-    int countsPerInch = 252;
+    int countsPerInch = 45;
     int inToSZ = 20;
 
 
@@ -72,16 +72,16 @@ public class JustTranslation extends LinearOpMode{
         robot.mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.mtrFL.setTargetPosition(1120);
-        robot.mtrFR.setTargetPosition(1120);
-        robot.mtrBL.setTargetPosition(1120);
-        robot.mtrBR.setTargetPosition(1120);
+        robot.mtrFL.setTargetPosition(inToSZ * countsPerInch);
+        robot.mtrFR.setTargetPosition(inToSZ * countsPerInch);
+        robot.mtrBL.setTargetPosition(inToSZ * countsPerInch);
+        robot.mtrBR.setTargetPosition(inToSZ * countsPerInch);
 
 
-        robot.mtrFL.setPower(0.2);
-        robot.mtrFR.setPower(0.2);
-        robot.mtrBL.setPower(0.2);
-        robot.mtrBR.setPower(0.2);
+        robot.mtrFL.setPower(0.02);
+        robot.mtrFR.setPower(0.02);
+        robot.mtrBL.setPower(0.02);
+        robot.mtrBR.setPower(0.02);
         while(robot.mtrFL.isBusy() && robot.mtrFR.isBusy() && robot.mtrBL.isBusy() && robot.mtrBR.isBusy()) {
             telemetry.addData("MTRFL", robot.mtrFL.getCurrentPosition());
             telemetry.addData("MTRFR", robot.mtrFR.getCurrentPosition());

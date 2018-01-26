@@ -54,6 +54,7 @@ public class BackBlue extends LinearOpMode {
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         boolean active = opModeIsActive();
+        a.autonInit(telemetry,hardwareMap);
         waitForStart();
 
         // run until the end of the match (driver presses STOP)

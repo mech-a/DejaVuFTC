@@ -52,14 +52,18 @@ public class testmvmt extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.getOpModeData(telemetry, hardwareMap); r.init("mtrs");
+        r.getOpModeData(telemetry, hardwareMap); r.init("all");
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         a = opModeIsActive();
 
-        r.translate("fwd",0.2,6.0,a);
+        r.translate("fwd",0.15,10.0,a);
+        sleep(2000);
+        r.translate("fwd",0.15,26.0,a);
+        sleep(2000);
+        r.rotate("cw",0.15,90,a);
 
-        r.translate("left",0.2,6.0,a);
+        //r.translate("left",0.02,6.0,a);
     }
 }

@@ -71,9 +71,11 @@ public class AutonHandler {
             rsleep(500);
             r.moveForCrypto(vuf, a);
             rsleep(500);
-            r.translate(generalDirection, SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
             rsleep(500);
             extrudeGlyph();
+            rsleep(600);
+            r.translate("back");
         }
 
         else if (area.toLowerCase().equals("front")) {
@@ -114,10 +116,10 @@ public class AutonHandler {
 
     private void extrudeGlyph() {
         r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
-        r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
-        rsleep(500);
+        r.mtrClawR.setPower(EXTRUDE_CLAW_POWER);
+        rsleep(1000);
         r.mtrClawL.setPower(0);
-        r.mtrClawL.setPower(0);
+        r.mtrClawR.setPower(0);
     }
 
     private void rsleep(long milliseconds) {
