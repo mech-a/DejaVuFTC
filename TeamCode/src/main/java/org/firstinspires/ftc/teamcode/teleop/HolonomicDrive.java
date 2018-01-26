@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 import static com.sun.tools.doclint.Entity.le;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SEVEN_INCHES_NV60;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 
 /**
@@ -20,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 //@Disabled
 public class HolonomicDrive extends LinearOpMode{
     HWRobot robot = new HWRobot();
+
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
@@ -171,12 +173,12 @@ public class HolonomicDrive extends LinearOpMode{
         //we use slidelevel to signify which counts we want to go to
         if(linearRun) {
             if(linUp) {
-                if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SIX_INCHES_NV60) {
+                if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SEVEN_INCHES_NV60) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
                     linUp = false;
-                    if(slideLevel<3) {
+                    if(slideLevel<2) {
                         slideLevel++;
                     }
                 }
@@ -185,7 +187,7 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
             else if(linDown) {
-                if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SIX_INCHES_NV60 ) {
+                if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SEVEN_INCHES_NV60 ) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -208,7 +210,7 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SIX_INCHES_NV60 * 3) {
+            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
             else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {

@@ -31,6 +31,7 @@ public class RobotValues {
 
     //counts per 6inch neverest 60
     public static int SIX_INCHES_NV60 = 5040;
+    public static int SEVEN_INCHES_NV60 = 5880;
 
     //neverest 60 speed
     public static double NV60_SPEED = 1;

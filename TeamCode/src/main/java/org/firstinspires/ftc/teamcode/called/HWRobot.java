@@ -175,8 +175,8 @@ public class HWRobot
 
         //TODO mtr linear might be giving negative encoder values or encoder not plugged in correctly
         mtrLinear.setDirection(DcMotor.Direction.REVERSE);
-        mtrClawL.setDirection(DcMotor.Direction.REVERSE);
-        mtrClawR.setDirection(DcMotor.Direction.FORWARD);
+        mtrClawL.setDirection(DcMotor.Direction.FORWARD);
+        mtrClawR.setDirection(DcMotor.Direction.REVERSE);
 
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

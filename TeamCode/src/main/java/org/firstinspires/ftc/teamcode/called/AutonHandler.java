@@ -36,8 +36,15 @@ public class AutonHandler {
     String generalDirection;
     String teamString;
 
+
+    public void autonInit(Telemetry atele, HardwareMap hwmap) {
+        r.getOpModeData(atele, hwmap);
+        r.init("all");
+    }
+
     public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
-        r.getOpModeData(telemetry, hwMap); r.init("all");
+        //TODO error due to this? might need seperate initialization of getOpModeData
+        //r.getOpModeData(telemetry, hwMap); r.init("all");
 
         if(team.toLowerCase().equals("red")) {
             blueTeam = false;
