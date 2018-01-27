@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @TeleOp(name="Newforia with HWMap", group="Internal")
-//@Disabled
+@Disabled
 public class NewforiaWHWmap extends LinearOpMode {
 
     // Declare OpMode members.

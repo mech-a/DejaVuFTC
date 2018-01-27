@@ -53,10 +53,11 @@ public class FrontBlue extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        boolean active = opModeIsActive();
+
         a.autonInit(telemetry,hardwareMap);
         waitForStart();
 
+        boolean active = opModeIsActive();
         // run until the end of the match (driver presses STOP)
         a.auton(team,area,telemetry,hardwareMap,active);
     }

@@ -310,11 +310,12 @@ public class HWRobot
             //assuming the color sensor is reading the most back (southern) one
             if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
                 //do action to hit off
-                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
+                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
             }
             //if the ball is red, hit the northern (other) ball
             else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+
+                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
             }
 
         }

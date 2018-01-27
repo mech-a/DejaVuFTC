@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.archaic;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @TeleOp(name="ServoGyro", group="Testing")
-//@Disabled
+@Disabled
 public class ServoGyro extends LinearOpMode {
     // Declare OpMode members.
     //private ElapsedTime runtime = new ElapsedTime();

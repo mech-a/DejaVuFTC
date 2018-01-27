@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Copy Me Linear
  */
 
-@TeleOp(name="Values", group="Internal")
+@TeleOp(name="Values y", group="Internal")
 //@Disabled
 public class ValueTester extends LinearOpMode {
 

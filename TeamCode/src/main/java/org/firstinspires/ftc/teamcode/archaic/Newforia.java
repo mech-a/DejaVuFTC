@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.archaic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @Autonomous(name="Newforia", group="Testing")
-//@Disabled
+@Disabled
 public class Newforia extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

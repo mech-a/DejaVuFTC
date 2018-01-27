@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 import static com.sun.tools.doclint.Entity.le;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.DEADZONE;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SEVEN_INCHES_NV60;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
@@ -93,6 +94,21 @@ public class HolonomicDrive extends LinearOpMode{
         g2ch2 = -gamepad1.left_stick_y;
         g2ch3 = gamepad1.right_stick_x;
         g2ch4 = -gamepad1.left_stick_y;
+
+        if(Math.abs(ch1) <= DEADZONE) {
+            ch1 = 0;
+        }
+        if(Math.abs(ch2) <= DEADZONE) {
+            ch2 = 0;
+        }
+        if(Math.abs(ch3) <= DEADZONE) {
+            ch3 = 0;
+        }
+        if(Math.abs(ch4) <= DEADZONE) {
+            ch4 = 0;
+        }
+
+
     }
 
     //Sets how channels determine motor powers (mecanum in this case)

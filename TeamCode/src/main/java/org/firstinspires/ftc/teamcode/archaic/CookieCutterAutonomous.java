@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.archaic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @Autonomous(name="CookieCutter Red Back", group="Testing")
-//@Disabled
+@Disabled
 public class CookieCutterAutonomous extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

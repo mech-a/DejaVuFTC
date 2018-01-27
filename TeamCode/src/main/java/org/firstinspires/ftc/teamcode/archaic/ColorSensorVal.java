@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.archaic;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  */
 
 @TeleOp(name="Color Sensor", group="Testing")
-//@Disabled
+@Disabled
 public class ColorSensorVal extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

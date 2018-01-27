@@ -57,8 +57,8 @@ public class AutonHandler {
 
 
         if(area.toLowerCase().equals("back")) {
-            teamString = (blueTeam) ? "blue" : "red";
-            jewel(teamString, a);
+            //teamString = (blueTeam) ? "blue" : "red";
+            jewel(team, a);
 
 
             r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
@@ -75,12 +75,11 @@ public class AutonHandler {
             rsleep(500);
             extrudeGlyph();
             rsleep(600);
-            r.translate("back");
+            r.translate("back", 0.2, 3.0, a);
         }
 
         else if (area.toLowerCase().equals("front")) {
-            teamString = (blueTeam) ? "blue" : "red";
-            jewel(teamString, a);
+            jewel(team, a);
 
             r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
             rsleep(500);
@@ -94,11 +93,33 @@ public class AutonHandler {
 
             //TODO not sure if it'll move 90degrees more or not move
             if(blueTeam) {
-                r.rotate("ccw",0.2,90,a);
+                r.rotate("ccw",0.2,179,a);
             }
             else {
-                r.rotate("cw",0.2,90,a);
+                r.rotate("cw",0.2,0.1,a);
             }
+
+
+            //if perhaps we use strafing, use this code (insert after counts to crypto front
+            /*
+            r.translate("left", 0.2, 12 * COUNTS_PER_INCH, a);
+            if (blueTeam) {
+                r.rotate("ccw", 0.2, 179, a);
+            }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             //String quickdir = (blueTeam) ? "ccw" : "cw";
 
             rsleep(500);
@@ -111,6 +132,8 @@ public class AutonHandler {
             r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
             rsleep(500);
             extrudeGlyph();
+            rsleep(600);
+            r.translate("back", 0.2, 3.0, a);
         }
     }
 
