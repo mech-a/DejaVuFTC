@@ -40,13 +40,19 @@ public class HolonomicDrive extends LinearOpMode{
     private double modifierValueDefault = 0.5;
     private double modifierValue = modifierValueDefault;
     //private double modifierValue = 1;
+
+
+    double epsilon = 0.01;
+    double totalDifference = 0;
+
+
     double powClawL = 0;
     double powClawR = 0;
     double clawSpeed = 0.5;
     private int slideLevel = 1;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         robot.getOpModeData(telemetry,hardwareMap);
         robot.init("motors");
         robot.init("servos");
@@ -70,7 +76,7 @@ public class HolonomicDrive extends LinearOpMode{
 
             telemetry.addData("modifier value", modifierValue);
 
-            telemetry.addData("MTRLin Pos:", robot.mtrLinear);
+            telemetry.addData("MTRLin Pos:", robot.mtrLinear.getCurrentPosition());
 
             setDriveMotorPowers();
             sleep(50);
@@ -174,14 +180,64 @@ public class HolonomicDrive extends LinearOpMode{
             linUp = false;
         }
         //this is a force manual
-        if(gamepad2.left_stick_button) {
+        if(gamepad2.right_stick_button) {
             robot.mtrLinear.setPower(0);
             linearRun = false;
             linDown = false;
             linUp = false;
         }
     }
-    
+    private void linearSlideControlOld(){
+        //the slide only needs to go up 12 inches but this means 3 levels of the slide
+        //1) at ground 2) 6 inches up 3) 12 inches up
+        //we want this system to be smart - we want to go to every 6 inch increment
+        //we use slidelevel to signify which counts we want to go to
+        if(linearRun) {
+            if(linUp) {
+                if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SEVEN_INCHES_NV60) {
+                    robot.mtrLinear.setPower(0);
+                    linearRun = false;
+                    linDown = false;
+                    linUp = false;
+                }
+                else {
+                    robot.mtrLinear.setPower(NV60_SPEED);
+                }
+            }
+            else if(linDown) {
+                if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SEVEN_INCHES_NV60 ) {
+                    robot.mtrLinear.setPower(0);
+                    linearRun = false;
+                    linDown = false;
+                    linUp = false;
+                }
+                else {
+                    robot.mtrLinear.setPower(-NV60_SPEED);
+                }
+            }
+
+            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+                linearRun = false;
+                linDown = false;
+                linUp = false;
+            }
+
+        }
+
+        if(!linearRun) {
+            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
+                robot.mtrLinear.setPower(NV60_SPEED);
+            }
+            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
+                robot.mtrLinear.setPower(-NV60_SPEED);
+            }
+            else {
+                robot.mtrLinear.setPower(0);
+            }
+        }
+    }
+
+
     private void linearSlideControl(){
         //the slide only needs to go up 12 inches but this means 3 levels of the slide
         //1) at ground 2) 6 inches up 3) 12 inches up
@@ -240,18 +296,39 @@ public class HolonomicDrive extends LinearOpMode{
 
     //sets 2 buttons to extrude or intake glyphs
     private void setClawSpeeds() {
+        //Adjusting speed of claw
+        if(gamepad2.left_bumper) {
+            totalDifference-=epsilon;
+            totalDifference = Range.clip(totalDifference, -0.5, 0.5);
+            sleep(60);
+        }
+        else if(gamepad2.right_bumper) {
+            totalDifference+=epsilon;
+            totalDifference = Range.clip(totalDifference, -0.5, 0.5);
+            sleep(60);
+        }
+        else if(gamepad2.left_stick_button) {
+            totalDifference = 0;
+        }
+
+
+
         if(gamepad2.x) {
-            powClawL = clawSpeed;
-            powClawR = clawSpeed;
+            powClawL = clawSpeed + totalDifference;
+            powClawR = clawSpeed + totalDifference;
         }
         else if (gamepad2.b) {
-            powClawL = -clawSpeed;
-            powClawR = -clawSpeed;
+            powClawL = -(clawSpeed + totalDifference);
+            powClawR = -(clawSpeed + totalDifference);
         }
         else {
             powClawL = 0;
             powClawR = 0;
         }
+
+        telemetry.addData("Claw Speed L:", powClawL);
+        telemetry.addData("Claw Speed R:", powClawR);
+
     }
 
     //sets powers going to claws

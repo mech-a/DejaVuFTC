@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Copy Me Linear
  */
 
-@TeleOp(name="CopyMe", group="Internal")
+@TeleOp(name="AllAutons", group="Internal")
 //@Disabled
 public class AllAutons extends LinearOpMode {
 
@@ -65,16 +65,22 @@ public class AllAutons extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if(gamepad1.left_bumper && gamepad1.a) {
+            if(gamepad1.x) {
                 team = "blue";
-                area = "back";
+                area = "jewel";
                 run = true;
             }
-            else if (gamepad1.left_bumper && gamepad1.y) {
-                team = "blue";
-                area = "front";
+            else if (gamepad1.b) {
+                team = "red";
+                area = "jewel";
                 run = true;
             }
+            else if (gamepad1.y) {
+                team = "red";
+                area = "vuf strafe";
+                run = true;
+            }
+            /*
             else if(gamepad1.right_bumper && gamepad1.a) {
                 team = "red";
                 area = "back";
@@ -85,6 +91,7 @@ public class AllAutons extends LinearOpMode {
                 area = "front";
                 run = true;
             }
+            */
 
             if(run){
                 run = false;

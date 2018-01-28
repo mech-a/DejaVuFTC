@@ -147,7 +147,7 @@ public class HWRobot
                 initMotors();
                 initServos();
                 initImu();
-                initVuforia();
+                //initVuforia();
                 initSensors();
                 break;
             default:
@@ -235,7 +235,11 @@ public class HWRobot
     }
 
     private void initVuforia() {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
+                cameraMonitorViewId
+        );
 
         parameters.vuforiaLicenseKey = vuforiaKey;
 
@@ -267,6 +271,11 @@ public class HWRobot
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             for(int i = 1; i < 5; i++) {
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 type = "UNKNOWN";
@@ -281,7 +290,10 @@ public class HWRobot
                 type = "RIGHT";
             }
         }
+        telemetry.addData("VUF:", type);
+        telemetry.update();
         return type;
+
     }
 
     //TODO moveForCrypto to not strafe; rotate and move
@@ -310,12 +322,21 @@ public class HWRobot
             //assuming the color sensor is reading the most back (southern) one
             if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
                 //do action to hit off
+                telemetry.addData("Color Read:", "Blue");
+                telemetry.addData("Flipping:", "North");
+                telemetry.update();
                 srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
             }
             //if the ball is red, hit the northern (other) ball
             else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-
+                telemetry.addData("Color Read:", "Red");
+                telemetry.addData("Flipping:", "South");
+                telemetry.update();
                 srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
+            }
+            else {
+                telemetry.addData("Err", "no read");
+                telemetry.update();
             }
 
         }
@@ -323,12 +344,22 @@ public class HWRobot
             //if the ball is blue, hit off the other ball
             if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
                 //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
-                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+                telemetry.addData("Color Read:", "Blue");
+                telemetry.addData("Flipping:", "South");
+                telemetry.update();
+                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
 
             }
             //if the ball is red, hit off that ball
             else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
+                telemetry.addData("Color Read:", "Red");
+                telemetry.addData("Flipping:", "North");
+                telemetry.update();
+                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+            }
+            else {
+                telemetry.addData("Err", "no read");
+                telemetry.update();
             }
 
         }
@@ -494,7 +525,7 @@ public class HWRobot
     //Currently does not add to heading therefore if you want to turn 90 degrees when you are already 90
     //You must pass in cw/ccw (dir) and then 180
     //We'll make this addition some time
-    public void rotate(String direction, double speed, double angle, boolean active){
+    public void rotate(String direction, double speed, double angle, boolean active) {
         // TODO take out redundancy of setting power using thread
         // from -180 degrees -> 180 degrees
         decideDirection(direction);

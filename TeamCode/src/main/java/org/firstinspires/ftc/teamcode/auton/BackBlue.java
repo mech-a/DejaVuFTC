@@ -51,7 +51,7 @@ public class BackBlue extends LinearOpMode {
     String area = "back";
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         // Wait for the game to start (driver presses PLAY)
 
         a.autonInit(telemetry,hardwareMap);

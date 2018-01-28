@@ -3,7 +3,12 @@ package org.firstinspires.ftc.teamcode.called;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Hardware;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_DOWN;
@@ -35,11 +40,28 @@ public class AutonHandler {
     String vuf;
     String generalDirection;
     String teamString;
+    VuforiaLocalizer vuforia;
+    VuforiaTrackables relicTrackables;
+    VuforiaTrackable relicTemplate;
 
 
     public void autonInit(Telemetry atele, HardwareMap hwmap) {
         r.getOpModeData(atele, hwmap);
         r.init("all");
+        int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
+                cameraMonitorViewId
+        );
+
+        parameters.vuforiaLicenseKey = r.vuforiaKey;
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
     }
 
     public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
@@ -58,13 +80,36 @@ public class AutonHandler {
 
         if(area.toLowerCase().equals("back")) {
             //teamString = (blueTeam) ? "blue" : "red";
-            jewel(team, a);
-
+            //jewel(team, a);
+            //vuf = r.getVuMark(a);
+            if(a) {
+                relicTrackables.activate();
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                for(int i = 1; i < 5; i++) {
+                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    try {
+                        sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                    vuf = "UNKNOWN";
+                }
+                else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                    vuf = "LEFT";
+                }
+                else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                    vuf = "CENTER";
+                }
+                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                    vuf = "RIGHT";
+                }
+            }
 
             r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             rsleep(500);
-            vuf = r.getVuMark(a);
-            rsleep(500);
+            //rsleep(500);
             r.translate(generalDirection, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
             rsleep(500);
             r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
@@ -73,18 +118,43 @@ public class AutonHandler {
             rsleep(500);
             r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
             rsleep(500);
-            extrudeGlyph();
+            extrudeGlyphStart();
             rsleep(600);
-            r.translate("back", 0.2, 3.0, a);
+            r.translate("back", 0.2, 4.0, a);
+            extrudeGlyphStop();
         }
 
         else if (area.toLowerCase().equals("front")) {
-            jewel(team, a);
+            //jewel(team, a);
+            //vuf = r.getVuMark(a);
+            if(a) {
+                relicTrackables.activate();
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                for(int i = 1; i < 5; i++) {
+                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    try {
+                        sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                    vuf = "UNKNOWN";
+                }
+                else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                    vuf = "LEFT";
+                }
+                else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                    vuf = "CENTER";
+                }
+                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                    vuf = "RIGHT";
+                }
+            }
 
             r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
             rsleep(500);
-            vuf = r.getVuMark(a);
-            rsleep(500);
+            //rsleep(500);
             r.translate(generalDirection, 0.2, COUNTS_TO_CRYPTO_FRONT, a);
             rsleep(500);
             r.rotate("ccw",0.2,90,a);
@@ -93,10 +163,13 @@ public class AutonHandler {
 
             //TODO not sure if it'll move 90degrees more or not move
             if(blueTeam) {
-                r.rotate("ccw",0.2,179,a);
+                r.rotate("ccw",0.2,170,a);
+                r.init("imu");
+                rsleep(2000);
+                r.rotate("ccw",0.2,10,a);
             }
             else {
-                r.rotate("cw",0.2,0.1,a);
+                r.rotate("cw",0.2,0.001,a);
             }
 
 
@@ -131,16 +204,27 @@ public class AutonHandler {
 
             r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
             rsleep(500);
-            extrudeGlyph();
+            extrudeGlyphStart();
             rsleep(600);
             r.translate("back", 0.2, 3.0, a);
+            extrudeGlyphStop();
+        }
+        else if (area.toLowerCase().equals("jewel")) {
+            jewel(team, a);
+        }
+        else if (area.toLowerCase().equals("vuf strafe")) {
+            r.moveForCrypto("LEFT", a);
+            r.moveForCrypto("RIGHT", a);
         }
     }
 
-    private void extrudeGlyph() {
+    private void extrudeGlyphStart() {
         r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
         r.mtrClawR.setPower(EXTRUDE_CLAW_POWER);
         rsleep(1000);
+    }
+
+    private void extrudeGlyphStop() {
         r.mtrClawL.setPower(0);
         r.mtrClawR.setPower(0);
     }
@@ -162,8 +246,9 @@ public class AutonHandler {
         r.knockOffJewel(teamColor, active);
         rsleep(500);
         r.srvJewelHitter.setPosition(HITTER_JEWEL_MIDDLE);
-        rsleep(250);
+        rsleep(500);
         r.srvJewelArm.setPosition(ARM_JEWEL_UP/2);
+        rsleep(500);
         r.srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
         rsleep(250);
         r.srvJewelArm.setPosition(ARM_JEWEL_UP);
