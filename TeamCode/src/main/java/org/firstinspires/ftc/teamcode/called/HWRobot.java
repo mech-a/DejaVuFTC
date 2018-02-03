@@ -41,6 +41,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEY
 
 public class HWRobot
 {
+    //TODO: Make some claw values floats
     /* Declare all motors, sensors, etc. */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrLinear, mtrClawL, mtrClawR;
     public Servo srvJewelHitter, srvJewelArm;
@@ -90,6 +91,9 @@ public class HWRobot
     private int[] countTargets = {
             countTargetFL, countTargetFR, countTargetBL, countTargetBR
     };*/
+
+    // countTargets stores the encoder targets for translation
+
     private int[] countTargets = new int[4];
 
 
@@ -101,10 +105,10 @@ public class HWRobot
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415) ;
     static final double     DISTANCE_MODIFIER       = 1.414 ;
     */
-    
+
+    // hsv stores the color sensor's hue, sturation, and value
+
     public float hsv[] = {0F, 0F, 0F};
-
-
 
     /* local OpMode members and objects */
     HardwareMap hwMap           =  null;
@@ -125,7 +129,7 @@ public class HWRobot
         hwMap = ahwMap;
     }
 
-    // Initialize standard Hardware interfaces.
+    // Initialize chosen Hardware interfaces.
     public void init(String hw) {
         switch(hw.toLowerCase()){
             case "motors": case "motor": case "mtr": case "mtrs":
@@ -157,7 +161,7 @@ public class HWRobot
     }
 
     private void initMotors() {
-        // Define and initialize hardware
+        // Define and initialize hardware, specifically the DC motors
         mtrFL = hwMap.dcMotor.get("fl_drive");
         mtrFR = hwMap.dcMotor.get("fr_drive");
         mtrBL = hwMap.dcMotor.get("bl_drive");
@@ -263,7 +267,7 @@ public class HWRobot
                 hsv);
     }
 
-    public String getVuMark(boolean active) {
+    public String getVuMark(boolean active) { // Reads the Vumark and return the cryptobox position, or "UNKNOWN" if it cannot be determined
         String type = "";
 
         if(active) {
@@ -299,77 +303,77 @@ public class HWRobot
     //TODO moveForCrypto to not strafe; rotate and move
     public void moveForCrypto(String vuf, boolean active) {
         if(vuf.equals("LEFT")) {
+            telemetry.addData("Left read", "Going for left");
             translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
             //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
         }
         else if(vuf.equals("CENTER")) {
+            telemetry.addData("Center read", "Going for center");
             //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("RIGHT")) {
+            telemetry.addData("Right read", "Going for right");
             translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
         }
         else if(vuf.equals("UNKNOWN")) {
-            telemetry.addData("unkn read:", "going for center");
+            telemetry.addData("Unknown read:", "going for center");
             telemetry.update();
         }
     }
 
     public void knockOffJewel(String team, boolean active) {
+        if(active) {
+            float hue = hsv[0];
+            if (team.equals("red")) {
+                //if the ball is blue, hit it off
+                //assuming the color sensor is reading the most back (southern) one
+                if (hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
+                    //do action to hit off
+                    telemetry.addData("Color Read:", "Blue");
+                    telemetry.addData("Flipping:", "North");
+                    telemetry.update();
+                    srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+                }
+                //if the ball is red, hit the northern (other) ball
+                else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
+                    telemetry.addData("Color Read:", "Red");
+                    telemetry.addData("Flipping:", "South");
+                    telemetry.update();
+                    srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
+                } else {
+                    telemetry.addData("Err", "no read");
+                    telemetry.update();
+                }
 
-        float hue = hsv[0];
-        if(team.equals("red")) {
-            //if the ball is blue, hit it off
-            //assuming the color sensor is reading the most back (southern) one
-            if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
-                //do action to hit off
-                telemetry.addData("Color Read:", "Blue");
-                telemetry.addData("Flipping:", "North");
-                telemetry.update();
-                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
-            }
-            //if the ball is red, hit the northern (other) ball
-            else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                telemetry.addData("Color Read:", "Red");
-                telemetry.addData("Flipping:", "South");
-                telemetry.update();
-                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
-            }
-            else {
-                telemetry.addData("Err", "no read");
-                telemetry.update();
-            }
+            } else if (team.equals("blue")) {
+                //if the ball is blue, hit off the other ball
+                if (hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
+                    //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
+                    telemetry.addData("Color Read:", "Blue");
+                    telemetry.addData("Flipping:", "South");
+                    telemetry.update();
+                    srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
 
-        }
-        else if (team.equals("blue")) {
-            //if the ball is blue, hit off the other ball
-            if(hue > BLUE_LOWER_LIMIT && hue < BLUE_UPPER_LIMIT) {
-                //do action to hit off; ideally use a stick that has a servo on it that moves to hit it off; much easier
-                telemetry.addData("Color Read:", "Blue");
-                telemetry.addData("Flipping:", "South");
-                telemetry.update();
-                srvJewelHitter.setPosition(HITTER_JEWEL_SOUTH);
+                }
+                //if the ball is red, hit off that ball
+                else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
+                    telemetry.addData("Color Read:", "Red");
+                    telemetry.addData("Flipping:", "North");
+                    telemetry.update();
+                    srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
+                } else {
+                    telemetry.addData("Err", "no read");
+                    telemetry.update();
+                }
 
-            }
-            //if the ball is red, hit off that ball
-            else if (hue > RED_UPPER_LIMIT || hue < RED_LOWER_LIMIT) {
-                telemetry.addData("Color Read:", "Red");
-                telemetry.addData("Flipping:", "North");
-                telemetry.update();
-                srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
-            }
-            else {
-                telemetry.addData("Err", "no read");
+            } else {
+                telemetry.addData("unknown team", "");
                 telemetry.update();
             }
-
-        }
-        else {
-            telemetry.addData("unknown team", "");
-            telemetry.update();
         }
     }
 
-    public void conveyorStatus(String status) {
+    public void conveyorStatus(String status) { //
         if(status.toLowerCase().equals("start")) {
             mtrClawL.setPower(SPEED_FOR_CONVEYORS);
             mtrClawR.setPower(SPEED_FOR_CONVEYORS);
@@ -384,6 +388,7 @@ public class HWRobot
         }
     }
 
+    //TODO: remove
     public void moveSlide(String dir) {
         int finalCounts = 0;
         if (dir.toLowerCase().equals("up")) {
@@ -399,6 +404,7 @@ public class HWRobot
         mtrLinear.setPower(0);
     }
 
+    //TODO: umm something this is a very interesting comment
     /*
     public void extrudeGlyphs(String order) {
         if(order.toLowerCase().equals("both")) {
@@ -428,7 +434,7 @@ public class HWRobot
     }
     */
 
-    public void resets(String kind) {
+    public void resets(String kind) { // Changes conveyor state
         String normKind = kind.toLowerCase();
         if(normKind.equals("reverse")) {
             conveyorStatus("reverse");
@@ -440,6 +446,8 @@ public class HWRobot
             conveyorStatus("else aka zero out");
         }
     }
+
+    //TODO: remove
 
     public void driveMotorPolarity(String polarity) {
         if(polarity.toLowerCase().equals("normal")) {
@@ -459,12 +467,12 @@ public class HWRobot
 
    
     //MOTOR FUNCTIONS
-    
+
     
     //Function to translate on the field (encoders)- currently reconstructed
     //TODO make repitition into own functions
 
-    public void translate(String dir, double speed, double inches, boolean active){
+    public void translate(String dir, double speed, double inches, boolean active){ // Directional translation
         decideDirection(dir);
 
         if(active) {
@@ -490,7 +498,7 @@ public class HWRobot
         }
     }
 
-    //Rethink what would happen in rotation
+    //TODO: Rethink what would happen in rotation
     //Fix function; look at how counts is modified & when moving backwards
     public void translate(String dir, double speed, int counts, boolean active){
         decideDirection(dir);
@@ -517,7 +525,6 @@ public class HWRobot
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-
 
 
 
@@ -577,7 +584,7 @@ public class HWRobot
 
     }
 
-
+    // Changes runmode of drive train DC motors
 
     public void mtrChangeMode(DcMotor.RunMode mode){
         mtrFL.setMode(mode);
@@ -585,6 +592,8 @@ public class HWRobot
         mtrBL.setMode(mode);
         mtrBR.setMode(mode);
     }
+
+    // Changes DC motor speed
 
     public void mtrSetSpeed(double speed){
         if(isGyroRotationHappening == false) {
@@ -603,6 +612,8 @@ public class HWRobot
         }
 
     }
+
+    // Decides translation function
 
     private void decideDirection(String dir) {
         if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
@@ -636,6 +647,8 @@ public class HWRobot
             mvmtWay = "translation";
         }
     }
+
+    // Gives countTargets a modifier based on translation function
 
     private void setDirection(){
         if(mvmtWay == "translation") {
@@ -703,13 +716,15 @@ public class HWRobot
         srvR.setPosition(1);
     }*/
 
+    // TODO: remove
+
     public double getHeading() {
         double heading;
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
         return heading;
     }
 
-
+    // TODO: do something with stuff under this comment i want to die
 
     //private void determineValueOfATranslation
 
