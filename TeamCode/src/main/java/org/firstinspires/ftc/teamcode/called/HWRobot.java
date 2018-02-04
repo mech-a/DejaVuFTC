@@ -141,7 +141,7 @@ public class HWRobot
             case "imu":
                 initImu();
                 break;
-            case "vuforia":
+            case "vuforia": case "vuf":
                 initVuforia();
                 break;
             case "sensors":case "sensor":
@@ -151,7 +151,7 @@ public class HWRobot
                 initMotors();
                 initServos();
                 initImu();
-                //initVuforia();
+                initVuforia();
                 initSensors();
                 break;
             default:

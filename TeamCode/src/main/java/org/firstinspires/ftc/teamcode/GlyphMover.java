@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -99,5 +97,12 @@ public class GlyphMover extends LinearOpMode {
             sleep(10);
             */
         }
+    }
+
+    /**
+     * Created by Kalie on 2/3/2018.
+     */
+
+    public static class whatever {
     }
 }
