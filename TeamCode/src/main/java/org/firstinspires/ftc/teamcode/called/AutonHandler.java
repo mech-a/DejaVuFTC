@@ -39,7 +39,6 @@ public class AutonHandler {
     boolean blueTeam = false;
     String vuf;
     String generalDirection;
-    String teamString;
     VuforiaLocalizer vuforia;
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
@@ -48,6 +47,8 @@ public class AutonHandler {
     public void autonInit(Telemetry atele, HardwareMap hwmap) {
         r.getOpModeData(atele, hwmap);
         r.init("all");
+
+        /*
         int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
@@ -62,9 +63,13 @@ public class AutonHandler {
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+       */
+
+
     }
 
-    public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
+    public void auton(String team, String area, boolean a) {
         //TODO error due to this? might need seperate initialization of getOpModeData
         //r.getOpModeData(telemetry, hwMap); r.init("all");
 
@@ -81,7 +86,10 @@ public class AutonHandler {
         if(area.toLowerCase().equals("back")) {
             //teamString = (blueTeam) ? "blue" : "red";
             //jewel(team, a);
-            //vuf = r.getVuMark(a);
+            vuf = r.getVuMark(a);
+            r.telemetry.addData("vumark", vuf);
+            r.telemetry.update();
+            /*
             if(a) {
                 relicTrackables.activate();
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -106,7 +114,7 @@ public class AutonHandler {
                     vuf = "RIGHT";
                 }
             }
-
+            */
             r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
             rsleep(500);
             //rsleep(500);
@@ -126,7 +134,11 @@ public class AutonHandler {
 
         else if (area.toLowerCase().equals("front")) {
             //jewel(team, a);
-            //vuf = r.getVuMark(a);
+            vuf = r.getVuMark(a);
+            r.telemetry.addData("vumark", vuf);
+            r.telemetry.update();
+
+            /*
             if(a) {
                 relicTrackables.activate();
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -150,7 +162,7 @@ public class AutonHandler {
                 else if(vuMark == RelicRecoveryVuMark.RIGHT) {
                     vuf = "RIGHT";
                 }
-            }
+            }*/
 
             r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
             rsleep(500);

@@ -186,6 +186,12 @@ public class HolonomicDrive extends LinearOpMode{
             linDown = false;
             linUp = false;
         }
+        else if(gamepad2.dpad_down || gamepad2.dpad_down) {
+            linearRun = false;
+            linDown = false;
+            linUp = false;
+        }
+
     }
     private void linearSlideControlOld(){
         //the slide only needs to go up 12 inches but this means 3 levels of the slide
@@ -194,7 +200,7 @@ public class HolonomicDrive extends LinearOpMode{
         //we use slidelevel to signify which counts we want to go to
         if(linearRun) {
             if(linUp) {
-                if(robot.mtrLinear.getCurrentPosition() >= slideLevel * SEVEN_INCHES_NV60) {
+                if(robot.mtrLinear.getCurrentPosition() >= SEVEN_INCHES_NV60) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -205,7 +211,7 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
             else if(linDown) {
-                if(robot.mtrLinear.getCurrentPosition() <= (slideLevel - 1) * SEVEN_INCHES_NV60 ) {
+                if(robot.mtrLinear.getCurrentPosition() <= 0 ) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -225,10 +231,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
+            if(gamepad2.dpad_up && (robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25)) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
+            else if(gamepad2.dpad_down && (robot.mtrLinear.getCurrentPosition() >= -100)) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
