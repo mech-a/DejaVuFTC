@@ -176,8 +176,8 @@ public class HolonomicDrive extends LinearOpMode{
         }
         if(gamepad2.a) {
             linearRun = true;
-            linDown = true;
             linUp = false;
+            linDown = true;
         }
         //this is a force manual
         if(gamepad2.right_stick_button) {
@@ -186,12 +186,6 @@ public class HolonomicDrive extends LinearOpMode{
             linDown = false;
             linUp = false;
         }
-        else if(gamepad2.dpad_down || gamepad2.dpad_down) {
-            linearRun = false;
-            linDown = false;
-            linUp = false;
-        }
-
     }
     private void linearSlideControlOld(){
         //the slide only needs to go up 12 inches but this means 3 levels of the slide
@@ -199,6 +193,12 @@ public class HolonomicDrive extends LinearOpMode{
         //we want this system to be smart - we want to go to every 6 inch increment
         //we use slidelevel to signify which counts we want to go to
         if(linearRun) {
+            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+                linearRun = false;
+                linDown = false;
+                linUp = false;
+            }
+
             if(linUp) {
                 if(robot.mtrLinear.getCurrentPosition() >= SEVEN_INCHES_NV60) {
                     robot.mtrLinear.setPower(0);
@@ -211,7 +211,7 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
             else if(linDown) {
-                if(robot.mtrLinear.getCurrentPosition() <= 0 ) {
+                if(robot.mtrLinear.getCurrentPosition() <= 50) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -222,19 +222,13 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
 
-            if(gamepad2.dpad_up || gamepad2.dpad_down) {
-                linearRun = false;
-                linDown = false;
-                linUp = false;
-            }
-
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && (robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25)) {
+            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && (robot.mtrLinear.getCurrentPosition() >= -100)) {
+            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
@@ -343,6 +337,7 @@ public class HolonomicDrive extends LinearOpMode{
         robot.mtrClawR.setPower(powClawR);
     }
 
+    /*
     private void resets() {
         if(gamepad2.dpad_up) {
             robot.resets("reverse");
@@ -353,7 +348,7 @@ public class HolonomicDrive extends LinearOpMode{
         else if (gamepad2.dpad_down) {
             robot.resets("stop");
         }
-    }
+    }*/
 
     //modifies drive values
     private void modifyDriveValues() {

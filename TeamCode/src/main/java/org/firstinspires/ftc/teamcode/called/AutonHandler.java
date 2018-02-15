@@ -47,8 +47,6 @@ public class AutonHandler {
     public void autonInit(Telemetry atele, HardwareMap hwmap) {
         r.getOpModeData(atele, hwmap);
         r.init("all");
-
-        /*
         int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
@@ -63,13 +61,9 @@ public class AutonHandler {
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-       */
-
-
     }
 
-    public void auton(String team, String area, boolean a) {
+    public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
         //TODO error due to this? might need seperate initialization of getOpModeData
         //r.getOpModeData(telemetry, hwMap); r.init("all");
 
@@ -86,10 +80,68 @@ public class AutonHandler {
         if(area.toLowerCase().equals("back")) {
             //teamString = (blueTeam) ? "blue" : "red";
             //jewel(team, a);
-            vuf = r.getVuMark(a);
-            r.telemetry.addData("vumark", vuf);
-            r.telemetry.update();
-            /*
+            //vuf = r.getVuMark(a);
+            if(a) {
+                relicTrackables.activate();
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                for(int i = 1; i < 5; i++) {
+                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    rsleep(200);
+                }
+                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                    vuf = "UNKNOWN";
+                }
+                else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                    vuf = "LEFT";
+                }
+                else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                    vuf = "CENTER";
+                }
+                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                    vuf = "RIGHT";
+                }
+            }
+
+            r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+            rsleep(500);
+            //rsleep(500);
+            r.translate(generalDirection, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+            rsleep(500);
+            r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
+            rsleep(500);
+            r.moveForCrypto(vuf, a);
+            rsleep(500);
+            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            rsleep(500);
+            extrudeGlyphStart();
+            rsleep(600);
+            r.translate("back", 0.2, 4.0, a);
+            extrudeGlyphStop();
+        }
+        else if (area.toLowerCase().equals("backtest")) {
+            if(a) {
+                r.getVuMark(a);
+                r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
+                rsleep(500);
+                //rsleep(500);
+                r.translate(generalDirection, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
+                rsleep(500);
+                r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
+                rsleep(500);
+                r.moveForCrypto(a);
+                rsleep(500);
+                r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+                rsleep(500);
+                extrudeGlyphStart();
+                rsleep(600);
+                r.translate("back", 0.2, 4.0, a);
+                extrudeGlyphStop();
+            }
+        }
+
+        else if (area.toLowerCase().equals("front")) {
+            //jewel(team, a);
+            //vuf = r.getVuMark(a);
             if(a) {
                 relicTrackables.activate();
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -114,55 +166,6 @@ public class AutonHandler {
                     vuf = "RIGHT";
                 }
             }
-            */
-            r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
-            rsleep(500);
-            //rsleep(500);
-            r.translate(generalDirection, SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
-            rsleep(500);
-            r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
-            rsleep(500);
-            r.moveForCrypto(vuf, a);
-            rsleep(500);
-            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
-            rsleep(500);
-            extrudeGlyphStart();
-            rsleep(600);
-            r.translate("back", 0.2, 4.0, a);
-            extrudeGlyphStop();
-        }
-
-        else if (area.toLowerCase().equals("front")) {
-            //jewel(team, a);
-            vuf = r.getVuMark(a);
-            r.telemetry.addData("vumark", vuf);
-            r.telemetry.update();
-
-            /*
-            if(a) {
-                relicTrackables.activate();
-                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                for(int i = 1; i < 5; i++) {
-                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                    try {
-                        sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                    vuf = "UNKNOWN";
-                }
-                else if(vuMark == RelicRecoveryVuMark.LEFT) {
-                    vuf = "LEFT";
-                }
-                else if(vuMark == RelicRecoveryVuMark.CENTER) {
-                    vuf = "CENTER";
-                }
-                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
-                    vuf = "RIGHT";
-                }
-            }*/
 
             r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
             rsleep(500);
@@ -193,18 +196,6 @@ public class AutonHandler {
             }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
             //String quickdir = (blueTeam) ? "ccw" : "cw";
 
             rsleep(500);
@@ -221,6 +212,43 @@ public class AutonHandler {
             r.translate("back", 0.2, 3.0, a);
             extrudeGlyphStop();
         }
+        else if (area.toLowerCase().equals("fronttest")) {
+            if(a) {
+                r.getVuMark(a);
+                r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
+                rsleep(500);
+                //rsleep(500);
+                r.translate(generalDirection, 0.2, COUNTS_TO_CRYPTO_FRONT, a);
+                rsleep(500);
+                r.rotate("ccw",0.2,90,a);
+                rsleep(500);
+                r.translate("fwd", 0.2, 12*COUNTS_PER_INCH, a);
+
+                //TODO not sure if it'll move 90degrees more or not move
+                if(blueTeam) {
+                    r.rotate("ccw",0.2,170,a);
+                    r.init("imu");
+                    rsleep(2000);
+                    r.rotate("ccw",0.2,10,a);
+                }
+                else {
+                    r.rotate("cw",0.2,0.001,a);
+                }
+                rsleep(500);
+                r.moveForCrypto(a);
+
+                rsleep(700);
+
+                r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
+                rsleep(500);
+                extrudeGlyphStart();
+                rsleep(600);
+                r.translate("back", 0.2, 3.0, a);
+                extrudeGlyphStop();
+
+            }
+        }
+
         else if (area.toLowerCase().equals("jewel")) {
             jewel(team, a);
         }

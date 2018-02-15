@@ -18,9 +18,6 @@ public class Wahtever extends LinearOpMode {
     HWRobot r = new HWRobot();
     String vuf = "";
 
-
-
-
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
@@ -29,9 +26,9 @@ public class Wahtever extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            vuf = r.getVuMark(boolean a = opModeIsActive());
+            vuf = r.getVuMarkOld(true);
             telemetry.addData("vuf:", vuf);
-            sleep(1000);
+            sleep(200);
         }
     }
 }

@@ -16,81 +16,73 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 //@Disabled
 public class JustTranslation extends LinearOpMode{
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    HWRobot robot = new HWRobot();
     int countsPerInch = 45;
     int inToSZ = 20;
+    DcMotor mtrFL;
+    DcMotor mtrBL;
+    DcMotor mtrFR;
+    DcMotor mtrBR;
 
 
     @Override
     public void runOpMode() {
-        robot.getOpModeData(telemetry,hardwareMap);robot.init("motors");
+        // getOpModeData(telemetry,hardwareMap); init("motors");
+        mtrFL = hardwareMap.dcMotor.get("fl_drive");
+        mtrFR = hardwareMap.dcMotor.get("fr_drive");
+        mtrBL = hardwareMap.dcMotor.get("bl_drive");
+        mtrBR = hardwareMap.dcMotor.get("br_drive");
+        mtrFL.setDirection(DcMotor.Direction.REVERSE);
+        mtrFR.setDirection(DcMotor.Direction.FORWARD);
+        mtrBL.setDirection(DcMotor.Direction.REVERSE);
+        mtrBR.setDirection(DcMotor.Direction.FORWARD);
+        mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrFL.setPower(0);
+        mtrFR.setPower(0);
+        mtrBL.setPower(0);
+        mtrBR.setPower(0);
+        mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //Translate forward at a speed of 0.6 1120 *COUNTS* while a
-        //robot.translate("fwd", 0.6, 1120, a);
 
-        //Translate forward at a speed of 0.6 12 *INCHES* while a
-        //robot.translate("left", 0.4, 12.0, a);
-
-        //Translate (rotate) clockwise using counts at a speed of 0.2 ninety degrees while a
-        //DO NOT USE THIS THERE IS A BUG
-        //robot.translate("cw", 0.2, robot.ninetyDegreesInInches, a);
-
-        //Rotate clockwise using gyro 90 degrees at a speed of 0.2 while a
-        //robot.rotate("cw", 0.2, 90, a);
-
-        //Rotate counter clockwise 135 degrees at a speed of 0.3 while a
-        //robot.rotate("ccw", 0.3, 135, a);
-        boolean a = opModeIsActive();
         waitForStart();
+        
+         mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+         mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+         mtrFL.setTargetPosition(10000);
+         mtrFR.setTargetPosition(10000);
+         mtrBL.setTargetPosition(10000);
+         mtrBR.setTargetPosition(10000);
 
 
-        //Code used in competition
-        //robot.translate("fwd", 0.2, countsPerInch * inToSZ, a);
-        //sleep(250);
-
-
-
-
-//        robot.translate("fwd", 0.2, 2 * 1120, a);
-//        sleep(250);
-//        robot.translate("cw", 0.2, robot.ninetyDegreesInInches, a);
-//        sleep(250);
-//        robot.translate("ccw", 0.2, robot.turnAroundInInches, a);
-//        sleep(250);
-
-        // kalie u did rotate(cw, 0.3, and countsPerInch *InToSZ <- ?? u did rotate) - gaurav
-        //robot.translate("fwd", 0.3, countsPerInch * inToSZ, a);
-        //sleep(250);
-        robot.mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.mtrFL.setTargetPosition(inToSZ * countsPerInch);
-        robot.mtrFR.setTargetPosition(inToSZ * countsPerInch);
-        robot.mtrBL.setTargetPosition(inToSZ * countsPerInch);
-        robot.mtrBR.setTargetPosition(inToSZ * countsPerInch);
-
-
-        robot.mtrFL.setPower(0.02);
-        robot.mtrFR.setPower(0.02);
-        robot.mtrBL.setPower(0.02);
-        robot.mtrBR.setPower(0.02);
-        while(robot.mtrFL.isBusy() && robot.mtrFR.isBusy() && robot.mtrBL.isBusy() && robot.mtrBR.isBusy()) {
-            telemetry.addData("MTRFL", robot.mtrFL.getCurrentPosition());
-            telemetry.addData("MTRFR", robot.mtrFR.getCurrentPosition());
-            telemetry.addData("MTRBL", robot.mtrBL.getCurrentPosition());
-            telemetry.addData("MTRBR", robot.mtrBR.getCurrentPosition());
+         mtrFL.setPower(0.25);
+         mtrFR.setPower(0.25);
+         mtrBL.setPower(0.25);
+         mtrBR.setPower(0.25);
+        while( mtrFL.isBusy() &&  mtrFR.isBusy() &&  mtrBL.isBusy() &&  mtrBR.isBusy()) {
+            telemetry.addData("MTRFL",  mtrFL.getCurrentPosition());
+            telemetry.addData("MTRFR",  mtrFR.getCurrentPosition());
+            telemetry.addData("MTRBL",  mtrBL.getCurrentPosition());
+            telemetry.addData("MTRBR",  mtrBR.getCurrentPosition());
             telemetry.update();
         }
 
-        robot.mtrSetSpeed(0);
+         mtrFL.setPower(0);
+         mtrFR.setPower(0);
+         mtrBL.setPower(0);
+         mtrBR.setPower(0);
 
     }
 }

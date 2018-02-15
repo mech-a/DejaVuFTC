@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.called.HWRobot;
 
@@ -46,6 +47,9 @@ public class MultiTest extends LinearOpMode {
 
     // Declare OpMode members.
     HWRobot r = new HWRobot();
+    double powClaws = 0;
+    double powFL,powFR,powBL,powBR,powLin;
+    double epsilon = 0.01;
     boolean a;
 
 
@@ -60,16 +64,54 @@ public class MultiTest extends LinearOpMode {
         while (opModeIsActive()) {
             a = opModeIsActive();
 
-            if(gamepad1.left_bumper) {
-                r.rotate("ccw", 0.2,90,a);
+            if(gamepad1.left_bumper && gamepad1.right_stick_button) {
+                powLin-=epsilon;
+                powLin = Range.clip(powLin, -1, 1);
             }
+            else if(gamepad1.left_bumper){}
+
+
             else if(gamepad1.right_bumper) {
                 r.rotate("cw", 0.2, 90,a);
             }
+
+
+            telemetryBlock();
+
 
 
 
 
         }
     }
+    private void telemetryBlock() {
+        telemetry.addData("Arm Position", r.srvJewelArm.getPosition());
+        telemetry.addData("Hitter Position", r.srvJewelHitter.getPosition());
+        telemetry.addLine()
+                .addData("Hue", r.hsv[0])
+                .addData("Saturation", r.hsv[1])
+                .addData("Value", r.hsv[2]);
+        telemetry.addData("Vumark", r.vuf);
+        telemetryMotors();
+    }
+
+    private void telemetryMotors() {
+        telemetry.addLine()
+                .addData("mtrFL: power", powFL)
+                .addData("counts: ", r.mtrFL.getCurrentPosition());
+        telemetry.addLine()
+                .addData("mtrBL: power", powBL)
+                .addData("counts: ", r.mtrBL.getCurrentPosition());
+        telemetry.addLine()
+                .addData("mtrFR: power", powFR)
+                .addData("counts: ", r.mtrFR.getCurrentPosition());
+        telemetry.addLine()
+                .addData("mtrBR: power", powBR)
+                .addData("counts: ", r.mtrBR.getCurrentPosition());
+        telemetry.addLine()
+                .addData("mtrLinear: power", powLin)
+                .addData("counts: ", r.mtrLinear.getCurrentPosition());
+        telemetry.addData("claw powers", powClaws);
+    }
+
 }

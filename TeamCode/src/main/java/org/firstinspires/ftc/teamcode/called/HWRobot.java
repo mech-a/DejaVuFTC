@@ -28,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_FOR_FULL_ROTATION;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDER_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_NORTH;
@@ -64,6 +65,7 @@ public class HWRobot
     int a = 1;
     int b = 1;
     String mvmtWay;
+    public String vuf = "";
 
 
     double heading,roll,pitch;
@@ -267,10 +269,10 @@ public class HWRobot
                 hsv);
     }
 
-    public String getVuMark(boolean active) { // Reads the Vumark and return the cryptobox position, or "UNKNOWN" if it cannot be determined
+    public String getVuMarkOld(boolean a) {
         String type = "";
 
-        if(active) {
+        if(a) {
             relicTrackables.activate();
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             for(int i = 1; i < 5; i++) {
@@ -294,14 +296,62 @@ public class HWRobot
                 type = "RIGHT";
             }
         }
-        telemetry.addData("VUF:", type);
+        telemetry.addData("VUF:", vuf);
         telemetry.update();
         return type;
+    }
 
+    public void getVuMark(boolean active) { // Reads the Vumark and return the cryptobox position, or "UNKNOWN" if it cannot be determined
+        if(active) {
+            relicTrackables.activate();
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            for(int i = 1; i < 5; i++) {
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuf = "UNKNOWN";
+            }
+            else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                vuf = "LEFT";
+            }
+            else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                vuf = "CENTER";
+            }
+            else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                vuf = "RIGHT";
+            }
+        }
+        telemetry.addData("VUF:", vuf);
+        telemetry.update();
     }
 
     //TODO moveForCrypto to not strafe; rotate and move
-    public void moveForCrypto(String vuf, boolean active) {
+    public void moveForCrypto(String vuforiaRead, boolean active) {
+        if(vuforiaRead.equals("LEFT")) {
+            telemetry.addData("Left read", "Going for left");
+            translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+            //robot.translate("forward", 0.1, COUNTS_PER_INCH * );
+        }
+        else if(vuforiaRead.equals("CENTER")) {
+            telemetry.addData("Center read", "Going for center");
+            //translate("fwd", 0.1, COUNTS_PER_INCH * DISTANCE_BETWEEN_COLUMNS, active);
+        }
+        else if(vuforiaRead.equals("RIGHT")) {
+            telemetry.addData("Right read", "Going for right");
+            translate("right", 0.2, COUNTS_BETWEEN_COLUMNS, active);
+        }
+        else if(vuforiaRead.equals("UNKNOWN")) {
+            telemetry.addData("Unknown read:", "going for center");
+            telemetry.update();
+        }
+    }
+
+    public void moveForCrypto(boolean active) {
         if(vuf.equals("LEFT")) {
             telemetry.addData("Left read", "Going for left");
             translate("left", 0.2, COUNTS_BETWEEN_COLUMNS, active);
@@ -320,6 +370,7 @@ public class HWRobot
             telemetry.update();
         }
     }
+
 
     public void knockOffJewel(String team, boolean active) {
         if(active) {
@@ -546,7 +597,7 @@ public class HWRobot
 
         if(active) {
             if (direction.equals("clockwise") || direction.equals("cw")) {
-                while(heading > cwNegativeAngle) {
+                while(heading > cwNegativeAngle && active) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
@@ -560,7 +611,7 @@ public class HWRobot
                 }
 
             } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-                while(heading < angle) {
+                while(heading < angle && active) {
 
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -581,6 +632,38 @@ public class HWRobot
         mtrSetSpeed(0);
         mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+
+    //Rotating by counts depending on the diameter of the robot and portion of circle to turn
+    //NO GYRO
+    public void rotateByCounts(String direction, double speed, double angle, boolean active) {
+        double portionOfCircle = angle / 360;
+        int countsToMove = (int) (portionOfCircle * COUNTS_FOR_FULL_ROTATION);
+        decideDirection(direction);
+
+        if(active) {
+            mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            getNewPositions(countsToMove);
+
+            setDirection();
+
+            mtrSetTargetPos(posFL,posFR,posBL,posBR);
+
+            mtrChangeMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            mtrSetSpeed(speed);
+
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
+                posOutOfFinalTelemetry(countTargets);
+            }
+
+            mtrSetSpeed(0);
+
+            mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
     }
 

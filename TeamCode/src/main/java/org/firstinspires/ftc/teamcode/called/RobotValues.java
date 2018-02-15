@@ -11,7 +11,17 @@ public class RobotValues {
     //SRV R CLOSED IS 0, OPENED 1
     //COUNTSPERINCH should be 252 now, 126 previously w true holo
     //UPDATE: counts per inch is 45 due to bad gear ratios
-    public static int COUNTS_PER_INCH = 45;
+    //public static int COUNTS_PER_INCH = 45;
+
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // NV40
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    public static final int     COUNTS_PER_INCH         = (int) ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415));
+
+    static final int robotDiameter = 18;
+
+    public static int COUNTS_FOR_FULL_ROTATION = (int) (robotDiameter * 3.1415 * COUNTS_PER_INCH);
 
     //CPI for neverest 60
 
