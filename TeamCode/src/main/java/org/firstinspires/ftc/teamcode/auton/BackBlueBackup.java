@@ -91,7 +91,7 @@ public class BackBlueBackup extends LinearOpMode {
         //r.translate("fwd",0.2,1120,a);
         r.translate("fwd", SPEED_TO_VUFORIA, 10.0, a);
         sleep(500);
-        vuf = r.getVuMark(a);
+        //vuf = r.getVuMark(a);
         sleep(500);
         r.translate("fwd", SPEED_TO_CRYPTO, 26.0, a);
         sleep(500);

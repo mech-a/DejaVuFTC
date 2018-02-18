@@ -57,7 +57,7 @@ public class NewforiaWHWmap extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            vuf = r.getVuMark(active);
+            //vuf = r.getVuMark(active);
             telemetry.addData("vuf", vuf);
             telemetry.update();
             sleep(200);

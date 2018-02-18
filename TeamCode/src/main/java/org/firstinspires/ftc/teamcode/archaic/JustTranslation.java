@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
  * Made By Gaurav
  */
 
-@Autonomous(name="translate ting", group="Comp")
+@Autonomous(name="NewAut", group="Comp")
 //@Disabled
 public class JustTranslation extends LinearOpMode{
     // Declare OpMode members.
@@ -71,7 +71,7 @@ public class JustTranslation extends LinearOpMode{
          mtrFR.setPower(0.25);
          mtrBL.setPower(0.25);
          mtrBR.setPower(0.25);
-        while( mtrFL.isBusy() &&  mtrFR.isBusy() &&  mtrBL.isBusy() &&  mtrBR.isBusy()) {
+        while( mtrFL.isBusy() &&  mtrFR.isBusy() &&  mtrBL.isBusy() &&  mtrBR.isBusy() && opModeIsActive()) {
             telemetry.addData("MTRFL",  mtrFL.getCurrentPosition());
             telemetry.addData("MTRFR",  mtrFR.getCurrentPosition());
             telemetry.addData("MTRBL",  mtrBL.getCurrentPosition());

@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.called.AutonHandler;
+import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 
 /**
@@ -47,18 +48,24 @@ public class BackBlue extends LinearOpMode {
 
     // Declare OpMode members.
     AutonHandler a = new AutonHandler();
+    HWRobot r = new HWRobot();
     String team = "blue";
-    String area = "back";
+    String area = "eff-back";
 
     @Override
     public void runOpMode() throws InterruptedException {
         // Wait for the game to start (driver presses PLAY)
 
         a.autonInit(telemetry,hardwareMap);
+
         waitForStart();
         boolean active = opModeIsActive();
 
         // run until the end of the match (driver presses STOP)
         a.auton(team,area,telemetry,hardwareMap,active);
+        if(isStopRequested()) {
+            r.makeActive(false);
+        }
+
     }
 }

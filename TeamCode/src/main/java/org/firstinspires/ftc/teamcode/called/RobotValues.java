@@ -19,7 +19,7 @@ public class RobotValues {
     public static final int     COUNTS_PER_INCH         = (int) ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415));
 
-    static final int robotDiameter = 18;
+    static final int robotDiameter = (int)(18 * Math.sqrt(2));
 
     public static int COUNTS_FOR_FULL_ROTATION = (int) (robotDiameter * 3.1415 * COUNTS_PER_INCH);
 
@@ -40,11 +40,15 @@ public class RobotValues {
     public static double SPEED_FOR_CONVEYORS = 0.6;
 
     //counts per 6inch neverest 60
+    // six inch not accurate atm
     public static int SIX_INCHES_NV60 = 5040;
-    public static int SEVEN_INCHES_NV60 = 5880;
+    public static int SEVEN_INCHES_NV60 = 2940;
+
+    public static int CPI_NV60 = 1680/4;
+    public static int SIXPOINTFIVE_NV60 = (int)(CPI_NV60 * 6.5);
 
     //neverest 60 speed
-    public static double NV60_SPEED = 1;
+    public static double NV60_SPEED = 0.5;
 
     //extruder servo speed
     public static double EXTRUDER_SPEED = 1.0;
@@ -60,7 +64,13 @@ public class RobotValues {
     public static double DEGREES_TO_TURN_FOR_CRYPTO = 90;
 
     //actual dist is 7.63 ; test and check; currently 7.5inches
-    public static int COUNTS_BETWEEN_COLUMNS = 330;
+    public static int COUNTS_BETWEEN_COLUMNS = (int)(7.63 * COUNTS_PER_INCH);
+    public static int COUNTS_TO_GET_TO_EDGE_OF_CRYPTO = (int)(COUNTS_PER_INCH * (36 - 7.63));
+    public static int COUNTS_FOR_CLOSE_VUF = COUNTS_TO_GET_TO_EDGE_OF_CRYPTO;
+    public static int COUNTS_FOR_MID_VUF = COUNTS_TO_GET_TO_EDGE_OF_CRYPTO + (1 * COUNTS_BETWEEN_COLUMNS);
+    public static int COUNTS_FOR_FAR_VUF = COUNTS_TO_GET_TO_EDGE_OF_CRYPTO + (2 * COUNTS_BETWEEN_COLUMNS);
+
+
 
     public static double SPEED_TO_PLACE_GLYPH = 0.2;
     public static int COUNTS_TO_PLACE_GLYPH = 8 * COUNTS_PER_INCH;
@@ -69,6 +79,8 @@ public class RobotValues {
 
 
     public static int COUNTS_TO_CRYPTO_FRONT = 14 * COUNTS_PER_INCH;
+
+    public static int NEW_COUNTS_TO_CRYPTO_FRONT = 24* COUNTS_PER_INCH;
 
     //Static vars for detecting jewel colors
     public static final double SCALE_FACTOR = 255;

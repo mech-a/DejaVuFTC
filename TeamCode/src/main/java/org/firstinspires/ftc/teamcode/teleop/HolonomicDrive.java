@@ -12,7 +12,8 @@ import static com.sun.tools.doclint.Entity.le;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DEADZONE;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SEVEN_INCHES_NV60;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SIXPOINTFIVE_NV60;
+//import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 
 /**
  * Created by gbhat on 8/20/2017.
@@ -35,9 +36,9 @@ public class HolonomicDrive extends LinearOpMode{
     private boolean linearRun = false;
     private boolean linUp = false;
     private boolean linDown = false;
-    private double slowLimit = 0.25;
-    private double fastLimit = 0.75;
-    private double modifierValueDefault = 0.5;
+    private double slowLimit = 0.5;
+    private double fastLimit = 1;
+    private double modifierValueDefault = 0.75;
     private double modifierValue = modifierValueDefault;
     //private double modifierValue = 1;
 
@@ -55,7 +56,7 @@ public class HolonomicDrive extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         robot.getOpModeData(telemetry,hardwareMap);
         robot.init("motors");
-        robot.init("servos");
+        //robot.init("servos");
         prompt(telemetry, "Init", "HW initialized");
 
         waitForStart();
@@ -70,8 +71,19 @@ public class HolonomicDrive extends LinearOpMode{
             speedSwitch();
 
             linearSlideButtons();
-            linearSlideControl();
-            
+            linearSlideControlOld();
+
+            /*
+            if(gamepad2.dpad_down) {
+                robot.mtrLinear.setPower(-NV60_SPEED);
+            }
+            else if (gamepad2.dpad_up) {
+                robot.mtrLinear.setPower(NV60_SPEED);
+            }
+            else {
+                robot.mtrLinear.setPower(0);
+            }*/
+
             modifyDriveValues();
 
             telemetry.addData("modifier value", modifierValue);
@@ -94,12 +106,12 @@ public class HolonomicDrive extends LinearOpMode{
         ch1 = gamepad1.left_stick_x;
         ch2 = -gamepad1.left_stick_y;
         ch3 = gamepad1.right_stick_x;
-        ch4 = -gamepad1.left_stick_y;
+        ch4 = -gamepad1.right_stick_y;
 
         g2ch1 = gamepad2.left_stick_x;
-        g2ch2 = -gamepad1.left_stick_y;
-        g2ch3 = gamepad1.right_stick_x;
-        g2ch4 = -gamepad1.left_stick_y;
+        g2ch2 = -gamepad2.left_stick_y;
+        g2ch3 = gamepad2.right_stick_x;
+        g2ch4 = -gamepad2.right_stick_y;
 
         if(Math.abs(ch1) <= DEADZONE) {
             ch1 = 0;
@@ -123,6 +135,12 @@ public class HolonomicDrive extends LinearOpMode{
         powFR = ch2 - ch1 - ch3;
         powBL = ch2 - ch1 + ch3;
         powBR = ch2 + ch1 - ch3;
+
+        //because wheel setup is wrong, try this; currently left on stick is right .
+        //powFL = ch2 - ch1 + ch3;
+        //powFR = ch2 + ch1 - ch3;
+        //powBL = ch2 + ch1 + ch3;
+        //powBR = ch2 - ch1 - ch3;
 
     }
 
@@ -200,7 +218,7 @@ public class HolonomicDrive extends LinearOpMode{
             }
 
             if(linUp) {
-                if(robot.mtrLinear.getCurrentPosition() >= SEVEN_INCHES_NV60) {
+                if(robot.mtrLinear.getCurrentPosition() >= SIXPOINTFIVE_NV60) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -211,7 +229,7 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
             else if(linDown) {
-                if(robot.mtrLinear.getCurrentPosition() <= 50) {
+                if(robot.mtrLinear.getCurrentPosition() <= 100) {
                     robot.mtrLinear.setPower(0);
                     linearRun = false;
                     linDown = false;
@@ -225,10 +243,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
+            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= 2940) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
+            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 100) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {

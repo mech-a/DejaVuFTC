@@ -39,6 +39,7 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEYORS;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA;
 
 public class HWRobot
 {
@@ -69,6 +70,8 @@ public class HWRobot
 
 
     double heading,roll,pitch;
+
+    boolean areWeActive = false;
 
 
 
@@ -151,15 +154,19 @@ public class HWRobot
                 break;
             case "all":
                 initMotors();
-                initServos();
+                //initServos();
                 initImu();
-                initVuforia();
-                initSensors();
+                //initVuforia();
+                //initSensors();
                 break;
             default:
                 telemetry.addData("err:", "unknown initialization");
                 telemetry.update();
         }
+    }
+
+    public void makeActive(boolean setting) {
+        areWeActive = setting;
     }
 
     private void initMotors() {
@@ -181,8 +188,8 @@ public class HWRobot
 
         //TODO mtr linear might be giving negative encoder values or encoder not plugged in correctly
         mtrLinear.setDirection(DcMotor.Direction.REVERSE);
-        mtrClawL.setDirection(DcMotor.Direction.FORWARD);
-        mtrClawR.setDirection(DcMotor.Direction.REVERSE);
+        mtrClawL.setDirection(DcMotor.Direction.REVERSE);
+        mtrClawR.setDirection(DcMotor.Direction.FORWARD);
 
         //zero power behavior
         mtrFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -211,6 +218,7 @@ public class HWRobot
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        mtrLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mtrClawL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrClawR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -347,8 +355,8 @@ public class HWRobot
         }
         else if(vuforiaRead.equals("UNKNOWN")) {
             telemetry.addData("Unknown read:", "going for center");
-            telemetry.update();
         }
+        telemetry.update();
     }
 
     public void moveForCrypto(boolean active) {
@@ -367,7 +375,82 @@ public class HWRobot
         }
         else if(vuf.equals("UNKNOWN")) {
             telemetry.addData("Unknown read:", "going for center");
-            telemetry.update();
+        }
+        telemetry.update();
+    }
+
+    public void adjustPosForCrypto(String generalDirection, String teamColor, boolean front, boolean active) {
+        String normalizedGenDir = generalDirection;
+
+        if(front == true) {
+            //front
+            normalizedGenDir = "fwd";
+            //translate to be in between 1st and 2nd column, like how back will start out
+            translate(normalizedGenDir, SPEED_TO_VUFORIA, COUNTS_BETWEEN_COLUMNS/2, active);
+        }
+
+
+        if (active) {
+            if (teamColor.equals("red")) {
+                //ik its redundant dont scream at me its for aes.
+                if(vuf.equals("LEFT")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuf.equals("CENTER")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuf.equals("RIGHT")) {
+                    //nothing, already @ position
+                }
+            }
+            else if (teamColor.equals("blue")) {
+                if(vuf.equals("RIGHT")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuf.equals("CENTER")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuf.equals("LEFT")) {
+                    //nothing, already @ position
+                }
+            }
+        }
+    }
+    public void adjustPosForCrypto(String vuforia, String generalDirection, String teamColor, boolean front, boolean active) {
+        String normalizedGenDir = generalDirection;
+
+        if(front == true) {
+            //front
+            normalizedGenDir = "fwd";
+            //translate to be in between 1st and 2nd column, like how back will start out
+            translate(normalizedGenDir, SPEED_TO_VUFORIA, COUNTS_BETWEEN_COLUMNS/2, active);
+        }
+
+
+        if (active) {
+            if (teamColor.equals("red")) {
+                //ik its redundant dont scream at me its for aes.
+                if(vuforia.equals("LEFT")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuforia.equals("CENTER")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuforia.equals("RIGHT")) {
+                    //nothing, already @ position
+                }
+            }
+            else if (teamColor.equals("blue")) {
+                if(vuforia.equals("RIGHT")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuforia.equals("CENTER")) {
+                    translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                }
+                else if (vuforia.equals("LEFT")) {
+                    //nothing, already @ position
+                }
+            }
         }
     }
 
@@ -539,7 +622,7 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
@@ -567,7 +650,9 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
+            if( super.getClass().)
+
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
@@ -583,6 +668,8 @@ public class HWRobot
     //Currently does not add to heading therefore if you want to turn 90 degrees when you are already 90
     //You must pass in cw/ccw (dir) and then 180
     //We'll make this addition some time
+
+    //TODO while loop crashes; need to make it RUNWITHENCODERS until heading reaches;; OR BETTER IDEA make global boolean that is opModeIsActive and use that instead of active
     public void rotate(String direction, double speed, double angle, boolean active) {
         // TODO take out redundancy of setting power using thread
         // from -180 degrees -> 180 degrees
@@ -597,7 +684,7 @@ public class HWRobot
 
         if(active) {
             if (direction.equals("clockwise") || direction.equals("cw")) {
-                while(heading > cwNegativeAngle && active) {
+                while(heading > cwNegativeAngle && active && areWeActive) {
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
@@ -611,7 +698,7 @@ public class HWRobot
                 }
 
             } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-                while(heading < angle && active) {
+                while(heading < angle && active && areWeActive) {
 
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -656,7 +743,7 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy()) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
@@ -698,7 +785,7 @@ public class HWRobot
 
     // Decides translation function
 
-    private void decideDirection(String dir) {
+    public void decideDirection(String dir) {
         if(dir.equalsIgnoreCase("cw") || dir.equalsIgnoreCase("ccw")){
             if (dir.equals("clockwise") || dir.equals("cw")) {
                 a = 1;

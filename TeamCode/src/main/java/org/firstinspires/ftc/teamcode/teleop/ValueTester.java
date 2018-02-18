@@ -46,41 +46,41 @@ import org.firstinspires.ftc.teamcode.called.HWRobot;
 public class ValueTester extends LinearOpMode {
 
     // Declare OpMode members.
-    //HWRobot r = new HWRobot();
+    HWRobot r = new HWRobot();
     double currentPosArm = 0;
     double currentPosHitter = 0;
 
-    public Servo srvArmLeftJewel, srvHitterLeftJewel;
+    //public Servo srvArmLeftJewel, srvHitterLeftJewel;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        //r.getOpModeData(telemetry,hardwareMap);r.init("servos");
-        srvArmLeftJewel = hardwareMap.servo.get("arm_left_jewel");
-        srvHitterLeftJewel = hardwareMap.servo.get("hitter_left_jewel");
+        r.getOpModeData(telemetry,hardwareMap);r.init("servos");
+
         waitForStart();
 
 
         // run until the end of the match (driver presses STOP)
+        //
         while (opModeIsActive()) {
             if (gamepad1.left_bumper && gamepad1.a) {
-                currentPosArm+=0.01;
+                currentPosArm-=0.01;
             }
             else if(gamepad1.left_bumper) {
-                currentPosArm-=0.01;
+                currentPosArm+=0.01;
             }
 
             if (gamepad1.right_bumper && gamepad1.a) {
-                currentPosHitter+=0.01;
-            }
-            else if(gamepad1.right_bumper) {
                 currentPosHitter-=0.01;
             }
-            currentPosArm = Range.clip(currentPosArm, -1, 1);
-            currentPosHitter = Range.clip(currentPosHitter, -1, 1);
+            else if(gamepad1.right_bumper) {
+                currentPosHitter+=0.01;
+            }
+            currentPosArm = Range.clip(currentPosArm, 0, 1);
+            currentPosHitter = Range.clip(currentPosHitter, 0, 1);
 
-            srvArmLeftJewel.setPosition((currentPosArm));
-            srvHitterLeftJewel.setPosition(currentPosHitter);
+            r.srvJewelArm.setPosition((currentPosArm));
+            r.srvJewelHitter.setPosition(currentPosHitter);
 
             //r.srvIntakeL.setPower(currentPowerL);
             //r.srvIntakeR.setPower(-currentPowerR);

@@ -60,7 +60,7 @@ public class BackAutonCookieCutter extends LinearOpMode {
 
         //
         r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
-        vuf = r.getVuMark(a);
+        //vuf = r.getVuMark(a);
 
         r.translate("fwd", SPEED_TO_CRYPTO, COUNT_TO_CRYPTO, a);
         r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);

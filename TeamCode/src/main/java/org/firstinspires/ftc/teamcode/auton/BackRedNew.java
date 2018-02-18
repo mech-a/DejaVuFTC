@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.called;
+package org.firstinspires.ftc.teamcode.auton;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.called.AutonHandler;
+import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_DOWN;
@@ -19,7 +19,6 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_GET_TO_EDGE_OF_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDE_CLAW_POWER;
@@ -31,13 +30,15 @@ import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_G
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_TURN;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA;
 
-/**
- * Created by gbhat on 11/9/2017.
- */
-
-//TODO make ramp speed functions; reduces slippage
-public class AutonHandler {
+@Autonomous(name="BackRed Iterative", group="ITA")
+//@Disabled
+public class BackRedNew extends OpMode {
+    // Declare OpMode members.
+    //AutonHandler a = new AutonHandler();
     HWRobot r = new HWRobot();
+    String team = "red";
+    String area = "eff-back";
+
 
     boolean blueTeam = false;
     String vuf;
@@ -46,36 +47,36 @@ public class AutonHandler {
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
+    boolean a = true;
 
-    public void autonInit(Telemetry atele, HardwareMap hwmap) {
-        r.getOpModeData(atele, hwmap);
+
+    /*
+     * Code to run ONCE when the driver hits INIT
+     */
+    @Override
+    public void init() {
+        r.getOpModeData(telemetry, hardwareMap);
         r.init("all");
-
-        int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
-
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
-                cameraMonitorViewId
-        );
-
-        parameters.vuforiaLicenseKey = r.vuforiaKey;
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        r.makeActive(true);
+        telemetry.addData("Status", "Initialized");
     }
 
-    public void auton(String team, String area, Telemetry telemetry, HardwareMap hwMap, boolean a) {
-        //TODO error due to this? might need seperate initialization of getOpModeData
-        //r.getOpModeData(telemetry, hwMap); r.init("all");
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
+    @Override
+    public void init_loop() {
+    }
 
-        if(team.toLowerCase().equals("red")) {
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start() {
+        if (team.toLowerCase().equals("red")) {
             blueTeam = false;
             generalDirection = "fwd";
-        }
-        else if(team.toLowerCase().equals("blue")) {
+        } else if (team.toLowerCase().equals("blue")) {
             blueTeam = true;
             generalDirection = "bk";
         }
@@ -83,27 +84,24 @@ public class AutonHandler {
         telemetry.update();
 
 
-        if(area.toLowerCase().equals("back")) {
+        if (area.toLowerCase().equals("back")) {
             //teamString = (blueTeam) ? "blue" : "red";
             //jewel(team, a);
             //vuf = r.getVuMark(a);
-            if(a) {
+            if (a) {
                 relicTrackables.activate();
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                for(int i = 1; i < 5; i++) {
+                for (int i = 1; i < 5; i++) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     rsleep(200);
                 }
-                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
                     vuf = "UNKNOWN";
-                }
-                else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                     vuf = "LEFT";
-                }
-                else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                } else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     vuf = "CENTER";
-                }
-                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     vuf = "RIGHT";
                 }
             }
@@ -117,15 +115,14 @@ public class AutonHandler {
             rsleep(500);
             r.moveForCrypto(vuf, a);
             rsleep(500);
-            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
             rsleep(500);
             extrudeGlyphStart();
             rsleep(600);
             r.translate("back", 0.2, 4.0, a);
             extrudeGlyphStop();
-        }
-        else if (area.toLowerCase().equals("backtest")) {
-            if(a) {
+        } else if (area.toLowerCase().equals("backtest")) {
+            if (a) {
                 r.getVuMark(a);
                 r.translate(generalDirection, SPEED_TO_VUFORIA, COUNTS_TO_VUFORIA, a);
                 rsleep(500);
@@ -136,16 +133,14 @@ public class AutonHandler {
                 rsleep(500);
                 r.moveForCrypto(a);
                 rsleep(500);
-                r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+                r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
                 rsleep(500);
                 extrudeGlyphStart();
                 rsleep(600);
                 r.translate("back", 0.2, 4.0, a);
                 extrudeGlyphStop();
             }
-        }
-
-        else if (area.toLowerCase().equals("eff-back")) {
+        } else if (area.toLowerCase().equals("eff-back")) {
             //more efficient test code; doesnt translate left or right to complete going to crypto
             rsleep(5000);
             getVuMarkDataNotFromHWROBOT();
@@ -156,28 +151,26 @@ public class AutonHandler {
             rsleep(500);
             //jewel(team, a);
             //rsleep(500);
-            r.translate(generalDirection,SPEED_TO_CRYPTO,COUNTS_TO_GET_TO_EDGE_OF_CRYPTO, a);
+            r.translate(generalDirection, SPEED_TO_CRYPTO, COUNTS_TO_GET_TO_EDGE_OF_CRYPTO, a);
             rsleep(500);
-            r.adjustPosForCrypto(vuf,generalDirection,team,false,a);
+            r.adjustPosForCrypto(vuf, generalDirection, team, false, a);
             rsleep(500);
             //r.rotate("cw", SPEED_TO_TURN, DEGREES_TO_TURN_FOR_CRYPTO, a);
-            r.rotate("cw", SPEED_TO_TURN, 90, a);
+            r.rotateByCounts("cw", SPEED_TO_TURN, 90, a);
             rsleep(500);
-            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH,a);
+            r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
             rsleep(500);
             extrudeGlyphStart();
             rsleep(600);
             r.translate("back", 0.2, 4.0, a);
             extrudeGlyphStop();
-        }
-
-        else if (area.toLowerCase().equals("front")) {
+        } else if (area.toLowerCase().equals("front")) {
             //jewel(team, a);
             //vuf = r.getVuMark(a);
-            if(a) {
+            if (a) {
                 relicTrackables.activate();
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                for(int i = 1; i < 5; i++) {
+                for (int i = 1; i < 5; i++) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     try {
                         sleep(200);
@@ -185,16 +178,13 @@ public class AutonHandler {
                         e.printStackTrace();
                     }
                 }
-                if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
                     vuf = "UNKNOWN";
-                }
-                else if(vuMark == RelicRecoveryVuMark.LEFT) {
+                } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                     vuf = "LEFT";
-                }
-                else if(vuMark == RelicRecoveryVuMark.CENTER) {
+                } else if (vuMark == RelicRecoveryVuMark.CENTER) {
                     vuf = "CENTER";
-                }
-                else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                     vuf = "RIGHT";
                 }
             }
@@ -204,19 +194,18 @@ public class AutonHandler {
             //rsleep(500);
             r.translate(generalDirection, 0.2, COUNTS_TO_CRYPTO_FRONT, a);
             rsleep(500);
-            r.rotate("ccw",0.2,90,a);
+            r.rotate("ccw", 0.2, 90, a);
             rsleep(500);
-            r.translate("fwd", 0.2, 12*COUNTS_PER_INCH, a);
+            r.translate("fwd", 0.2, 12 * COUNTS_PER_INCH, a);
 
             //TODO not sure if it'll move 90degrees more or not move
-            if(blueTeam) {
-                r.rotate("ccw",0.2,170,a);
+            if (blueTeam) {
+                r.rotate("ccw", 0.2, 170, a);
                 r.init("imu");
                 rsleep(2000);
-                r.rotate("ccw",0.2,10,a);
-            }
-            else {
-                r.rotate("cw",0.2,0.001,a);
+                r.rotate("ccw", 0.2, 10, a);
+            } else {
+                r.rotate("cw", 0.2, 0.001, a);
             }
 
 
@@ -243,28 +232,26 @@ public class AutonHandler {
             rsleep(600);
             r.translate("back", 0.2, 4.0, a);
             extrudeGlyphStop();
-        }
-        else if (area.toLowerCase().equals("fronttest")) {
-            if(a) {
+        } else if (area.toLowerCase().equals("fronttest")) {
+            if (a) {
                 r.getVuMark(a);
                 r.translate(generalDirection, 0.2, COUNTS_TO_VUFORIA, a);
                 rsleep(500);
                 //rsleep(500);
                 r.translate(generalDirection, 0.2, COUNTS_TO_CRYPTO_FRONT, a);
                 rsleep(500);
-                r.rotate("ccw",0.2,90,a);
+                r.rotate("ccw", 0.2, 90, a);
                 rsleep(500);
-                r.translate("fwd", 0.2, 12*COUNTS_PER_INCH, a);
+                r.translate("fwd", 0.2, 12 * COUNTS_PER_INCH, a);
 
                 //TODO not sure if it'll move 90degrees more or not move
-                if(blueTeam) {
-                    r.rotate("ccw",0.2,170,a);
+                if (blueTeam) {
+                    r.rotate("ccw", 0.2, 170, a);
                     r.init("imu");
                     rsleep(2000);
-                    r.rotate("ccw",0.2,10,a);
-                }
-                else {
-                    r.rotate("cw",0.2,0.001,a);
+                    r.rotate("ccw", 0.2, 10, a);
+                } else {
+                    r.rotate("cw", 0.2, 0.001, a);
                 }
                 rsleep(500);
                 r.moveForCrypto(a);
@@ -279,9 +266,7 @@ public class AutonHandler {
                 extrudeGlyphStop();
 
             }
-        }
-
-        else if (area.toLowerCase().equals("eff-front")) {
+        } else if (area.toLowerCase().equals("eff-front")) {
             //efficient auton
             rsleep(5000);
             getVuMarkDataNotFromHWROBOT();
@@ -292,19 +277,19 @@ public class AutonHandler {
             //rsleep(500);
             //jewel(team, a);
             rsleep(500);
-            r.translate(generalDirection,0.2,NEW_COUNTS_TO_CRYPTO_FRONT, a);
+            r.translate(generalDirection, 0.2, NEW_COUNTS_TO_CRYPTO_FRONT, a);
             rsleep(500);
-            r.rotate("ccw",0.2, 90, a);
+            //r.rotate("ccw",0.2, 90, a);
+            r.rotateByCounts("ccw", 0.2, 90, a);
             rsleep(500);
-            r.adjustPosForCrypto(vuf,generalDirection,team,true,a);
+            r.adjustPosForCrypto(vuf, generalDirection, team, true, a);
             rsleep(500);
-            if(blueTeam) {
+            if (blueTeam) {
                 //r.init("vuf");
-                r.rotate("ccw", 0.2, 90, a);
-            }
-            else if (!blueTeam) {
+                r.rotateByCounts("ccw", 0.2, 90, a);
+            } else if (!blueTeam) {
                 //r.init("vuf");
-                r.rotate("cw", 0.2, 90, a);
+                r.rotateByCounts("cw", 0.2, 90, a);
             }
             rsleep(500);
             r.translate("fwd", SPEED_TO_PLACE_GLYPH, COUNTS_TO_PLACE_GLYPH, a);
@@ -314,16 +299,38 @@ public class AutonHandler {
             r.translate("back", 0.2, 4.0, a);
             rsleep(500);
             extrudeGlyphStop();
-        }
-
-        else if (area.toLowerCase().equals("jewel")) {
+        } else if (area.toLowerCase().equals("jewel")) {
             jewel(team, a);
-        }
-        else if (area.toLowerCase().equals("vuf strafe")) {
+        } else if (area.toLowerCase().equals("vuf strafe")) {
             r.moveForCrypto("LEFT", a);
             r.moveForCrypto("RIGHT", a);
         }
+
     }
+
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
+    @Override
+    public void loop() {
+        /*
+        a.auton(team,area,telemetry,hardwareMap,true);
+        try {
+            wait(30 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        */
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
+        r.makeActive(false);
+    }
+
 
     private void extrudeGlyphStart() {
         r.mtrClawL.setPower(EXTRUDE_CLAW_POWER);
@@ -345,7 +352,7 @@ public class AutonHandler {
     }
 
     private void jewel(String teamColor, boolean active) {
-        r.srvJewelArm.setPosition(ARM_JEWEL_DOWN/2);
+        r.srvJewelArm.setPosition(ARM_JEWEL_DOWN / 2);
         r.srvJewelHitter.setPosition(HITTER_JEWEL_MIDDLE);
         rsleep(250);
         r.srvJewelArm.setPosition(ARM_JEWEL_DOWN);
@@ -354,7 +361,7 @@ public class AutonHandler {
         rsleep(500);
         r.srvJewelHitter.setPosition(HITTER_JEWEL_MIDDLE);
         rsleep(500);
-        r.srvJewelArm.setPosition(ARM_JEWEL_UP/2);
+        r.srvJewelArm.setPosition(ARM_JEWEL_UP / 2);
         rsleep(500);
         r.srvJewelHitter.setPosition(HITTER_JEWEL_NORTH);
         rsleep(250);
@@ -364,74 +371,18 @@ public class AutonHandler {
     private void getVuMarkDataNotFromHWROBOT() {
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        for(int i = 1; i < 5; i++) {
+        for (int i = 1; i < 5; i++) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             rsleep(200);
         }
-        if(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             vuf = "UNKNOWN";
-        }
-        else if(vuMark == RelicRecoveryVuMark.LEFT) {
+        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
             vuf = "LEFT";
-        }
-        else if(vuMark == RelicRecoveryVuMark.CENTER) {
+        } else if (vuMark == RelicRecoveryVuMark.CENTER) {
             vuf = "CENTER";
-        }
-        else if(vuMark == RelicRecoveryVuMark.RIGHT) {
+        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
             vuf = "RIGHT";
         }
     }
-
-/*
-    public void translate(String dir, double speed, double inches, boolean active){ // Directional translation
-        r.decideDirection(dir);
-
-        if(active) {
-            r.mtrChangeMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            r.getNewPositions(inches);
-
-            r.setDirection();
-
-            r.mtrSetTargetPos(posFL,posFR,posBL,posBR);
-
-            r.mtrChangeMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            r.mtrSetSpeed(speed);
-
-            while(active && r.mtrFL.isBusy() && r.mtrFR.isBusy() && r.mtrBL.isBusy() && r.mtrBR.isBusy()) {
-                posOutOfFinalTelemetry(countTargets);
-            }
-
-            mtrSetSpeed(0);
-
-            mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

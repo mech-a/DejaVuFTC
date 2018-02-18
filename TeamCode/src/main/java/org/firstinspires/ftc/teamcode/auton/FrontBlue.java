@@ -48,7 +48,7 @@ public class FrontBlue extends LinearOpMode {
     // Declare OpMode members.
     AutonHandler a = new AutonHandler();
     String team = "blue";
-    String area = "front";
+    String area = "eff-front";
 
     @Override
     public void runOpMode() throws InterruptedException {
