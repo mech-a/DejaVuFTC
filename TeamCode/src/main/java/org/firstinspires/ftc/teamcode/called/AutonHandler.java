@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.called;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Hardware;
@@ -47,8 +48,8 @@ public class AutonHandler {
     VuforiaTrackable relicTemplate;
 
 
-    public void autonInit(Telemetry atele, HardwareMap hwmap) {
-        r.getOpModeData(atele, hwmap);
+    public void autonInit(Telemetry atele, HardwareMap hwmap, LinearOpMode invoked) {
+        r.getOpModeData(atele, hwmap, invoked);
         r.init("all");
 
         int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
@@ -81,7 +82,6 @@ public class AutonHandler {
         }
         telemetry.addData("got to", "before back/front loop");
         telemetry.update();
-
 
         if(area.toLowerCase().equals("back")) {
             //teamString = (blueTeam) ? "blue" : "red";

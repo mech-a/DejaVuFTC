@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.called;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,6 +53,8 @@ public class HWRobot
     public VuforiaLocalizer vuforia;
 
 
+
+
     // Declare speeds and other vars
     public double powFL = 0;
     public double powFR = 0;
@@ -71,7 +74,7 @@ public class HWRobot
 
     double heading,roll,pitch;
 
-    boolean areWeActive = false;
+    boolean areWeActive = true;
 
 
 
@@ -121,6 +124,7 @@ public class HWRobot
     public Orientation angles;
     public VuforiaTrackables relicTrackables;
     public VuforiaTrackable relicTemplate;
+    LinearOpMode inv = null;
 
     /*
     public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
@@ -128,6 +132,12 @@ public class HWRobot
         hwMap = ahwMap;
 }
 */
+
+    public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap, LinearOpMode invoked) {
+        telemetry = atelemetry;
+        hwMap = ahwMap;
+        inv = invoked;
+    }
 
     public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap) {
         telemetry = atelemetry;
@@ -626,6 +636,10 @@ public class HWRobot
                 posOutOfFinalTelemetry(countTargets);
             }
 
+            if(inv.isStopRequested()) {
+                inv.stop();
+            }
+
             mtrSetSpeed(0);
 
             mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -650,10 +664,14 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            if( super.getClass().)
+            //if(super)
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && !inv.isStopRequested()) {
                 posOutOfFinalTelemetry(countTargets);
+            }
+
+            if(inv.isStopRequested()) {
+                inv.stop();
             }
 
             mtrSetSpeed(0);
@@ -684,7 +702,25 @@ public class HWRobot
 
         if(active) {
             if (direction.equals("clockwise") || direction.equals("cw")) {
-                while(heading > cwNegativeAngle && active && areWeActive) {
+                while(heading > cwNegativeAngle && active && !inv.isStopRequested()) {
+                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                    heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+                    mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+                    mtrSetSpeed(speed);
+                    telemetry.addData("heading", heading);
+                    telemetry.update();
+
+                }
+                if(inv.isStopRequested()) {
+                    inv.stop();
+                }
+
+            } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
+                while(heading < angle && active && areWeActive && !inv.isStopRequested()) {
+
                     angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                     heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
@@ -697,19 +733,8 @@ public class HWRobot
 
                 }
 
-            } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-                while(heading < angle && active && areWeActive) {
-
-                    angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                    heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-
-                    mtrChangeMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-                    mtrSetSpeed(speed);
-                    telemetry.addData("heading", heading);
-                    telemetry.update();
-
+                if(inv.isStopRequested()) {
+                    inv.stop();
                 }
 
             }
@@ -743,8 +768,12 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && !inv.isStopRequested()) {
                 posOutOfFinalTelemetry(countTargets);
+            }
+
+            if(inv.isStopRequested()) {
+                inv.stop();
             }
 
             mtrSetSpeed(0);

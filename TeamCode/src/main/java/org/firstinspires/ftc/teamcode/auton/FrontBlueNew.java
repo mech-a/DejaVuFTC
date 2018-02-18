@@ -23,7 +23,7 @@ public class FrontBlueNew extends OpMode
      */
     @Override
     public void init() {
-        a.autonInit(telemetry,hardwareMap);
+        //a.autonInit(telemetry,hardwareMap,this);
         r.makeActive(true);
         telemetry.addData("Status", "Initialized");
     }

@@ -47,6 +47,7 @@ public class CopyMeLinear extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
 
         // run until the end of the match (driver presses STOP)

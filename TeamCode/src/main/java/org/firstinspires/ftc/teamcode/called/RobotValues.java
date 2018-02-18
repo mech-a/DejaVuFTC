@@ -54,10 +54,10 @@ public class RobotValues {
     public static double EXTRUDER_SPEED = 1.0;
 
     //counts to vuf + crypto = 36 * countsPerInch
-    public static double SPEED_TO_VUFORIA = 0.1;
+    public static double SPEED_TO_VUFORIA = 0.4;
     public static int COUNTS_TO_VUFORIA = 10 * COUNTS_PER_INCH;
 
-    public static double SPEED_TO_CRYPTO = 0.2;
+    public static double SPEED_TO_CRYPTO = 0.4;
     public static int COUNT_TO_CRYPTO = 26 * COUNTS_PER_INCH;
 
     public static double SPEED_TO_TURN = 0.2;
@@ -72,7 +72,7 @@ public class RobotValues {
 
 
 
-    public static double SPEED_TO_PLACE_GLYPH = 0.2;
+    public static double SPEED_TO_PLACE_GLYPH = 0.3;
     public static int COUNTS_TO_PLACE_GLYPH = 8 * COUNTS_PER_INCH;
 
     public static double DEADZONE = 0.1;
