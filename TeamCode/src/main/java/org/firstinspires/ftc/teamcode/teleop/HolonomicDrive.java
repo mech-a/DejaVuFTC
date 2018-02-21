@@ -36,9 +36,9 @@ public class HolonomicDrive extends LinearOpMode{
     private boolean linearRun = false;
     private boolean linUp = false;
     private boolean linDown = false;
-    private double slowLimit = 0.5;
-    private double fastLimit = 1;
-    private double modifierValueDefault = 0.75;
+    private double slowLimit = 0.25;
+    private double fastLimit = 0.75;
+    private double modifierValueDefault = 0.5;
     private double modifierValue = modifierValueDefault;
     //private double modifierValue = 1;
 
@@ -165,7 +165,7 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
-            sleep(250);
+            sleep(25);
         }
 
         else if(runFast) {
@@ -177,7 +177,7 @@ public class HolonomicDrive extends LinearOpMode{
             else if(modifierValue == slowLimit || modifierValue == fastLimit) {
                 modifierValue = modifierValueDefault;
             }
-            sleep(250);
+            sleep(25);
         }
 
     }
@@ -246,7 +246,7 @@ public class HolonomicDrive extends LinearOpMode{
             if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= 2940) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 100) {
+            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 300) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
@@ -318,12 +318,12 @@ public class HolonomicDrive extends LinearOpMode{
         if(gamepad2.left_bumper) {
             totalDifference-=epsilon;
             totalDifference = Range.clip(totalDifference, -0.5, 0.5);
-            sleep(60);
+            sleep(20);
         }
         else if(gamepad2.right_bumper) {
             totalDifference+=epsilon;
             totalDifference = Range.clip(totalDifference, -0.5, 0.5);
-            sleep(60);
+            sleep(20);
         }
         else if(gamepad2.left_stick_button) {
             totalDifference = 0;

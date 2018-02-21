@@ -442,23 +442,45 @@ public class HWRobot
                 //ik its redundant dont scream at me its for aes.
                 if(vuforia.equals("LEFT")) {
                     translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                    telemetry.addData("VUFMOVE:", "LEFT");
+                    telemetry.update();
                 }
                 else if (vuforia.equals("CENTER")) {
                     translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                    telemetry.addData("VUFMOVE:", "CENTER");
+                    telemetry.update();
                 }
                 else if (vuforia.equals("RIGHT")) {
                     //nothing, already @ position
+                    telemetry.addData("VUFMOVE:", "RIGHT: AT POS");
+                    telemetry.update();
+                }
+                else if (vuforia.equals("UNKNOWN")) {
+                    //no read just turn
+                    telemetry.addData("VUFMOVE:", "UNKN: AT POS");
+                    telemetry.update();
                 }
             }
             else if (teamColor.equals("blue")) {
                 if(vuforia.equals("RIGHT")) {
                     translate(normalizedGenDir,SPEED_TO_VUFORIA, 2*COUNTS_BETWEEN_COLUMNS, active);
+                    telemetry.addData("VUFMOVE:", "RIGHT");
+                    telemetry.update();
                 }
                 else if (vuforia.equals("CENTER")) {
                     translate(normalizedGenDir,SPEED_TO_VUFORIA, 1*COUNTS_BETWEEN_COLUMNS, active);
+                    telemetry.addData("VUFMOVE:", "CENTER");
+                    telemetry.update();
                 }
                 else if (vuforia.equals("LEFT")) {
                     //nothing, already @ position
+                    telemetry.addData("VUFMOVE:", "LEFT: AT POS");
+                    telemetry.update();
+                }
+                else if (vuforia.equals("UNKNOWN")) {
+                    //no read just turn
+                    telemetry.addData("VUFMOVE:", "UNKN: AT POS");
+                    telemetry.update();
                 }
             }
         }

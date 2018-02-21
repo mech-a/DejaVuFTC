@@ -46,6 +46,7 @@ import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_GET_TO_EDGE_OF_CRYPTO;
+import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_GET_TO_MID_FRONT;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
@@ -205,7 +206,7 @@ public class BackBlue extends LinearOpMode {
             sleep(500);
             extrudeGlyphStart();
             sleep(600);
-            r.translate("back", 0.2, 4.0, a);
+            r.translate("back", SPEED_TO_PLACE_GLYPH, 6.0, a);
             extrudeGlyphStop();
         }
 
@@ -327,16 +328,17 @@ public class BackBlue extends LinearOpMode {
             sleep(500);
             r.translate(generalDirection,SPEED_TO_VUFORIA,NEW_COUNTS_TO_CRYPTO_FRONT, a);
             sleep(500);
-            r.rotate("ccw",SPEED_TO_VUFORIA, 90, a);
+            r.rotate("ccw",SPEED_TO_TURN, 90, a);
             sleep(500);
+            //r.translate("fwd", SPEED_TO_VUFORIA, COUNTS_TO_GET_TO_MID_FRONT, a);
             r.adjustPosForCrypto(vuf,generalDirection,team,true,a);
             sleep(500);
             if(blueTeam) {
-                //r.init("vuf");
+                r.init("imu");
                 r.rotate("ccw", SPEED_TO_TURN, 90, a);
             }
             else if (!blueTeam) {
-                //r.init("vuf");
+                r.init("imu");
                 r.rotate("cw", SPEED_TO_TURN, 90, a);
             }
             sleep(500);
@@ -344,7 +346,7 @@ public class BackBlue extends LinearOpMode {
             sleep(500);
             extrudeGlyphStart();
             sleep(500);
-            r.translate("back", SPEED_TO_VUFORIA, 4.0, a);
+            r.translate("back", SPEED_TO_PLACE_GLYPH, 6.0, a);
             sleep(500);
             extrudeGlyphStop();
         }
