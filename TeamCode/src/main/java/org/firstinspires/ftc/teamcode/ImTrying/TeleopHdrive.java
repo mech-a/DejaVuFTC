@@ -96,8 +96,8 @@ public class TeleopHdrive extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        RightDrive.setDirection(DcMotor.Direction.FORWARD);
-        LeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        LeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        RightDrive.setDirection(DcMotor.Direction.REVERSE);
         ClawMotor.setDirection(DcMotor.Direction.FORWARD);
         StrafeDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -127,6 +127,8 @@ public class TeleopHdrive extends LinearOpMode {
 
             //TODO: the whole holonomic drive thingy
 
+            //StrafePow = gamepad1.left_stick_x;
+
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
             LeftPow = Range.clip(drive + turn, -1.0, 1.0) ;
@@ -137,6 +139,25 @@ public class TeleopHdrive extends LinearOpMode {
             LeftDrive.setPower(LeftPow);
             ClawMotor.setPower(ClawPow);
             StrafeDrive.setPower(StrafePow);
+
+            /*
+            if(gamepad1.dpad_left)
+                StrafePow += 0.3;
+            if(gamepad1.dpad_right)
+                StrafePow -= 0.3;
+            */
+
+            if(gamepad1.dpad_up)
+                CLAW_RIGHT1_OUT += 0.05;
+            if(gamepad1.dpad_down)
+                CLAW_RIGHT1_OUT -= 0.05;
+
+            
+            ClawR1.setPosition(CLAW_RIGHT1_OUT);
+
+            telemetry.addData("Servo Right1:", CLAW_RIGHT1_OUT);
+
+
             sleep(125);
 
             /*
