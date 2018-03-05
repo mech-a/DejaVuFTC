@@ -42,14 +42,15 @@ public class TeleopHdrive extends LinearOpMode {
     // Declare OpMode members.
 
     //TODO: assign servo values; they are not 0.93
-    public static double CLAW_RIGHT1_OUT = 0.93;
-    public static double CLAW_LEFT1_OUT = 0.93;
-    public static double CLAW_RIGHT2_OUT = 0.93;
-    public static double CLAW_LEFT2_OUT = 0.93;
-    public static double CLAW_RIGHT1_IN = 0.93;
-    public static double CLAW_LEFT1_IN = 0.93;
-    public static double CLAW_RIGHT2_IN = 0.93;
-    public static double CLAW_LEFT2_IN = 0.93;
+    public double CLAW_RIGHT1_OUT = 0.7;
+    public double CLAW_RIGHT2_OUT = 0.67;
+    public double CLAW_LEFT1_OUT = 0.28;
+    public double CLAW_LEFT2_OUT = 0.26;
+
+    public double CLAW_RIGHT1_IN = 0.5;
+    public double CLAW_RIGHT2_IN = 0.47;
+    public double CLAW_LEFT1_IN = 0.48;
+    public double CLAW_LEFT2_IN = 0.47;
 
     private double LeftPow = 0;
     private double RightPow = 0;
@@ -147,15 +148,19 @@ public class TeleopHdrive extends LinearOpMode {
                 StrafePow -= 0.3;
             */
 
-            if(gamepad1.dpad_up)
-                CLAW_RIGHT1_OUT += 0.05;
-            if(gamepad1.dpad_down)
-                CLAW_RIGHT1_OUT -= 0.05;
+            if(gamepad1.x) {
+                ClawR1.setPosition(CLAW_RIGHT1_IN);
+                ClawR2.setPosition(CLAW_RIGHT2_IN);
+                ClawL1.setPosition(CLAW_LEFT1_IN);
+                ClawL2.setPosition(CLAW_LEFT2_IN);
+            }
+            if(gamepad1.b) {
+                ClawR1.setPosition(CLAW_RIGHT1_OUT);
+                ClawR2.setPosition(CLAW_RIGHT2_OUT);
+                ClawL1.setPosition(CLAW_LEFT1_OUT);
+                ClawL2.setPosition(CLAW_LEFT2_OUT);
+            }
 
-            
-            ClawR1.setPosition(CLAW_RIGHT1_OUT);
-
-            telemetry.addData("Servo Right1:", CLAW_RIGHT1_OUT);
 
 
             sleep(125);
@@ -164,6 +169,13 @@ public class TeleopHdrive extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.update();
+            */
+            /*
+            telemetry.addData("Servo Right1:", CLAW_RIGHT1_OUT);
+            telemetry.addData("Servo Right2:", CLAW_RIGHT2_OUT);
+            telemetry.addData("Servo Left1:", CLAW_LEFT1_OUT);
+            telemetry.addData("Servo Left2:", CLAW_LEFT2_OUT);
             telemetry.update();
             */
         }
