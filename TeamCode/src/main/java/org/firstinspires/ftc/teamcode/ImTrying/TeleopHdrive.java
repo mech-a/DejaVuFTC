@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
 import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
@@ -125,6 +126,11 @@ public class TeleopHdrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             //TODO: the whole holonomic drive thingy
+
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+            LeftPow = Range.clip(drive + turn, -1.0, 1.0) ;
+            RightPow = Range.clip(drive - turn, -1.0, 1.0) ;
 
             //Set power for drive motors
             RightDrive.setPower(RightPow);
