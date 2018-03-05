@@ -135,7 +135,7 @@ public class TeleopHdrive extends LinearOpMode {
             LeftPow = Range.clip(drive + turn, -1.0, 1.0) ;
             RightPow = Range.clip(drive - turn, -1.0, 1.0) ;
 
-            //Set power for drive motors
+            //Set power for all motors
             RightDrive.setPower(RightPow);
             LeftDrive.setPower(LeftPow);
             ClawMotor.setPower(ClawPow);
@@ -147,6 +147,20 @@ public class TeleopHdrive extends LinearOpMode {
             if(gamepad1.dpad_right)
                 StrafePow -= 0.3;
             */
+
+            if(gamepad1.y) {
+                ClawPow += 0.1;
+            }
+            if(gamepad1.a) {
+                ClawPow -= 0.1;
+            }
+
+            ClawPow = Range.clip(ClawPow, -0.3, 0.3) ;
+//            if(gamepad1.a) {
+//                ClawPow = -1;
+//                sleep(1000);
+//                ClawPow = 0;
+//            }
 
             if(gamepad1.x) {
                 ClawR1.setPosition(CLAW_RIGHT1_IN);
@@ -161,9 +175,10 @@ public class TeleopHdrive extends LinearOpMode {
                 ClawL2.setPosition(CLAW_LEFT2_OUT);
             }
 
+            telemetry.addData("Claw motor power:", ClawPow);
+            telemetry.update();
 
-
-            sleep(125);
+            sleep(69);
 
             /*
             // Show the elapsed game time and wheel power.
