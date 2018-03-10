@@ -74,10 +74,10 @@ public class HolonomicDrive extends LinearOpMode{
             linearSlideControlOld();
 
             /*
-            if(gamepad2.dpad_down) {
+            if(gamepad1.dpad_down) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
-            else if (gamepad2.dpad_up) {
+            else if (gamepad1.dpad_up) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
             else {
@@ -108,10 +108,10 @@ public class HolonomicDrive extends LinearOpMode{
         ch3 = gamepad1.right_stick_x;
         ch4 = -gamepad1.right_stick_y;
 
-        g2ch1 = gamepad2.left_stick_x;
-        g2ch2 = -gamepad2.left_stick_y;
-        g2ch3 = gamepad2.right_stick_x;
-        g2ch4 = -gamepad2.right_stick_y;
+        g2ch1 = gamepad1.left_stick_x;
+        g2ch2 = -gamepad1.left_stick_y;
+        g2ch3 = gamepad1.right_stick_x;
+        g2ch4 = -gamepad1.right_stick_y;
 
         if(Math.abs(ch1) <= DEADZONE) {
             ch1 = 0;
@@ -131,10 +131,17 @@ public class HolonomicDrive extends LinearOpMode{
 
     //Sets how channels determine motor powers (mecanum in this case)
     private void setPowers() {
-        powFL = ch2 + ch1 + ch3;
-        powFR = ch2 - ch1 - ch3;
-        powBL = ch2 - ch1 + ch3;
-        powBR = ch2 + ch1 - ch3;
+        //correct
+//        powFL = ch2 + ch1 + ch3;
+//        powFR = ch2 - ch1 - ch3;
+//        powBL = ch2 - ch1 + ch3;
+//        powBR = ch2 + ch1 - ch3;
+
+        powFL = ch1 + ch2 + ch3;
+        powFR = ch1 - ch2 - ch3;
+        powBL = ch1 - ch2 + ch3;
+        powBR = ch1 + ch2 - ch3;
+
 
         //because wheel setup is wrong, try this; currently left on stick is right .
         //powFL = ch2 - ch1 + ch3;
@@ -187,18 +194,18 @@ public class HolonomicDrive extends LinearOpMode{
         //we want manual control, automatic control that can go up and down
         //we use the booleans below to indicate what mode the slide should be doing
 
-        if(gamepad2.y) {
+        if(gamepad1.y) {
             linearRun = true;
             linUp = true;
             linDown = false;
         }
-        if(gamepad2.a) {
+        if(gamepad1.a) {
             linearRun = true;
             linUp = false;
             linDown = true;
         }
         //this is a force manual
-        if(gamepad2.right_stick_button) {
+        if(gamepad1.right_stick_button) {
             robot.mtrLinear.setPower(0);
             linearRun = false;
             linDown = false;
@@ -211,7 +218,7 @@ public class HolonomicDrive extends LinearOpMode{
         //we want this system to be smart - we want to go to every 6 inch increment
         //we use slidelevel to signify which counts we want to go to
         if(linearRun) {
-            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+            if(gamepad1.dpad_up || gamepad1.dpad_down) {
                 linearRun = false;
                 linDown = false;
                 linUp = false;
@@ -243,10 +250,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= 2940) {
+            if(gamepad1.dpad_up && robot.mtrLinear.getCurrentPosition() <= 2940) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 300) {
+            else if(gamepad1.dpad_down && robot.mtrLinear.getCurrentPosition() >= 300) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
@@ -291,7 +298,7 @@ public class HolonomicDrive extends LinearOpMode{
                 }
             }
 
-            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+            if(gamepad1.dpad_up || gamepad1.dpad_down) {
                 linearRun = false;
                 linDown = false;
                 linUp = false;
@@ -300,10 +307,10 @@ public class HolonomicDrive extends LinearOpMode{
         }
 
         if(!linearRun) {
-            if(gamepad2.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
+            if(gamepad1.dpad_up && robot.mtrLinear.getCurrentPosition() <= SEVEN_INCHES_NV60 * 1.25) {
                 robot.mtrLinear.setPower(NV60_SPEED);
             }
-            else if(gamepad2.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
+            else if(gamepad1.dpad_down && robot.mtrLinear.getCurrentPosition() >= 0) {
                 robot.mtrLinear.setPower(-NV60_SPEED);
             }
             else {
@@ -315,27 +322,27 @@ public class HolonomicDrive extends LinearOpMode{
     //sets 2 buttons to extrude or intake glyphs
     private void setClawSpeeds() {
         //Adjusting speed of claw
-        if(gamepad2.left_bumper) {
+        if(gamepad1.left_bumper) {
             totalDifference-=epsilon;
             totalDifference = Range.clip(totalDifference, -0.5, 0.5);
             sleep(20);
         }
-        else if(gamepad2.right_bumper) {
+        else if(gamepad1.right_bumper) {
             totalDifference+=epsilon;
             totalDifference = Range.clip(totalDifference, -0.5, 0.5);
             sleep(20);
         }
-        else if(gamepad2.left_stick_button) {
+        else if(gamepad1.left_stick_button) {
             totalDifference = 0;
         }
 
 
 
-        if(gamepad2.x) {
+        if(gamepad1.x) {
             powClawL = clawSpeed + totalDifference;
             powClawR = clawSpeed + totalDifference;
         }
-        else if (gamepad2.b) {
+        else if (gamepad1.b) {
             powClawL = -(clawSpeed + totalDifference);
             powClawR = -(clawSpeed + totalDifference);
         }
@@ -357,13 +364,13 @@ public class HolonomicDrive extends LinearOpMode{
 
     /*
     private void resets() {
-        if(gamepad2.dpad_up) {
+        if(gamepad1.dpad_up) {
             robot.resets("reverse");
         }
-        else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+        else if (gamepad1.dpad_left || gamepad1.dpad_right) {
             robot.resets("normal");
         }
-        else if (gamepad2.dpad_down) {
+        else if (gamepad1.dpad_down) {
             robot.resets("stop");
         }
     }*/
