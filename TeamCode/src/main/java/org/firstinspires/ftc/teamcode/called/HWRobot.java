@@ -654,7 +654,7 @@ public class HWRobot
 
             mtrSetSpeed(speed);
 
-            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive) {
+            while(active && mtrFL.isBusy() && mtrFR.isBusy() && mtrBL.isBusy() && mtrBR.isBusy() && areWeActive && !inv.isStopRequested()) {
                 posOutOfFinalTelemetry(countTargets);
             }
 
