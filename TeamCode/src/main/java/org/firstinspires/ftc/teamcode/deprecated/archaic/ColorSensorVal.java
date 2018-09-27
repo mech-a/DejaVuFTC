@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.archaic;
+package org.firstinspires.ftc.teamcode.deprecated.archaic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.called.HWRobot;
+import org.firstinspires.ftc.teamcode.deprecated.called.HWRobot;
 
 /**
  * Autonomous made for color sensor values

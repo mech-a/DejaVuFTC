@@ -1,19 +1,17 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.deprecated.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.called.HWRobot;
+import org.firstinspires.ftc.teamcode.deprecated.called.HWRobot;
 
-import static com.sun.tools.doclint.Entity.le;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.DEADZONE;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SEVEN_INCHES_NV60;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SIXPOINTFIVE_NV60;
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.DEADZONE;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.NV60_SPEED;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SEVEN_INCHES_NV60;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SIXPOINTFIVE_NV60;
+//import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SIX_INCHES_NV60;
 
 /**
  * Created by gbhat on 8/20/2017.

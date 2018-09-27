@@ -27,19 +27,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.deprecated.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.called.HWRobot;
+import org.firstinspires.ftc.teamcode.deprecated.called.HWRobot;
 
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
+//import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
+//import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_PLACE_GLYPH;
 
 
 /**

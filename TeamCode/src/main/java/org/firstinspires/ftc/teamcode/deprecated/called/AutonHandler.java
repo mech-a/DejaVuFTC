@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.called;
+package org.firstinspires.ftc.teamcode.deprecated.called;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,24 +11,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_DOWN;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_GET_TO_EDGE_OF_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
-//import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDE_CLAW_POWER;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_MIDDLE;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_NORTH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.NEW_COUNTS_TO_CRYPTO_FRONT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_TURN;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.ARM_JEWEL_DOWN;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.ARM_JEWEL_UP;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_CRYPTO_FRONT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_GET_TO_EDGE_OF_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_VUFORIA;
+//import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_VUFORIA_FRONT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNT_TO_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.EXTRUDE_CLAW_POWER;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.HITTER_JEWEL_MIDDLE;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.HITTER_JEWEL_NORTH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.NEW_COUNTS_TO_CRYPTO_FRONT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_PLACE_GLYPH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_TURN;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_VUFORIA;
 
 /**
  * Created by gbhat on 11/9/2017.

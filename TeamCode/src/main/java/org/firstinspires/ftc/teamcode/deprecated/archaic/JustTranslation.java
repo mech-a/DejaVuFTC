@@ -1,11 +1,8 @@
-package org.firstinspires.ftc.teamcode.archaic;
+package org.firstinspires.ftc.teamcode.deprecated.archaic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.called.HWRobot;
 
 /**
  * Autonomous made to test out translation and other functions related to movement.

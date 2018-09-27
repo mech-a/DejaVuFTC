@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode.called;
+package org.firstinspires.ftc.teamcode.deprecated.called;
 
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -25,22 +22,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.ARM_JEWEL_UP;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.BLUE_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_FOR_FULL_ROTATION;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.EXTRUDER_SPEED;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_NORTH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.HITTER_JEWEL_SOUTH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.NV60_SPEED;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.RED_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SCALE_FACTOR;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SIX_INCHES_NV60;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_FOR_CONVEYORS;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.ARM_JEWEL_UP;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.BLUE_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.BLUE_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_BETWEEN_COLUMNS;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_FOR_FULL_ROTATION;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.HITTER_JEWEL_NORTH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.HITTER_JEWEL_SOUTH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.NV60_SPEED;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.RED_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.RED_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SCALE_FACTOR;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SIX_INCHES_NV60;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_FOR_CONVEYORS;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_VUFORIA;
 
 public class HWRobot
 {

@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.deprecated.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.called.AutonHandler;
-import org.firstinspires.ftc.teamcode.called.HWRobot;
+import org.firstinspires.ftc.teamcode.deprecated.called.AutonHandler;
+import org.firstinspires.ftc.teamcode.deprecated.called.HWRobot;
 
 @Autonomous(name="FrontBlue Iterative", group="ITA")
 //@Disabled

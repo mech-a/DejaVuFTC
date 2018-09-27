@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.deprecated.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.called.HWRobot;
+import org.firstinspires.ftc.teamcode.deprecated.called.HWRobot;
 
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNTS_TO_VUFORIA;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.COUNT_TO_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_CRYPTO;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_PLACE_GLYPH;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_TURN;
-import static org.firstinspires.ftc.teamcode.called.RobotValues.SPEED_TO_VUFORIA;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_PLACE_GLYPH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNTS_TO_VUFORIA;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.COUNT_TO_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.DEGREES_TO_TURN_FOR_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_CRYPTO;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_PLACE_GLYPH;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_TURN;
+import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_VUFORIA;
 
 @TeleOp(name="back auton", group="testing")
 @Disabled
