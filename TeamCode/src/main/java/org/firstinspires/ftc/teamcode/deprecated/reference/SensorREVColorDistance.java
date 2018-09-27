@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.deprecated.refrence;
+package org.firstinspires.ftc.teamcode.deprecated.reference;
 
 import android.app.Activity;
 import android.graphics.Color;
