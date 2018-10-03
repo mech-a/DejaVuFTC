@@ -38,20 +38,38 @@ import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SIX_I
 import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_FOR_CONVEYORS;
 import static org.firstinspires.ftc.teamcode.deprecated.called.RobotValues.SPEED_TO_VUFORIA;
 
+/**
+ * This file is deprecated; it is code from previous years of FTC
+ * We are in the process of phasing out HWRobot in favor of a new OPMode
+ * **NOTE** This is not something we will ever use again probably - LUNG LUNG LUNG LUNG
+ * @version 1.0
+ */
+
+/**
+ * HWRobot is a dedicated class used to define hardware members
+ * @author Gaurav
+ *
+ * @since 1.0
+ */
 public class HWRobot
 {
     //TODO: Make some claw values floats
-    /* Declare all motors, sensors, etc. */
+    /**
+     * Declares all motors, sensors, etc.
+     *
+     * @since 1.0
+     */
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrLinear, mtrClawL, mtrClawR;
     public Servo srvJewelHitter, srvJewelArm;
     public ColorSensor sensorColor;
     public BNO055IMU imu;
     public VuforiaLocalizer vuforia;
 
-
-
-
-    // Declare speeds and other vars
+    /**
+     * Declares speeds and other variables
+     *
+     * @since 1.0
+     */
     public double powFL = 0;
     public double powFR = 0;
     public double powBL = 0;
@@ -79,6 +97,11 @@ public class HWRobot
 
     boolean isGyroRotationHappening= false;
 
+    /**
+     * Vuforia requires a key
+     *
+     * @since 1.0
+     */
     public String vuforiaKey = "AboeStD/////AAAAGaA8AMxAS0isjCVUhD" +
             "5lHuRymY1yqEVbDu1/PRTIEg/9JzZxKpV/P" +
             "39rY/QC64WcjeCtnUDq0jj7yWEPkWZClL" +
@@ -110,11 +133,18 @@ public class HWRobot
     static final double     DISTANCE_MODIFIER       = 1.414 ;
     */
 
-    // hsv stores the color sensor's hue, sturation, and value
+    /**
+     * hsv stores the color sensor's hue, saturation, and value
+     *
+     * @since 1.0
+     */
 
     public float hsv[] = {0F, 0F, 0F};
 
-    /* local OpMode members and objects */
+    /**
+     *  local OpMode members and objects
+     *  @since
+     */
     HardwareMap hwMap           =  null;
     Telemetry telemetry = null;
     public Orientation angles;
@@ -122,25 +152,31 @@ public class HWRobot
     public VuforiaTrackable relicTemplate;
     LinearOpMode inv = null;
 
-    /*
-    public HWRobot(Telemetry atelemetry, HardwareMap ahwMap) {
-        telemetry = atelemetry;
-        hwMap = ahwMap;
-}
-*/
-
+    /**
+     * Sets ftc_app required values
+     *
+     * @param atelemetry
+     * @param ahwMap
+     * @param invoked
+     * @since 1.0
+     */
     public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap, LinearOpMode invoked) {
         telemetry = atelemetry;
         hwMap = ahwMap;
         inv = invoked;
     }
 
-    public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap) {
-        telemetry = atelemetry;
-        hwMap = ahwMap;
-    }
+//    public void getOpModeData(Telemetry atelemetry, HardwareMap ahwMap) {
+//        telemetry = atelemetry;
+//        hwMap = ahwMap;
+//    }
 
-    // Initialize chosen Hardware interfaces.
+    /**
+     * Initialize chosen Hardware interfaces.
+     *
+     * @param hw
+     * @since 1.0
+     */
     public void init(String hw) {
         switch(hw.toLowerCase()){
             case "motors": case "motor": case "mtr": case "mtrs":
@@ -171,10 +207,21 @@ public class HWRobot
         }
     }
 
+    /**
+     * sets areWeActive to whatever we want
+     *
+     * @param setting
+     * @since 1.0
+     */
     public void makeActive(boolean setting) {
         areWeActive = setting;
     }
 
+    /**
+     * Initializes the motors for ftc_app - assigns ports, break behavior, direction, power, and runmode
+     *
+     * @since 1.0
+     */
     private void initMotors() {
         // Define and initialize hardware, specifically the DC motors
         mtrFL = hwMap.dcMotor.get("fl_drive");
@@ -230,7 +277,11 @@ public class HWRobot
         mtrClawR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-
+    /**
+     * Initializes the servos for ftc_app - assigns ports and position
+     *
+     * @since 1.0
+     */
     private void initServos() {
         //srv fetch + def
         srvJewelArm = hwMap.servo.get("arm_jewel");
@@ -242,6 +293,11 @@ public class HWRobot
 
     }
 
+    /**
+     * initializes the Gyro Sensor
+     *
+     * @since 1.0
+     */
     private void initImu() {
         imu = hwMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
@@ -254,6 +310,10 @@ public class HWRobot
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
+    /**
+     * Initializes Vuforia - uses the vuforiaKey
+     * @since 1.0
+     */
     private void initVuforia() {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 
@@ -271,11 +331,20 @@ public class HWRobot
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
     }
 
+    /**
+     * Initializes other sensors from hwMap
+     *
+     * @since 1.0
+     */
     private void initSensors() {
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
     }
-    
-    //Sensor Functions
+
+    /**
+     * Refreshes the color sensor
+     *
+     * @since 1.0
+     */
     public void refreshHSV() {
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
@@ -283,6 +352,11 @@ public class HWRobot
                 hsv);
     }
 
+    /**
+     * Does Vuforia stuff and gets the vuMark
+     * @param a
+     * @return
+     */
     public String getVuMarkOld(boolean a) {
         String type = "";
 
@@ -315,6 +389,10 @@ public class HWRobot
         return type;
     }
 
+    /**
+     * If the robot is active, it reads the Vumark and ??????
+     * @param active
+     */
     public void getVuMark(boolean active) { // Reads the Vumark and return the cryptobox position, or "UNKNOWN" if it cannot be determined
         if(active) {
             relicTrackables.activate();
