@@ -29,38 +29,53 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Hardware;
 
 
 /**
- * Copy Me Linear
+ * Ramping Power
+ * CB: Gaurav
  */
 
-@TeleOp(name="Since_gaurav_isnt_telling_us_what_to_do_we_aremaking_this_thing_gabi", group="DriveOPs")
+@TeleOp(name="Ramping Power", group="Internal")
 @Disabled
-public class Since_gaurav_isnt_telling_us_what_to_do_we_aremaking_this_thing_gabi extends LinearOpMode {
+public class RampingSpeed extends LinearOpMode {
 
     // Declare OpMode members.
-    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR;
-    private double powFL = 0;
-    private double powFR = 0;
-    private double powBL = 0;
-    private double powBR = 0;
-
-
+    private DcMotor mtr;
+    private double power = 0;
+    private double epsilon = 0.05;
+    private double numSteps = 20;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
 
+        mtr = hardwareMap.dcMotor.get("a_motor");
+        mtr.setDirection(DcMotor.Direction.FORWARD);
+
+        //once ramping is completed, then it can brake.
+        mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtr.setPower(power);
+        mtr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            double joystick = -gamepad1.left_stick_y;
+
+            if(Math.abs(joystick-power)>epsilon) {
+                power += (joystick-power)/numSteps;
+            }
+
+            mtr.setPower(power);
 
         }
     }
