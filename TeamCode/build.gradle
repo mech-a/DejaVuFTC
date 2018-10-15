@@ -10,10 +10,7 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-android {
-    buildToolsVersion '27.0.3'
-}
 dependencies {
-    implementation project(':openCVLibrary3')
     implementation project(':DogeCV')
+    implementation project(':openCVLibrary3')
 }

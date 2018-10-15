@@ -63,7 +63,7 @@ public class RampingSpeed extends LinearOpMode {
         //once ramping is completed, then it can brake.
         mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtr.setPower(power);
-        mtr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
@@ -76,7 +76,6 @@ public class RampingSpeed extends LinearOpMode {
             }
 
             mtr.setPower(power);
-
         }
     }
 }

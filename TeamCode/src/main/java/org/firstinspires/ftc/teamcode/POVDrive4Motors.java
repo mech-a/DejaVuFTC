@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -94,17 +94,25 @@ public class POVDrive4Motors extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            ch2 = -gamepad1.left_stick_y;
+            ch3 = gamepad1.right_stick_x;
 
-            setChannels();
-            setPowers();
+
+            powFL = Range.clip(ch2 + ch3, -1, 1);
+            powFR = Range.clip(ch2 - ch3, -1, 1);
+            powBL = Range.clip(ch2 + ch3, -1, 1);
+            powBR = Range.clip(ch2 - ch3, -1, 1);
+
 
             mtrFL.setPower(powFL);
             mtrFR.setPower(powFR);
             mtrBL.setPower(powBL);
             mtrBR.setPower(powBR);
-            sleep(125);
+            sleep(50);
         }
     }
+
+
     public void setChannels() {
         ch2 = -gamepad1.left_stick_y ;
         ch3 = Math.abs(gamepad1.right_stick_x) * gamepad1.right_stick_x ;
