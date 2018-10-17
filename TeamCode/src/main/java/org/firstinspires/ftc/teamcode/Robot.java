@@ -11,9 +11,11 @@ public class Robot {
     //TODO based on specification, add more motor slots
 
     public DcMotor[] drive_motors = new DcMotor[4];
+    public DcMotor[] intake_motors = new DcMotor[4];
     public BNO055IMU imu;
     //public VuforiaLocalizer vuf;
     public double[] drive_mtr_powers = new double[4];
+    public double[] intake_mtr_powers = new double[4];
 
     LinearOpMode caller;
 

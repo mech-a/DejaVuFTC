@@ -11,6 +11,12 @@ public class Constants {
     public static final double HD_COUNTS_PER_REV = 560;
     public static final double WHEEL_DIAM = 4;
 
+    //Armthingy motor specs:
+    public static final double MAX_UP_DOWN_DISTANCE_REV = 0;
+    public static final double MAX_FRONT_BACK_DISTANCE_REV = 0;
+    public static final double FLINGY_ROTATE_ARM_ROTATION_REV = 0;
+    public static final double
+
     //this is equal to your exact gear ratio
     public static final double GEAR_RATIO_DRIVE = 1;
     public static final int HD_COUNTS_PER_INCH = (int) (HD_COUNTS_PER_REV * GEAR_RATIO_DRIVE / (Math.PI * WHEEL_DIAM));
