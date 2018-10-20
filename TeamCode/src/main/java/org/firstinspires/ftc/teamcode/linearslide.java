@@ -31,11 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Hardware;
 
 
 /**
@@ -43,9 +39,9 @@ import com.qualcomm.robotcore.util.Hardware;
  * CB: Gaurav
  */
 
-@TeleOp(name="Ramping Power", group="Internal")
+@TeleOp(name="linearslide", group="Internal")
 
-public class RampingSpeed extends LinearOpMode {
+public class linearslide extends LinearOpMode {
 
     // Declare OpMode members.
     private DcMotor mtr;
@@ -76,24 +72,24 @@ public class RampingSpeed extends LinearOpMode {
             joystick = -gamepad1.left_stick_y;
 
 
-            if(Math.abs(joystick-power)>epsilon)
-                power += (joystick-power)/numSteps;
+            //if(Math.abs(joystick-power)>epsilon)
+             //   power += (joystick-power)/numSteps;
 
-            mtr.setPower(power);
+            mtr.setPower(joystick);
 
 
             telemetry.addData("Joystick", joystick);
-            telemetry.addData("power", power);
+            //telemetry.addData("power", power);
 
-            count++;
+            //count++;
 
-            if(count % 5 == 0)
-                oldJoystick = joystick;
+            //if(count % 5 == 0)
+               // oldJoystick = joystick;
 
-            if(Math.abs(oldJoystick) < epsilon && Math.abs(joystick) < epsilon)
-                power = 0;
+            //if(Math.abs(oldJoystick) < epsilon && Math.abs(joystick) < epsilon)
+              //  power = 0;
 
-            sleep(50);
+            sleep(15);
             telemetry.update();
         }
     }
