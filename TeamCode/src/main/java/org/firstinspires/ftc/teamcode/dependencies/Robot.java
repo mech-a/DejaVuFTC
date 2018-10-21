@@ -26,6 +26,7 @@ public class Robot {
     public double[] intakeMtrPowers = new double[4];
 
     public int[] driveMtrTargets = new int[4];
+    public int driveMtrTarget;
     public int[] intakeMtrTargets = new int[4];
 
     public BNO055IMU imu;
@@ -100,7 +101,8 @@ public class Robot {
     //TODO stability? waitfullhardwarecycle? not sure about this. check LinearOpMode to see if something could work
     //Also rethink naming style, drive+whatever is getting really reptitive and long.
     public void positionDrive(int motorNum, double inches, double speed) {
-        driveMtrTargets[motorNum] = (int) (inches * HD_COUNTS_PER_REV);
+
+        driveMtrTargets[motorNum] = (int) (inches * HD_COUNTS_PER_INCH);
         driveMotors[motorNum].setTargetPosition(driveMtrTargets[motorNum]);
         driveMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -115,11 +117,41 @@ public class Robot {
 
         driveMotors[motorNum].setPower(0);
         driveMotors[motorNum].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     //TODO just realized that position drive cannot be used for translate, it'll sequentially do each motor. mmmf
-    public void translate(int counts, double speed) {
-        //positionDrive();
+    //used to move forward and back
+
+    public void translate(double inches, double speed) {
+
+        driveMtrTarget = (int) (inches * HD_COUNTS_PER_INCH);
+        for (int i = 0; i<4; i++) {
+            driveMotors[i].setTargetPosition(driveMtrTarget);
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        for (int i = 0; i<4; i++) {
+            driveMotors[i].setPower(speed);
+        }
+        while(caller.opModeIsActive() & driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() & driveMotors[3].isBusy()) {
+            //TODO change telemetry name to enum
+            telemetry.addData("current position of motors", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMotors[1].getCurrentPosition(),driveMotors[2].getCurrentPosition(),driveMotors[3].getCurrentPosition());
+            telemetry.update();
+        }
+        for (int i = 0; i<4; i++) {
+
+            driveMotors[i].setPower(0);
+
+        }
+        for (int i = 0; i<4; i++) {
+
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+
+
     }
 
 
