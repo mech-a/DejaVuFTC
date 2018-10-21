@@ -64,7 +64,7 @@ public class RampingSpeed extends LinearOpMode {
         mtr.setDirection(DcMotor.Direction.FORWARD);
 
         //once ramping is completed, then it can brake.
-        mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         mtr.setPower(power);
         mtr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -92,6 +92,13 @@ public class RampingSpeed extends LinearOpMode {
 
             if(Math.abs(oldJoystick) < epsilon && Math.abs(joystick) < epsilon)
                 power = 0;
+            if(power>0){
+                numSteps = 5;
+            }
+            else{
+                numSteps = 10;
+            }
+
 
             sleep(50);
             telemetry.update();

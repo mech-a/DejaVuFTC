@@ -119,7 +119,7 @@ public class Robot {
 
     //TODO just realized that position drive cannot be used for translate, it'll sequentially do each motor. mmmf
     public void translate(int counts, double speed) {
-        positionDrive();
+        //positionDrive();
     }
 
 
