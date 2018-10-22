@@ -151,4 +151,6 @@ public class CustomGoldDetector extends DogeCVDetector {
     public boolean isFound() {
         return found;
     }
+
+    public boolean isAligned() { if (getScreenPosition().x < 350 && getScreenPosition().x < 150) { return true; } else { return false; } }
 }
