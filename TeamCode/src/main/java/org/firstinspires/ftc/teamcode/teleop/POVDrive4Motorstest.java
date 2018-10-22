@@ -56,7 +56,10 @@ public class POVDrive4Motorstest extends LinearOpMode {
     private double oldJoystickCh3;
     private double power = 0;
     private double joystick;
-    private double numSteps = 20;
+    private double numSteps = 10;
+    private double numStepsHigh = numSteps;
+    private double numStepsLow = numSteps/2;
+    private int modifier = 2;
 
 
 
@@ -101,8 +104,21 @@ public class POVDrive4Motorstest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            ch2 = -gamepad1.left_stick_y/2;
-            ch3 = gamepad1.right_stick_x/2;
+            ch2 = -gamepad1.left_stick_y/modifier;
+            ch3 = gamepad1.right_stick_x/modifier;
+
+            if(Math.abs(oldJoystickCh2) < Math.abs(ch2)){
+                numSteps = numStepsLow;
+                telemetry.addData("going forward", numSteps);
+                
+            }
+            else {
+                numSteps = numStepsHigh;
+                telemetry.addData("going back", numSteps);
+
+            }
+
+
 
             if(Math.abs(ch2-power)>epsilon)
                 power += (ch2-power)/numSteps;
@@ -118,9 +134,7 @@ public class POVDrive4Motorstest extends LinearOpMode {
             if(Math.abs(oldJoystickCh2) < epsilon && Math.abs(ch2) < epsilon)
                 power = 0;
 
-
-
-            telemetry.addData("Joystick", joystick);
+            telemetry.addData("Joystick y", ch2);
             telemetry.addData("power", power);
 
             count++;
