@@ -19,23 +19,27 @@ import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
 public class Robot {
     //TODO based on specification, add more motor slots
 
+
+
+    //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
-    public DcMotor[] intakeMotors = new DcMotor[4];
+    //Raise, Telescope, Rotation, Intake
+    public DcMotor[] armMotors = new DcMotor[4];
 
-    public double[] driveMtrPowers = new double[4];
-    public double[] intakeMtrPowers = new double[4];
+    private double[] driveMtrPowers = new double[4];
+    private double[] armMtrPowers = new double[4];
 
-    public int[] driveMtrTargets = new int[4];
-    public int driveMtrTarget;
-    public int[] intakeMtrTargets = new int[4];
+    private int[] driveMtrTargets = new int[4];
+    private int driveMtrTarget;
+    private int[] armMtrTargets = new int[4];
 
-    public BNO055IMU imu;
+    private BNO055IMU imu;
     //public VuforiaLocalizer vuf;
 
-    LinearOpMode caller;
-    Telemetry telemetry;
-    HardwareMap hardwareMap;
-    Orientation angles;
+    private LinearOpMode caller;
+    private Telemetry telemetry;
+    private HardwareMap hardwareMap;
+    private Orientation angles;
 
 
     public Robot(LinearOpMode initializer) {
@@ -59,28 +63,55 @@ public class Robot {
         for (int i = 0; i<4; i++) {
             driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
 
-            //TODO change if needed
-            if(i%2 == 0)
+            //TODO standardize between robot and code the port numbers and i
+            /*
+            switch (i) {
+                case 0: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 1: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+                case 2: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+                case 3: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+
+            }*/
+
+            if(i%3==0)
                 driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
             else
-                driveMotors[i].setDirection(DcMotorSimple.Direction.FORWARD);
+                driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
             driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
-    //TODO standardized naming system (intake vs arm)
     private void armMotorsInit() {
         for (int i = 0; i<4; i++) {
-            intakeMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
+            armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
 
-            //TODO change if needed
-            if(i%2 == 0)
-                intakeMotors[i].setDirection(DcMotor.Direction.REVERSE);
+            //TODO change if needed: well, i did it, but must be changed for when telescoping works
+            /*
+            switch (i) {
+                case 0: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                        break;
+                case 1: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 2: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 3: armMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+            }*/
+
+            if(i==3)
+                armMotors[i].setDirection(DcMotor.Direction.REVERSE);
             else
-                intakeMotors[i].setDirection(DcMotorSimple.Direction.FORWARD);
+                armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
-            intakeMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            
+            armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 

@@ -32,8 +32,11 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
+
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_MAX_POSITION;
 
 
 /**
@@ -41,16 +44,46 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  */
 
 @TeleOp(name="POV Drive", group="Competition")
-@Disabled
+//@Disabled
 public class POVDriveRobot extends LinearOpMode {
 
     // Declare OpMode members.
     Robot r = new Robot(this);
 
-    double[] gamepad1 = new double[4];
-    double[] gamepad2 = new double[4];
-    double[] gamepad1Adjusted = new double[4];
-    double[] gamepad2Adjusted = new double[4];
+    double[] g1 = new double[4];
+    double[] g2 = new double[4];
+    double[] g1Adjusted = new double[4];
+    double[] g2Adjusted = new double[4];
+    
+    double powL = 0;
+    double powR = 0;
+    
+    double powIntake = 0;
+    double powIntakeMax = 1;
+    double powIntakeMin = -1;
+
+    double powLift = 0;
+    double powLiftMax = 1;
+    double powLiftMin = -1;
+
+    double powRotate = 0;
+    double powRotateOutwards = 0.5;
+    double powRotateTowardsRobot = -0.5;
+
+
+    double powTelescope = 0;
+    
+    final double TRIGGER_DEADZONE = 0.3;
+
+    boolean telescopingMax = false;
+    boolean telescopingMin = false;
+
+    //code spec:
+    // powLift; 1 for raise, -1 for fall
+    // powIntake; 1 for intake, -1 for expel
+    // powRotate; 1 for outwards, -1 for inwards
+    // powTelescope; 1 for extend, -1 for retract
+
 
     @Override
     public void runOpMode() {
@@ -62,9 +95,115 @@ public class POVDriveRobot extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            //basic driving
+            setGamepads(0.25);
+
+            powL = Range.clip(g1[1] + g1[2], -1, 1);
+            powR = Range.clip(g1[1] - g1[2], -1, 1);
+
+
+            //Button handling
+            //L/R Trigger, intake
+            if(gamepad1.right_trigger > TRIGGER_DEADZONE)
+                powIntake = powIntakeMax;
+            else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
+                powIntake = powIntakeMin;
+            else
+                powIntake = 0;
+
+            //U/D Dpad, lift(raise)
+            if(gamepad1.dpad_up)
+                powLift = powLiftMax;
+            else if (gamepad1.dpad_down)
+                powLift = powLiftMin;
+            else
+                powLift = 0;
+
+            //X,B rotation
+            if(gamepad1.x)
+                powRotate = powRotateTowardsRobot;
+            else if (gamepad1.b)
+                powRotate = powRotateOutwards;
+            else
+                powRotate = 0;
+
+            setPowers(powL, powR, powLift, powTelescope, powRotate, 0);
+
+            sleep(100);
+
+
+
+
+
+            /*
+            //TODO see if vertical motor can be floated due to surgical tubing 
+            
+
+
+
+            //TODO a "bug" is that if the next tick the current position is instantaneously less than or equal to 0,
+            // both telescopingMax and Min will be true, therefore the motor will lock.
+            // I want to test to see if this case happens, which most likely will, then we can changed the code by making
+            // two different if/else clauses. Let's just try it out!
+            // also good thing for eng nb
+            // or, we can keep this as is annd make the second powIntake handling part an else if so only 1 runs
+            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
+                telescopingMax = true;
+            else if(r.armMotors[1].getCurrentPosition()<=0)
+                telescopingMin = true;
+            else {
+                telescopingMax = false;
+                telescopingMin = false;
+            }
+
+
+            //TODO check if hardware cycle will allow this to run correctly
+            if(telescopingMax) {
+                if(powTelescope > 0)
+                    powTelescope = 0;
+            }
+
+            if(telescopingMin) {
+                if(powTelescope < 0)
+                    powTelescope = 0;
+            }
+            */
+
+
+
+
+
+
+
 
 
         }
+    }
+
+    private void setPowers(double powL, double powR, double powLift, double powTelescope,
+                           double powRotate, double powIntake) {
+        r.driveMotors[0].setPower(powL);
+        r.driveMotors[1].setPower(powR);
+        r.driveMotors[2].setPower(powR);
+        r.driveMotors[3].setPower(powL);
+
+        r.armMotors[0].setPower(powLift);
+        r.armMotors[1].setPower(powTelescope);
+        r.armMotors[2].setPower(powRotate);
+        r.armMotors[3].setPower(powIntake);
+    }
+
+    private void setGamepads(double modifier) {
+        //left joystick x, y, right joystick x, y
+        g1[0] = gamepad1.left_stick_x * modifier;
+        g1[1] = -gamepad1.left_stick_y * modifier;
+        g1[2] = gamepad1.right_stick_x * modifier;
+        g1[3] = -gamepad1.right_stick_y * modifier;
+
+        g2[0] = gamepad2.left_stick_x * modifier;
+        g2[1] = -gamepad2.left_stick_y * modifier;
+        g2[2] = gamepad2.right_stick_x * modifier;
+        g2[3] = -gamepad2.right_stick_y * modifier;
+
+        //TODO deadzones
     }
 }

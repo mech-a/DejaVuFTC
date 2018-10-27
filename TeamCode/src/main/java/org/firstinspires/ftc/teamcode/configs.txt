@@ -1,0 +1,10 @@
+Motors;
+
+4 HD Hex for DT
+
+Cores-
+
+Vertical (raise) motor
+Horizontal extension motor
+Intake motor
+Rotating arm motor

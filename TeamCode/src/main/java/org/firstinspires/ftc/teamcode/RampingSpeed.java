@@ -37,71 +37,80 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Hardware;
 
+import org.firstinspires.ftc.teamcode.dependencies.Robot;
+import org.opencv.core.Mat;
+
 
 /**
- * Ramping Power
+ * Ramping Speed
  * CB: Gaurav
  */
-
-@TeleOp(name="Ramping Power", group="Internal")
+//@Disabled
+@TeleOp(name="Ramping Speed", group="Internal")
 
 public class RampingSpeed extends LinearOpMode {
 
     // Declare OpMode members.
-    private DcMotor mtr;
     private double power = 0;
     private double epsilon = 0.1;
     private double numSteps = 10;
+    private double numStepsMin = numSteps/=2;
+    private double numStepsMax = numSteps;
     private double count = 0;
     private double joystick;
     private double oldJoystick;
+    Robot r = new Robot(this);
+
+
+    double modifier = 0.5;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
 
-        mtr = hardwareMap.dcMotor.get("a_motor");
-        mtr.setDirection(DcMotor.Direction.FORWARD);
-
-        //once ramping is completed, then it can brake.
-        mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        mtr.setPower(power);
-        mtr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //TODO combine r.start and r.init
+        r.start(hardwareMap, telemetry);
+        r.init();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            joystick = -gamepad1.left_stick_y;
+            joystick = -gamepad1.left_stick_y * modifier;
+
+
+            if(count % 5 == 0)
+                oldJoystick = joystick;
+
+
+            if(Math.abs(oldJoystick)< Math.abs(joystick)) {
+                numSteps = numStepsMin;
+            }
+            else {
+                numSteps = numStepsMax;
+            }
 
 
             if(Math.abs(joystick-power)>epsilon)
                 power += (joystick-power)/numSteps;
 
-            mtr.setPower(power);
-
-
-            telemetry.addData("Joystick", joystick);
-            telemetry.addData("power", power);
-
-            count++;
-
-            if(count % 5 == 0)
-                oldJoystick = joystick;
 
             if(Math.abs(oldJoystick) < epsilon && Math.abs(joystick) < epsilon)
                 power = 0;
-            if(power>0){
-                numSteps = 5;
-            }
-            else{
-                numSteps = 10;
-            }
 
+            r.driveMotors[0].setPower(power);
+            r.driveMotors[1].setPower(power);
+            r.driveMotors[2].setPower(power);
+            r.driveMotors[3].setPower(power);
 
             sleep(50);
+
+            telemetry.addData("Joystick", joystick);
+            telemetry.addData("power", power);
             telemetry.update();
+
+            count++;
         }
     }
 }

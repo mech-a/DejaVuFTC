@@ -7,8 +7,7 @@ public class ConfigurationNames {
     };
 
     public static final String[] ARM_MOTOR_NAMES = {
-            "raise_motor", "intake_motor", "telescoping_motor",
-            // last motor? reading through the technical engineering ntbk didn't help me out
+            "raise", "telescoping", "rotation", "intake"
     };
 
     public static final String[] SENSOR_NAMES = {
