@@ -45,11 +45,12 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
 
     // Declare OpMode members.
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrV,mtrI;
+    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrV,mtrI, mtrA,mtrH;
     private double powFL = 0;
     private double powFR = 0;
     private double powBL = 0;
     private double powBR = 0;
-    private double g1ch2,g1ch3, g2ch2, g2ch4, g2left, g2right;
+    private double g1ch2,g1ch3, g2ch2, g2ch3, g2left, g2right;
     private double epsilon = 0.1;
     private double count = 0;
     private double oldJoystickCh2 = 0;
@@ -79,8 +80,10 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
         mtrFR = hardwareMap.dcMotor.get("fr_drive");
         mtrBL = hardwareMap.dcMotor.get("bl_drive");
         mtrBR = hardwareMap.dcMotor.get("br_drive");
-        mtrV= hardwareMap.dcMotor.get("vertical");
-        mtrI= hardwareMap.dcMotor.get("intake");
+        mtrV= hardwareMap.dcMotor.get("raise_motor");
+        mtrI= hardwareMap.dcMotor.get("intake_motor");
+        mtrA =  hardwareMap.dcMotor.get("arm_motor");
+        mtrH=  hardwareMap.dcMotor.get("telescoping_motor");
 
 
         // Set directions for motors.
@@ -100,6 +103,8 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
         mtrBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrV.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtrI.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mtrA.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Set power for all motors.
@@ -107,6 +112,7 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
         //mtrFR.setPower(powFR);
         //mtrBL.setPower(powBL);
         //mtrBR.setPower(powBR);
+       mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         // Set all motors to run with given mode
@@ -115,7 +121,9 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrI.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrH.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrA.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrV.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -125,23 +133,24 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
             g1ch2 = -gamepad1.left_stick_y/modifier;
             g1ch3 = gamepad1.right_stick_x/modifier;
             //
-            g2ch2 = -gamepad2.left_stick_x;
-            g2ch4 = -gamepad2.right_stick_x;
+            g2ch2 = -gamepad2.left_stick_y/modifier;
+            g2ch3 = gamepad2.right_stick_x/modifier;
             // trigger for intake
             g2left = gamepad2.left_trigger;
             g2right = gamepad2.right_trigger;
             g2a = gamepad2.a;
+            /*
 
             change = g1ch2 - limitedch2;
             if(change > limit){
                 change = limit;
 
             }
-            else{
+            else if(change < limit){
                 change = -limit;
             }
             limitedch2 += change;
-            /*
+
             if(count % 2 == 0){
                 oldJoystickCh2 = ch2;
             }
@@ -162,34 +171,45 @@ public class POVDrive4Motorstest2 extends LinearOpMode {
 
 
 
-            powFL = Range.clip(limitedch2 + g1ch3, -1, 1);
-            powFR = Range.clip(limitedch2 - g1ch3, -1, 1);
-            powBL = Range.clip(limitedch2 + g1ch3, -1, 1);
-            powBR = Range.clip(limitedch2 - g1ch3, -1, 1);
+            powFL = Range.clip(g1ch2 + g1ch3, -1, 1);
+            powFR = Range.clip(g1ch2 - g1ch3, -1, 1);
+            powBL = Range.clip(g1ch2 + g1ch3, -1, 1);
+            powBR = Range.clip(g1ch2 - g1ch3, -1, 1);
 
             count++;
-            if(g2right > 0.55){
+            if(g2right > 0){
                 mtrI.setPower(g2right);
             }
-            else if (g2left > 0.55){
+            else{
+                mtrI.setPower(0.0);
+            }
+            if (g2left > 0){
                 mtrI.setPower(-g2left);
             }
-            if(g2a){
-                buttoncount++;
-                switch(buttoncount){
-                    case 1:
-                        mtrV.setTargetPosition(mtrVticks);
-                        mtrV.setPower(mtrVpower);
-                        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        break;
-                    case 2:
-                        mtrV.setTargetPosition(-mtrVticks);
-                        mtrV.setPower(mtrVpower);
-                        mtrV.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        buttoncount = buttoncount - 2;
-                        break;
-                }
+            else{
+                mtrI.setPower(0.0);
             }
+            if(gamepad2.dpad_up){
+                mtrV.setTargetPosition(100);
+                mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                mtrV.setPower(0.10);
+            }
+            else if(gamepad2.dpad_down){
+                mtrV.setTargetPosition(-100);
+                mtrV.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                mtrV.setPower(0.10);
+            }
+
+            if (gamepad2.y)
+                mtrA.setPower(0.1);
+            else if (gamepad2.a)
+                mtrA.setPower(-0.1);
+            else
+                mtrA.setPower(0.0);
+
+            mtrH.setPower(g2ch2);
+
+
 
 
 
