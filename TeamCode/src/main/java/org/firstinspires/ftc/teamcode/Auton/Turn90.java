@@ -69,8 +69,8 @@ public class Turn90 extends LinearOpMode {
     Robot r = new Robot(this);
 
     @Override public void runOpMode() {
-        r.init();
         r.start(hardwareMap, telemetry);
+        r.init();
 
         // Wait until we're told to go
         waitForStart();
