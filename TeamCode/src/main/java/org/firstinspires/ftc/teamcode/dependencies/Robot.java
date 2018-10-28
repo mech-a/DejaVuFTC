@@ -190,6 +190,7 @@ public class Robot {
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
         heading = Math.floor(heading);
         heading = Range.clip(heading, -180.0, 180.0);
