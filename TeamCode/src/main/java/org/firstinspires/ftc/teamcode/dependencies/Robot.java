@@ -197,7 +197,7 @@ public class Robot {
 
 
         if (direction.equals("cw") || direction.equals("clockwise")) {
-            while (Math.abs(heading) > angle) {
+            while (Math.abs(heading) > angle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -215,7 +215,7 @@ public class Robot {
 
             }
         } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-            while (heading < angle) {
+            while (heading < angle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
