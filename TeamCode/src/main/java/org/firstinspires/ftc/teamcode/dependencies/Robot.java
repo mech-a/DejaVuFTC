@@ -43,6 +43,7 @@ public class Robot {
     private Orientation angles;
 
     private double heading;
+    private double lastangle = 0;
 
     public Robot(LinearOpMode initializer) {
         caller = initializer;
@@ -189,15 +190,15 @@ public class Robot {
     public void rotate(String direction,double speed, double angle) {
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
+        private double newangle -= lastangle;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
         heading = Math.floor(heading);
         heading = Range.clip(heading, -180.0, 180.0);
 
-
         if (direction.equals("cw") || direction.equals("clockwise")) {
-            while (Math.abs(heading) > angle && caller.opModeIsActive()) {
+            while (Math.abs(heading) > newangle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -215,7 +216,7 @@ public class Robot {
 
             }
         } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-            while (heading < angle && caller.opModeIsActive()) {
+            while (heading < newangle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -232,6 +233,8 @@ public class Robot {
                 for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
             }
         }
+
+        lastangle = heading;
 
         for (int i = 0; i<4; i++) {driveMtrPowers[i] = 0; }
         for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
