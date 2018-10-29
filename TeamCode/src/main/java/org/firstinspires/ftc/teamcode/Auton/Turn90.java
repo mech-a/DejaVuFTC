@@ -80,7 +80,7 @@ public class Turn90 extends LinearOpMode {
         while (opModeIsActive()) {
             r.rotate("cw", 0.25, 90);
             sleep(1024);
-            r.rotate("ccw", 0.25, 135);
+            r.rotate("cw", 0.25, 135);
         }
     }
 }

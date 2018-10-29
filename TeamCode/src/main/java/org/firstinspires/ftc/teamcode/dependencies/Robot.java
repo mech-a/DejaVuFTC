@@ -190,7 +190,7 @@ public class Robot {
     public void rotate(String direction,double speed, double angle) {
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
-        private double newangle -= lastangle;
+        private double newangle = angle - lastangle;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
