@@ -3,6 +3,8 @@
 
 package org.firstinspires.ftc.teamcode.dependencies;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.*;
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
@@ -45,6 +48,8 @@ public class Robot {
     private double heading;
     private double lastangle = 0;
 
+    private CustomGoldDetector detector;
+
     public Robot(LinearOpMode initializer) {
         caller = initializer;
     }
@@ -60,6 +65,7 @@ public class Robot {
         driveMotorsInit();
         armMotorsInit();
         imuInit();
+        detectorInit();
     }
 
     private void driveMotorsInit() {
@@ -130,6 +136,24 @@ public class Robot {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
+    private void detectorInit() {
+        detector = new CustomGoldDetector();
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.useDefaults();
+
+        // Optional Tuning
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        detector.enable();
+    }
+
     //TODO again enum the motors.
     //TODO make position drive compatible with arm motors
     //TODO stability? waitfullhardwarecycle? not sure about this. check LinearOpMode to see if something could work
@@ -187,10 +211,13 @@ public class Robot {
 
 
     }
+
+    //Rotate function that inputs a direction
+    //Directions can be abbreviated to 'cw' or 'ccw'
+    //It does not currently reset the gyro sensor
     public void rotate(String direction,double speed, double angle) {
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
-        private double newangle = angle - lastangle;
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
 
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -198,7 +225,7 @@ public class Robot {
         heading = Range.clip(heading, -180.0, 180.0);
 
         if (direction.equals("cw") || direction.equals("clockwise")) {
-            while (Math.abs(heading) > newangle && caller.opModeIsActive()) {
+            while (Math.abs(heading) > angle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -216,7 +243,7 @@ public class Robot {
 
             }
         } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-            while (heading < newangle && caller.opModeIsActive()) {
+            while (heading < angle && caller.opModeIsActive()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
@@ -240,6 +267,10 @@ public class Robot {
         for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+    }
+
+    public double goldPos() {
+        return detector.getScreenPosition().x;
     }
 
 
