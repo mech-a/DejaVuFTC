@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
-@Autonomous(name = "Depot Side", group = "Auton")
+@Autonomous(name = "Depot Side ", group = "Auton")
 public class SimpleDepotSide extends LinearOpMode {
 
     Robot r = new Robot(this);
@@ -18,7 +18,7 @@ public class SimpleDepotSide extends LinearOpMode {
     public static final double TRANSLATE_SPEED = 0.25;
     public static final double ROTATE_SPEED = 0.25;
 
-    double samplex = 0;
+    private double samplex = 0;
     String samplePos = "center";
 
     @Override public void runOpMode() {
@@ -54,7 +54,7 @@ public class SimpleDepotSide extends LinearOpMode {
             //knock off sample
             //for simplicity and fast coding, this currently goes to knock out the sample and just comes back
             sleep(600);
-            if (samplePos == "center") {
+            if (samplePos.equals("center")) {
                 //forward and back about 35 inches
                 r.translate(SAMPLE_DISTANCE_CENTER, TRANSLATE_SPEED);
                 sleep(1000);
