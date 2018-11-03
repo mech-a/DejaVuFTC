@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
-@TeleOp(name="CopyMe", group="Internal")
-@Disabled
+@TeleOp(name="TestTranslate", group="Internal")
+//@Disabled
 public class TestTranslate extends LinearOpMode {
 
     // Declare OpMode members.

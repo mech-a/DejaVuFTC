@@ -184,15 +184,18 @@ public class Robot {
     public void translate(double inches, double speed) {
 
         driveMtrTarget = (int) (inches * HD_COUNTS_PER_INCH);
+
         for (int i = 0; i<4; i++) {
             driveMotors[i].setTargetPosition(driveMtrTarget);
             driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
         for (int i = 0; i<4; i++) {
             driveMotors[i].setPower(speed);
         }
-        while(caller.opModeIsActive() & driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() & driveMotors[3].isBusy()) {
+
+        while(!caller.isStopRequested() && driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() && driveMotors[3].isBusy()) {
             //TODO change telemetry name to enum
             telemetry.addData("0mtrFl", "%7d : %7d",
                     driveMotors[0].getCurrentPosition(), driveMtrTarget);
@@ -205,6 +208,7 @@ public class Robot {
 
             telemetry.update();
         }
+
         for (int i = 0; i<4; i++) {
 
             driveMotors[i].setPower(0);
@@ -222,7 +226,7 @@ public class Robot {
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
-    public void rotate(String direction,double speed, double angle) {
+    public void rotate(String direction, double speed, double angle) {
         for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
@@ -231,26 +235,28 @@ public class Robot {
         heading = Math.floor(heading);
         heading = Range.clip(heading, -180.0, 180.0);
 
+        boolean beforeAngle = (direction.equals("cw") ? heading > angle | heading<angle);
+
         if (direction.equals("cw") || direction.equals("clockwise")) {
-            while (Math.abs(heading) > angle && caller.opModeIsActive()) {
+            while (Math.abs(heading) > angle && !caller.isStopRequested()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
-                for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
 
-                for (int i = 0; i<4; i++) {
+                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
                     if(i%3==0)
                         driveMtrPowers[i] = speed;
                     else
                         driveMtrPowers[i] = -speed;
                 }
 
-                for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
+                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
 
             }
         } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
-            while (heading < angle && caller.opModeIsActive()) {
+            while (heading < angle && !caller.isStopRequested()) {
 
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);

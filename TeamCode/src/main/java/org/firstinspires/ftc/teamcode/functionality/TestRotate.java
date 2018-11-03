@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  */
 
 @TeleOp(name="TestRotate", group="Internal")
-@Disabled
+//@Disabled
 public class TestRotate extends LinearOpMode {
 
     // Declare OpMode members.
