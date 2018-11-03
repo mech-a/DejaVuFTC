@@ -30,6 +30,7 @@ public class Constants {
     public static final int LIFT_COUNTS_PER_INCH =
             getCountsPerInch(LIFT_GEAR_RATIO, CORE_COUNTS_PER_REV, LINKS_PER_INCH, TEETH_ON_OUTPUT_GEAR);
 
+    public static final int COUNTS_TO_DROP = 854;
 
     public static final int TELESCOPING_GEAR_RATIO = 1;
     //TODO get diam

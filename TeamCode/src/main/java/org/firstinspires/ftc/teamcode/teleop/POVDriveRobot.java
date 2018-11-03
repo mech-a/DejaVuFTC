@@ -54,7 +54,9 @@ public class POVDriveRobot extends LinearOpMode {
     double[] g2 = new double[4];
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
-    
+
+    double modifier = 0.25;
+
     double powL = 0;
     double powR = 0;
     
@@ -95,7 +97,7 @@ public class POVDriveRobot extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            setGamepads(0.25);
+            setGamepads(modifier);
 
             powL = Range.clip(g1[1] + g1[2], -1, 1);
             powR = Range.clip(g1[1] - g1[2], -1, 1);
@@ -103,32 +105,15 @@ public class POVDriveRobot extends LinearOpMode {
 
             //Button handling
             //L/R Trigger, intake
-            if(gamepad1.right_trigger > TRIGGER_DEADZONE)
-                powIntake = powIntakeMax;
-            else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
-                powIntake = powIntakeMin;
-            else
-                powIntake = 0;
+            intake();
 
             //U/D Dpad, lift(raise)
-            if(gamepad1.dpad_up)
-                powLift = powLiftMax;
-            else if (gamepad1.dpad_down)
-                powLift = powLiftMin;
-            else
-                powLift = 0;
+            raise();
 
             //X,B rotation
-            if(gamepad1.x)
-                powRotate = powRotateTowardsRobot;
-            else if (gamepad1.b)
-                powRotate = powRotateOutwards;
-            else
-                powRotate = 0;
+            rotation();
 
-            setPowers(powL, powR, powLift, powTelescope, powRotate, 0);
-            telemetry.addData("counts of motor",r.armMotors[0].getCurrentPosition());
-            telemetry.update();
+            setPowers(powL, powR, powLift, powTelescope, powRotate, powIntake);
 
             sleep(100);
 
@@ -181,6 +166,33 @@ public class POVDriveRobot extends LinearOpMode {
         }
     }
 
+    private void intake() {
+        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
+            powIntake = powIntakeMax;
+        else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
+            powIntake = powIntakeMin;
+        else
+            powIntake = 0;
+    }
+
+    private void raise() {
+        if(gamepad1.dpad_up)
+            powLift = powLiftMax;
+        else if (gamepad1.dpad_down)
+            powLift = powLiftMin;
+        else
+            powLift = 0;
+    }
+
+    private void rotation() {
+        if(gamepad1.x)
+            powRotate = powRotateTowardsRobot;
+        else if (gamepad1.b)
+            powRotate = powRotateOutwards;
+        else
+            powRotate = 0;
+    }
+
     private void setPowers(double powL, double powR, double powLift, double powTelescope,
                            double powRotate, double powIntake) {
         r.driveMotors[0].setPower(powL);
@@ -207,5 +219,10 @@ public class POVDriveRobot extends LinearOpMode {
         g2[3] = -gamepad2.right_stick_y * modifier;
 
         //TODO deadzones
+    }
+
+
+    private void ramping() {
+
     }
 }

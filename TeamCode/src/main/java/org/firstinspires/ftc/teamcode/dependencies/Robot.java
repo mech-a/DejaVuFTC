@@ -194,8 +194,15 @@ public class Robot {
         }
         while(caller.opModeIsActive() & driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() & driveMotors[3].isBusy()) {
             //TODO change telemetry name to enum
-            telemetry.addData("current position of motors", "%7d : %7d",
-                    driveMotors[0].getCurrentPosition(), driveMotors[1].getCurrentPosition(),driveMotors[2].getCurrentPosition(),driveMotors[3].getCurrentPosition());
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+
             telemetry.update();
         }
         for (int i = 0; i<4; i++) {
