@@ -29,6 +29,7 @@ public class Robot {
     public DcMotor[] driveMotors = new DcMotor[4];
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
+    private double newinches;
 
     private double[] driveMtrPowers = new double[4];
     private double[] armMtrPowers = new double[4];
@@ -65,7 +66,7 @@ public class Robot {
         driveMotorsInit();
         armMotorsInit();
         imuInit();
-        detectorInit();
+
     }
 
     private void driveMotorsInit() {
@@ -161,20 +162,20 @@ public class Robot {
     public void positionDrive(int motorNum, int counts, double speed) {
 
 
-        driveMotors[motorNum].setTargetPosition(counts);
-        driveMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveMotors[motorNum].setPower(speed);
+        armMotors[motorNum].setTargetPosition(counts);
+        armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotors[motorNum].setPower(speed);
 
         while(caller.opModeIsActive() & driveMotors[motorNum].isBusy()) {
             //TODO change telemetry name to enum
             telemetry.addData(motorNum + ":", "%7d : %7d",
-                    driveMotors[motorNum].getCurrentPosition(), driveMtrTargets[motorNum]);
+                    armMotors[motorNum].getCurrentPosition(), counts);
             telemetry.update();
         }
 
-        driveMotors[motorNum].setPower(0);
-        driveMotors[motorNum].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotors[motorNum].setPower(0);
+        armMotors[motorNum].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -182,8 +183,14 @@ public class Robot {
     //used to move forward and back
 
     public void translate(double inches, double speed) {
+        if(speed > 0) {
+            newinches = inches - 1;
+        }
+        else{
+            newinches=  -inches + 1;
+        }
 
-        driveMtrTarget = (int) (inches * HD_COUNTS_PER_INCH);
+        driveMtrTarget = (int) (newinches * HD_COUNTS_PER_INCH);
 
         for (int i = 0; i<4; i++) {
             driveMotors[i].setTargetPosition(driveMtrTarget);
@@ -235,7 +242,7 @@ public class Robot {
         heading = Math.floor(heading);
         heading = Range.clip(heading, -180.0, 180.0);
 
-        boolean beforeAngle = (direction.equals("cw") ? heading > angle | heading<angle);
+        //boolean beforeAngle = (direction.equals("cw") ? heading > angle | heading<angle);
 
         if (direction.equals("cw") || direction.equals("clockwise")) {
             while (Math.abs(heading) > angle && !caller.isStopRequested()) {
