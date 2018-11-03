@@ -127,6 +127,8 @@ public class POVDriveRobot extends LinearOpMode {
                 powRotate = 0;
 
             setPowers(powL, powR, powLift, powTelescope, powRotate, 0);
+            telemetry.addData("counts of motor",r.armMotors[0].getCurrentPosition());
+            telemetry.update();
 
             sleep(100);
 

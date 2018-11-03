@@ -158,10 +158,10 @@ public class Robot {
     //TODO make position drive compatible with arm motors
     //TODO stability? waitfullhardwarecycle? not sure about this. check LinearOpMode to see if something could work
     //Also rethink naming style, drive+whatever is getting really reptitive and long.
-    public void positionDrive(int motorNum, double inches, double speed) {
+    public void positionDrive(int motorNum, int counts, double speed) {
 
-        driveMtrTargets[motorNum] = (int) (inches * HD_COUNTS_PER_INCH);
-        driveMotors[motorNum].setTargetPosition(driveMtrTargets[motorNum]);
+
+        driveMotors[motorNum].setTargetPosition(counts);
         driveMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         driveMotors[motorNum].setPower(speed);

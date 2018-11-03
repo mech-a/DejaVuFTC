@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.util.Range;
 public class POVDrive4Motorstest2 extends LinearOpMode {
 
     // Declare OpMode members.
-    public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrV,mtrI;
+
     public DcMotor mtrFL, mtrFR, mtrBL, mtrBR, mtrV,mtrI, mtrA,mtrH;
     private double powFL = 0;
     private double powFR = 0;

@@ -62,23 +62,27 @@ public class linearslide extends LinearOpMode {
         //once ramping is completed, then it can brake.
         mtr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mtr.setPower(power);
-        mtr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //854 counts for getting on the ground
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            joystick = -gamepad1.left_stick_y;
+            //joystick = -gamepad1.left_stick_y;
 
 
             //if(Math.abs(joystick-power)>epsilon)
              //   power += (joystick-power)/numSteps;
 
-            mtr.setPower(joystick);
+            //mtr.setPower(joystick);
 
 
             telemetry.addData("Joystick", joystick);
+            telemetry.addData("counts of motor",mtr.getCurrentPosition());
+
             //telemetry.addData("power", power);
 
             //count++;

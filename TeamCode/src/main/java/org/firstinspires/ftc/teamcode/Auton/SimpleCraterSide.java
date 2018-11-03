@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 @Autonomous(name = "Crater Side", group = "Auton")
-public class SimpleCraterSide extends LinearOpMode {
+public class SimpleCraterSide  extends LinearOpMode {
 
     Robot r = new Robot(this);
 
