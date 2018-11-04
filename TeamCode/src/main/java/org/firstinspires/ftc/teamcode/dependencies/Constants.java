@@ -49,6 +49,11 @@ public class Constants {
 
 
 
+    public static final int RIGHT_BOUND = 400;
+    public static final int LEFT_BOUND = 200;
+
+
+
 
     private static int getCountsPerInch(double gearRatio, double countsRevolution, double diam) {
         return (int) (gearRatio * countsRevolution / (Math.PI * diam));

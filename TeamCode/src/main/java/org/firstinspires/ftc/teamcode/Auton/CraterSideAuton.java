@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.reference;
+package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -48,6 +48,19 @@ public class CraterSideAuton extends LinearOpMode {
     // Declare OpMode members.
     Robot r = new Robot(this);
 
+    boolean left = false;
+    boolean middle = false;
+    boolean right = false;
+    //TODO better names
+    String directionForMineralFirst = "";
+    String directionForMineralSecond = "";
+    double distanceForLineUp = 0;
+
+    double baseDistance = 30;
+
+    double inchesToDepot = 60;
+    double inchesToCrater = 70;
+
 
 
     @Override
@@ -61,9 +74,35 @@ public class CraterSideAuton extends LinearOpMode {
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
+        sleep(3000);
 
+        if(r.goldLocation() == Robot.GoldPosition.LEFT){
+            directionForMineralFirst = "ccw";
+            directionForMineralSecond = "cw";
+            distanceForLineUp = baseDistance;
+        }
+        else if (r.goldLocation() == Robot.GoldPosition.MIDDLE) {
+            distanceForLineUp = baseDistance + 12*Math.sqrt(2);
 
+        }
+        else if (r.goldLocation() == Robot.GoldPosition.RIGHT) {
+            directionForMineralFirst = "cw";
+            directionForMineralSecond = "ccw";
+            distanceForLineUp = baseDistance + 2*12*Math.sqrt(2);
+        }
 
-
+        r.translate(4, -0.05);
+        r.rotate(directionForMineralFirst, 0.05, 44.5);
+        r.translate(22.45, -0.05);
+        r.rotate(directionForMineralSecond, 0.05, 0);
+        r.translate(4, -0.05);
+        r.translate(4, 0.05);
+        r.rotate("ccw", 0.05, 90);
+        r.translate(distanceForLineUp, -0.05);
+        r.rotate("ccw", 0.05, 135);
+        r.translate(inchesToDepot, -0.05);
+        //Deploy marker
+        sleep(1000);
+        r.translate(inchesToCrater, 0.05);
     }
 }

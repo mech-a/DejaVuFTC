@@ -62,7 +62,7 @@ public class Robot {
 
 
     public enum GoldPosition {
-        LEFT, MIDDLE, RIGHT
+        LEFT, MIDDLE, RIGHT, UNK
     }
 
 
@@ -381,7 +381,6 @@ public class Robot {
 //        heading = Range.clip(heading, -180.0, 180.0);
     }
     public double getHeading(){
-
         return heading;
     }
 
@@ -398,9 +397,21 @@ public class Robot {
 
 
 
-    public Day goldLocation() {
-        if (detector.getScreenPosition().x < RIGHT_BOUND & detector.getScreenPosition() > LEFT_BOUND)
-            return ;
+    public GoldPosition goldLocation() {
+        double screenPos = detector.getScreenPosition().x;
+
+        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND)
+            return GoldPosition.MIDDLE;
+
+        else if (screenPos < LEFT_BOUND && screenPos > 0)
+            return GoldPosition.LEFT;
+
+        else if (screenPos > RIGHT_BOUND)
+                //&& screenPos < 480
+            return GoldPosition.RIGHT;
+
+        else
+            return GoldPosition.UNK;
     }
 
 
