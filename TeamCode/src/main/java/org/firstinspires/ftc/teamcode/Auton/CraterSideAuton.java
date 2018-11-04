@@ -27,8 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.functionality;
+package org.firstinspires.ftc.teamcode.reference;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -37,15 +38,17 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
 /**
- * Copy Me Linear
+ * CraterSide
  */
 
-@TeleOp(name="TestRotate", group="Internal")
+@Autonomous(name="CopyMe", group="Internal")
 //@Disabled
-public class TestRotate extends LinearOpMode {
+public class CraterSideAuton extends LinearOpMode {
 
     // Declare OpMode members.
     Robot r = new Robot(this);
+
+
 
     @Override
     public void runOpMode() {
@@ -53,18 +56,14 @@ public class TestRotate extends LinearOpMode {
 
         r.start(hardwareMap, telemetry);
         r.init();
+        r.detectorInit();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
-        telemetry.addData("Rotating", "90 degrees cw @ 0.1");
-        telemetry.update();
-        r.rotate("cw", 0.05, 90);
 
-        sleep(750);
 
-        //telemetry.addData("Rotating", "45 degrees ccw @ 0.25");
-        //telemetry.update();
-        //r.rotate("ccw", 0.05, 90);
+
+
     }
 }

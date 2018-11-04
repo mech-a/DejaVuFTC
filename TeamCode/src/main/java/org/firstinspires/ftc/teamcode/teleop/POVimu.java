@@ -31,21 +31,18 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
-
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_MAX_POSITION;
 
 
 /**
  * POV Drive mode with encoder driving compatibility w/o while loops
  */
 
-@TeleOp(name="POV Drive", group="Competition")
+@TeleOp(name="POV imu", group="Competition")
 //@Disabled
-public class POVDriveRobot extends LinearOpMode {
+public class POVimu extends LinearOpMode {
 
     // Declare OpMode members.
     Robot r = new Robot(this);
@@ -59,7 +56,7 @@ public class POVDriveRobot extends LinearOpMode {
 
     double powL = 0;
     double powR = 0;
-    
+
     double powIntake = 0;
     double powIntakeMax = 1;
     double powIntakeMin = -1;
@@ -74,7 +71,7 @@ public class POVDriveRobot extends LinearOpMode {
 
 
     double powTelescope = 0;
-    
+
     final double TRIGGER_DEADZONE = 0.3;
 
     boolean telescopingMax = false;
@@ -114,6 +111,9 @@ public class POVDriveRobot extends LinearOpMode {
             rotation();
 
             setPowers(powL, powR, powLift, powTelescope, powRotate, powIntake);
+            r.refreshAngle();
+            telemetry.addData("angle",r.getHeading());
+            telemetry.update();
 
 
             sleep(100);

@@ -29,6 +29,8 @@ public class Robot {
     public DcMotor[] driveMotors = new DcMotor[4];
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
+    private int adjustmentForangle = 3;
+    private int adjustmentFortranslation = 1;
 
 
     private double[] driveMtrPowers = new double[4];
@@ -58,6 +60,10 @@ public class Robot {
 
 
 
+
+    public enum GoldPosition {
+        LEFT, MIDDLE, RIGHT
+    }
 
 
 
@@ -147,7 +153,7 @@ public class Robot {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    private void detectorInit() {
+    public void detectorInit() {
         detector = new CustomGoldDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
@@ -195,9 +201,9 @@ public class Robot {
     public void translate(double inches, double speed) {
         double localizedInches;
         if(speed > 0)
-            localizedInches = inches - 1;
+            localizedInches = inches - adjustmentFortranslation;
         else
-            localizedInches =  -inches + 1;
+            localizedInches =  -inches + adjustmentFortranslation;
 
         driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
 
@@ -248,6 +254,7 @@ public class Robot {
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
     public void rotate(String direction, double speed, double angle) {
+        angle = angle - adjustmentForangle;
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 //
 //        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
@@ -322,13 +329,16 @@ public class Robot {
                 driveMotors[i].setPower(powR);
         }
 
-        telemetry.addData("Rotating:", "%7d, %7s")
+        //telemetry.addData("Rotating:", "%7d, %7s");
 
         //priming
         refreshAngle();
 
+
         while(reachedAngle(angle) && !caller.isStopRequested()) {
             refreshAngle();
+            telemetry.addData("heading","%7f %7f", heading, angle);
+            telemetry.update();
             //telemetry.addData("Angle", "%7d : %7d", imu.getAngularOrientation(), angle);
         }
 
@@ -359,7 +369,8 @@ public class Robot {
     }
 
     //Currently normalizes angle as well
-    private void refreshAngle() {
+
+    public void refreshAngle() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
 
@@ -368,6 +379,10 @@ public class Robot {
 
 //        heading = Math.floor(heading);
 //        heading = Range.clip(heading, -180.0, 180.0);
+    }
+    public double getHeading(){
+
+        return heading;
     }
 
 
@@ -379,6 +394,13 @@ public class Robot {
 
     public void getStatus() {
         //TODO implement a status message, possibly useful for the invoker
+    }
+
+
+
+    public Day goldLocation() {
+        if (detector.getScreenPosition().x < RIGHT_BOUND & detector.getScreenPosition() > LEFT_BOUND)
+            return ;
     }
 
 
