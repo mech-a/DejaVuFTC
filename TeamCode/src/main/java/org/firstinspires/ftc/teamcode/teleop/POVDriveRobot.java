@@ -168,27 +168,27 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
     private void intake() {
-        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
+        if(gamepad2.right_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMax;
-        else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
+        else if (gamepad2.left_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMin;
         else
             powIntake = 0;
     }
 
     private void raise() {
-        if(gamepad1.dpad_up)
+        if(gamepad2.dpad_up)
             powLift = powLiftMax;
-        else if (gamepad1.dpad_down)
+        else if (gamepad2.dpad_down)
             powLift = powLiftMin;
         else
             powLift = 0;
     }
 
     private void rotation() {
-        if(gamepad1.x)
+        if(gamepad2.x)
             powRotate = powRotateTowardsRobot;
-        else if (gamepad1.b)
+        else if (gamepad2.b)
             powRotate = powRotateOutwards;
         else
             powRotate = 0;

@@ -200,6 +200,7 @@ public class Robot {
 
     public void translate(double inches, double speed) {
         double localizedInches;
+
         if(speed > 0)
             localizedInches = inches - adjustmentFortranslation;
         else

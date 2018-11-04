@@ -58,8 +58,8 @@ public class Autontest extends LinearOpMode {
             //for center mineral go straight 62.5 inches
             // and then move 45 degrees ccw and move 72 inches for crater
 
-        /*
-        for left mineral
+
+        //for left mineral
 
         r.translate(4,-0.1);
         r.rotate("ccw", 0.1, 30.7);
@@ -70,16 +70,19 @@ public class Autontest extends LinearOpMode {
         r.rotate("ccw",0.1,40);
         r.translate(65,0.1);
         r.translate(10,0.05);
-        */
+
+        /*
+        // for right mineral
         r.translate(4,-0.1);
-        r.rotate("cw", 0.1, 30.7);
+        r.rotate("cw", 0.1, 35 );
         r.translate(30.8, -0.1);
-        r.rotate("ccw",0.05,25);
+        r.rotate("ccw",0.05,28);
         r.translate(39.3,-0.1);
         sleep(1000);
-        r.rotate("ccw",0.05,40);
+        r.rotate("ccw",0.05,45);
         r.translate(65,0.1);
         r.translate(10,0.05);
+        */
 
 
             /*

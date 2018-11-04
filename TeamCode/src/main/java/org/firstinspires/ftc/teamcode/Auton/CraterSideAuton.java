@@ -41,7 +41,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  * CraterSide
  */
 
-@Autonomous(name="CopyMe", group="Internal")
+@Autonomous(name="Crater Side Auton", group="Internal")
 //@Disabled
 public class CraterSideAuton extends LinearOpMode {
 
@@ -76,26 +76,36 @@ public class CraterSideAuton extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         sleep(3000);
 
-        if(r.goldLocation() == Robot.GoldPosition.LEFT){
-            directionForMineralFirst = "ccw";
-            directionForMineralSecond = "cw";
-            distanceForLineUp = baseDistance;
-        }
-        else if (r.goldLocation() == Robot.GoldPosition.MIDDLE) {
-            distanceForLineUp = baseDistance + 12*Math.sqrt(2);
-
-        }
-        else if (r.goldLocation() == Robot.GoldPosition.RIGHT) {
-            directionForMineralFirst = "cw";
-            directionForMineralSecond = "ccw";
-            distanceForLineUp = baseDistance + 2*12*Math.sqrt(2);
-        }
+//        if(r.goldLocation() == Robot.GoldPosition.LEFT){
+//            directionForMineralFirst = "ccw";
+//            directionForMineralSecond = "cw";
+//            distanceForLineUp = baseDistance;
+//        }
+//        else if (r.goldLocation() == Robot.GoldPosition.MIDDLE) {
+//            distanceForLineUp = baseDistance + 12*Math.sqrt(2);
+//
+//        }
+//        else if (r.goldLocation() == Robot.GoldPosition.RIGHT) {
+//            directionForMineralFirst = "cw";
+//            directionForMineralSecond = "ccw";
+//            distanceForLineUp = baseDistance + 2*12*Math.sqrt(2);
+//        }
 
         r.translate(4, -0.05);
-        r.rotate(directionForMineralFirst, 0.05, 44.5);
-        r.translate(22.45, -0.05);
-        r.rotate(directionForMineralSecond, 0.05, 0);
+        sleep(1000);
+
+        if(!directionForMineralFirst.equals("")) {
+            r.rotate(directionForMineralFirst, 0.05, 44.5);
+            r.translate(22.45, -0.05);
+            r.rotate(directionForMineralSecond, 0.05, 0);
+        }
+        else {
+            r.translate(15,-0.05);
+        }
+
+
         r.translate(4, -0.05);
+        sleep(1000);
         r.translate(4, 0.05);
         r.rotate("ccw", 0.05, 90);
         r.translate(distanceForLineUp, -0.05);

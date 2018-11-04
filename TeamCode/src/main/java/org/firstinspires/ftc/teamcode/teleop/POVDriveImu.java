@@ -31,18 +31,21 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
+
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_INCH;
 
 
 /**
  * POV Drive mode with encoder driving compatibility w/o while loops
  */
 
-@TeleOp(name="POV imu", group="Competition")
+@TeleOp(name="POV Drive Imu", group="Competition")
 //@Disabled
-public class POVimu extends LinearOpMode {
+public class POVDriveImu extends LinearOpMode {
 
     // Declare OpMode members.
     Robot r = new Robot(this);
@@ -52,11 +55,11 @@ public class POVimu extends LinearOpMode {
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
 
-    double modifier = 0.25;
+    double modifier = 0.125;
 
     double powL = 0;
     double powR = 0;
-
+    
     double powIntake = 0;
     double powIntakeMax = 1;
     double powIntakeMin = -1;
@@ -71,7 +74,7 @@ public class POVimu extends LinearOpMode {
 
 
     double powTelescope = 0;
-
+    
     final double TRIGGER_DEADZONE = 0.3;
 
     boolean telescopingMax = false;
@@ -90,6 +93,11 @@ public class POVimu extends LinearOpMode {
         r.start(hardwareMap, telemetry);
         r.init();
 
+        for(int i = 0; i<4; i++) {
+            r.driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            r.driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
@@ -102,18 +110,36 @@ public class POVimu extends LinearOpMode {
 
             //Button handling
             //L/R Trigger, intake
-            intake();
-
-            //U/D Dpad, lift(raise)
-            raise();
-
-            //X,B rotation
-            rotation();
-
-            setPowers(powL, powR, powLift, powTelescope, powRotate, powIntake);
             r.refreshAngle();
             telemetry.addData("angle",r.getHeading());
+
+            int[] currentPos = new int[4];
+
+
+            if(gamepad1.a) {
+                for(int i = 0; i<4; i++) {
+                    r.driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    r.driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
+            }
+
+
+
+            for(int i = 0; i<4; i++) {
+                currentPos[i] = r.driveMotors[i].getCurrentPosition();
+                telemetry.addData(r.driveMotors[i] + " Pos, In", "%4d : %4f", currentPos[i], currentPos[i]/HD_COUNTS_PER_INCH);
+            }
+
+
+
+
+
+
+
+
             telemetry.update();
+
+            setPowers(powL, powR);
 
 
             sleep(100);
@@ -194,17 +220,12 @@ public class POVimu extends LinearOpMode {
             powRotate = 0;
     }
 
-    private void setPowers(double powL, double powR, double powLift, double powTelescope,
-                           double powRotate, double powIntake) {
+    private void setPowers(double powL, double powR) {
         r.driveMotors[0].setPower(powL);
         r.driveMotors[1].setPower(powR);
         r.driveMotors[2].setPower(powR);
         r.driveMotors[3].setPower(powL);
 
-        r.armMotors[0].setPower(powLift);
-        r.armMotors[1].setPower(powTelescope);
-        r.armMotors[2].setPower(powRotate);
-        r.armMotors[3].setPower(powIntake);
     }
 
     private void setGamepads(double modifier) {

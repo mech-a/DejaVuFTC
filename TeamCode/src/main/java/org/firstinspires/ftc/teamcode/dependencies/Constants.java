@@ -13,7 +13,7 @@ public class Constants {
 
     //this is equal to your exact gear ratio
     public static final double DRIVE_GEAR_RATIO = 1;
-    public static final int HD_COUNTS_PER_INCH =
+    public static final double HD_COUNTS_PER_INCH =
             getCountsPerInch(DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
 
 
@@ -27,7 +27,7 @@ public class Constants {
     //TODO get these vals
     public static final double LINKS_PER_INCH = 5;
     public static final double TEETH_ON_OUTPUT_GEAR = 25;
-    public static final int LIFT_COUNTS_PER_INCH =
+    public static final double LIFT_COUNTS_PER_INCH =
             getCountsPerInch(LIFT_GEAR_RATIO, CORE_COUNTS_PER_REV, LINKS_PER_INCH, TEETH_ON_OUTPUT_GEAR);
 
     public static final int COUNTS_TO_DROP = 854;
@@ -35,12 +35,12 @@ public class Constants {
     public static final int TELESCOPING_GEAR_RATIO = 1;
     //TODO get diam
     public static final double PULLEY_DIAM = 2;
-    public static final int TELESCOPING_COUNTS_PER_INCH =
+    public static final double TELESCOPING_COUNTS_PER_INCH =
             getCountsPerInch(TELESCOPING_GEAR_RATIO, CORE_COUNTS_PER_REV, PULLEY_DIAM);
 
 
     //TODO set
-    public static final int TELESCOPING_MAX_POSITION = 111111111 * TELESCOPING_COUNTS_PER_INCH;
+    public static final double TELESCOPING_MAX_POSITION = 111111111 * TELESCOPING_COUNTS_PER_INCH;
 
 
     //TODO get these other vals
@@ -55,13 +55,13 @@ public class Constants {
 
 
 
-    private static int getCountsPerInch(double gearRatio, double countsRevolution, double diam) {
-        return (int) (gearRatio * countsRevolution / (Math.PI * diam));
+    private static double getCountsPerInch(double gearRatio, double countsRevolution, double diam) {
+        return (gearRatio * countsRevolution / (Math.PI * diam));
     }
 
-    private static int getCountsPerInch(double gearRatio, double countsRevolution,
+    private static double getCountsPerInch(double gearRatio, double countsRevolution,
                                         double linksPerInch, double teethOnOutputGear) {
-        return (int) (gearRatio * countsRevolution * linksPerInch / teethOnOutputGear);
+        return (gearRatio * countsRevolution * linksPerInch / teethOnOutputGear);
     }
 
     //TODO make constants based off of robot
