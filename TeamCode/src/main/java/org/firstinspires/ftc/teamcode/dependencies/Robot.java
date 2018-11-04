@@ -7,9 +7,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -27,6 +25,7 @@ public class Robot {
 
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
+    public Servo[] servoMotors = new Servo[2];
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
     private int adjustmentForangle = 3;
@@ -82,7 +81,13 @@ public class Robot {
         driveMotorsInit();
         armMotorsInit();
         imuInit();
+        servoMotorsInit();
 
+    }
+    private void servoMotorsInit(){
+        for(int i =0; i<2; i++){
+            servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
+        }
     }
 
     private void driveMotorsInit() {

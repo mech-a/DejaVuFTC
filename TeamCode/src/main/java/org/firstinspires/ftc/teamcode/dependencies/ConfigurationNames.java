@@ -13,6 +13,10 @@ public class ConfigurationNames {
     public static final String[] SENSOR_NAMES = {
             "imu"
     };
+    public static final String[] SERVO_MOTOR_NAMES = {
+            "marker", "locker"
+    };
+
 
     //add servos, sensors, when and if needed.
     //probably also webcam and stuff
