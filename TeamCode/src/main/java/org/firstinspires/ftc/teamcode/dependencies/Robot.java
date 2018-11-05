@@ -87,7 +87,10 @@ public class Robot {
     private void servoMotorsInit(){
         for(int i =0; i<2; i++){
             servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
+
         }
+        servoMotors[1].setPosition(0);
+
     }
 
     private void driveMotorsInit() {
@@ -188,7 +191,7 @@ public class Robot {
         armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotors[motorNum].setPower(speed);
 
-        while(caller.opModeIsActive() & driveMotors[motorNum].isBusy()) {
+        while(!caller.isStopRequested() && armMotors[motorNum].isBusy()) {
             //TODO change telemetry name to enum
             telemetry.addData(motorNum + ":", "%7d : %7d",
                     armMotors[motorNum].getCurrentPosition(), counts);
@@ -394,6 +397,7 @@ public class Robot {
     public double goldPos() {
         return detector.getScreenPosition().x;
     }
+
 
 
 

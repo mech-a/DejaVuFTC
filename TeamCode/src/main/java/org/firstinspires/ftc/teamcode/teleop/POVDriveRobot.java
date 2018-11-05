@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
@@ -49,6 +50,14 @@ public class POVDriveRobot extends LinearOpMode {
 
     // Declare OpMode members.
     Robot r = new Robot(this);
+
+
+    Servo jamServo;
+
+    double servoPosition = 1;
+    double step = 0.05;
+
+
 
     double[] g1 = new double[4];
     double[] g2 = new double[4];
@@ -113,16 +122,20 @@ public class POVDriveRobot extends LinearOpMode {
             //X,B rotation
             rotation();
 
+            //G2 LB + RB - Servo
+            jamServoControl();
+
             setPowers(powL, powR, powLift, powTelescope, powRotate, powIntake);
 
 
+            telemetry.update();
             sleep(100);
 
 
 
 
 
-            /*
+
             //TODO see if vertical motor can be floated due to surgical tubing 
             
 
@@ -134,27 +147,27 @@ public class POVDriveRobot extends LinearOpMode {
             // two different if/else clauses. Let's just try it out!
             // also good thing for eng nb
             // or, we can keep this as is annd make the second powIntake handling part an else if so only 1 runs
-            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
-                telescopingMax = true;
-            else if(r.armMotors[1].getCurrentPosition()<=0)
-                telescopingMin = true;
-            else {
-                telescopingMax = false;
-                telescopingMin = false;
-            }
+//            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
+//                telescopingMax = true;
+//            else if(r.armMotors[1].getCurrentPosition()<=0)
+//                telescopingMin = true;
+//            else {
+//                telescopingMax = false;
+//                telescopingMin = false;
+//            }
+//
+//
+//            //TODO check if hardware cycle will allow this to run correctly
+//            if(telescopingMax) {
+//                if(powTelescope > 0)
+//                    powTelescope = 0;
+//            }
+//
+//            if(telescopingMin) {
+//                if(powTelescope < 0)
+//                    powTelescope = 0;
+//            }
 
-
-            //TODO check if hardware cycle will allow this to run correctly
-            if(telescopingMax) {
-                if(powTelescope > 0)
-                    powTelescope = 0;
-            }
-
-            if(telescopingMin) {
-                if(powTelescope < 0)
-                    powTelescope = 0;
-            }
-            */
 
 
 
@@ -224,6 +237,23 @@ public class POVDriveRobot extends LinearOpMode {
 
 
     private void ramping() {
+
+    }
+
+    private void jamServoControl() {
+
+        if(gamepad2.left_bumper)
+            servoPosition+=step;
+        else if (gamepad2.right_bumper)
+            servoPosition-=step;
+
+
+        r.servoMotors[1].setPosition(servoPosition);
+
+        telemetry.addData("locker servo pos", r.servoMotors[1].getPosition());
+
+
+        //start (zero) will be at 1
 
     }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+
 @Autonomous(name = "Auton Test", group = "Auton")
 public class Autontest extends LinearOpMode {
 
@@ -29,11 +30,12 @@ public class Autontest extends LinearOpMode {
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
-        r.driveMotors[0].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        r.driveMotors[0].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //r.driveMotors[0].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //r.driveMotors[0].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         detector = new CustomGoldDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
+
         detector.enable();
 
         waitForStart();
@@ -43,10 +45,21 @@ public class Autontest extends LinearOpMode {
             //.driveMotors[0].setPower(0.1);
             //while(r.driveMotors[0].isBusy()){
 
-            //}
-            //r.positionDrive(0,854,0.5);
 
-            //sleep(3000);
+
+        r.armMotors[0].setPower(-0.25);
+
+        sleep(350);
+        r.servoMotors[1].setPosition(0.35);
+        sleep(350);
+
+
+
+
+        r.positionDrive(0,840,0.2 );
+
+
+            sleep(3000);
 
             //28 inches to go forward to center
             //26.5 inches to center mineral for angle measuring
@@ -60,9 +73,13 @@ public class Autontest extends LinearOpMode {
 
 
         //for left mineral
+        r.rotate("ccw",45, 0.05);
+        r.positionDrive(0,-800,0.5);
+        r.rotate("cw",0.05,0);
+
 
         r.translate(4,-0.1);
-        r.rotate("ccw", 0.1, 30.7);
+        r.rotate("ccw", 0.1, 27);
         r.translate(30.8, -0.1);
         r.rotate("cw",0.05,35);
         r.translate(39.3,-0.05);
