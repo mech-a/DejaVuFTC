@@ -147,26 +147,26 @@ public class POVDriveRobot extends LinearOpMode {
             // two different if/else clauses. Let's just try it out!
             // also good thing for eng nb
             // or, we can keep this as is annd make the second powIntake handling part an else if so only 1 runs
-            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
-                telescopingMax = true;
-            else if(r.armMotors[1].getCurrentPosition()<=0)
-                telescopingMin = true;
-            else {
-                telescopingMax = false;
-                telescopingMin = false;
-            }
-
-
-            //TODO check if hardware cycle will allow this to run correctly
-            if(telescopingMax) {
-                if(powTelescope > 0)
-                    powTelescope = 0;
-            }
-
-            if(telescopingMin) {
-                if(powTelescope < 0)
-                    powTelescope = 0;
-            }
+//            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
+//                telescopingMax = true;
+//            else if(r.armMotors[1].getCurrentPosition()<=0)
+//                telescopingMin = true;
+//            else {
+//                telescopingMax = false;
+//                telescopingMin = false;
+//            }
+//
+//
+//            //TODO check if hardware cycle will allow this to run correctly
+//            if(telescopingMax) {
+//                if(powTelescope > 0)
+//                    powTelescope = 0;
+//            }
+//
+//            if(telescopingMin) {
+//                if(powTelescope < 0)
+//                    powTelescope = 0;
+//            }
 
 
 
