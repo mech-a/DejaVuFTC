@@ -147,26 +147,26 @@ public class POVDriveRobot extends LinearOpMode {
             // two different if/else clauses. Let's just try it out!
             // also good thing for eng nb
             // or, we can keep this as is annd make the second powIntake handling part an else if so only 1 runs
-//            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
-//                telescopingMax = true;
-//            else if(r.armMotors[1].getCurrentPosition()<=0)
-//                telescopingMin = true;
-//            else {
-//                telescopingMax = false;
-//                telescopingMin = false;
-//            }
-//
-//
-//            //TODO check if hardware cycle will allow this to run correctly
-//            if(telescopingMax) {
-//                if(powTelescope > 0)
-//                    powTelescope = 0;
-//            }
-//
-//            if(telescopingMin) {
-//                if(powTelescope < 0)
-//                    powTelescope = 0;
-//            }
+            if(r.armMotors[1].getCurrentPosition()>=(TELESCOPING_MAX_POSITION))
+                telescopingMax = true;
+            else if(r.armMotors[1].getCurrentPosition()<=0)
+                telescopingMin = true;
+            else {
+                telescopingMax = false;
+                telescopingMin = false;
+            }
+
+
+            //TODO check if hardware cycle will allow this to run correctly
+            if(telescopingMax) {
+                if(powTelescope > 0)
+                    powTelescope = 0;
+            }
+
+            if(telescopingMin) {
+                if(powTelescope < 0)
+                    powTelescope = 0;
+            }
 
 
 
@@ -181,27 +181,27 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
     private void intake() {
-        if(gamepad2.right_trigger > TRIGGER_DEADZONE)
+        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMax;
-        else if (gamepad2.left_trigger > TRIGGER_DEADZONE)
+        else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMin;
         else
             powIntake = 0;
     }
 
     private void raise() {
-        if(gamepad2.dpad_up)
+        if(gamepad1.dpad_up)
             powLift = powLiftMax;
-        else if (gamepad2.dpad_down)
+        else if (gamepad1.dpad_down)
             powLift = powLiftMin;
         else
             powLift = 0;
     }
 
     private void rotation() {
-        if(gamepad2.x)
+        if(gamepad1.x)
             powRotate = powRotateTowardsRobot;
-        else if (gamepad2.b)
+        else if (gamepad1.b)
             powRotate = powRotateOutwards;
         else
             powRotate = 0;
@@ -242,9 +242,9 @@ public class POVDriveRobot extends LinearOpMode {
 
     private void jamServoControl() {
 
-        if(gamepad2.left_bumper)
+        if(gamepad1.left_bumper)
             servoPosition+=step;
-        else if (gamepad2.right_bumper)
+        else if (gamepad1.right_bumper)
             servoPosition-=step;
 
 
