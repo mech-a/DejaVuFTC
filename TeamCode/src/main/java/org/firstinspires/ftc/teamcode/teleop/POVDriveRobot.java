@@ -122,14 +122,19 @@ public class POVDriveRobot extends LinearOpMode {
             //X,B rotation
             rotation();
 
+            //DPAD L, R telescoping
+            telescope();
+
+
+
             //G2 LB + RB - Servo
             jamServoControl();
 
-            setPowers(powL, powR, powLift, powTelescope, powRotate, powIntake);
+            setPowers();
 
 
             telemetry.update();
-            sleep(100);
+            sleep(50);
 
 
 
@@ -153,7 +158,6 @@ public class POVDriveRobot extends LinearOpMode {
 //                telescopingMin = true;
 //            else {
 //                telescopingMax = false;
-//                telescopingMin = false;
 //            }
 //
 //
@@ -167,6 +171,9 @@ public class POVDriveRobot extends LinearOpMode {
 //                if(powTelescope < 0)
 //                    powTelescope = 0;
 //            }
+
+
+
 
 
 
@@ -207,8 +214,16 @@ public class POVDriveRobot extends LinearOpMode {
             powRotate = 0;
     }
 
-    private void setPowers(double powL, double powR, double powLift, double powTelescope,
-                           double powRotate, double powIntake) {
+    private void telescope() {
+        if(gamepad1.dpad_left)
+            powTelescope = 0.5;
+        else if(gamepad1.dpad_right)
+            powTelescope= -0.5;
+        else
+            powTelescope = 0;
+    }
+
+    private void setPowers() {
         r.driveMotors[0].setPower(powL);
         r.driveMotors[1].setPower(powR);
         r.driveMotors[2].setPower(powR);
@@ -218,6 +233,8 @@ public class POVDriveRobot extends LinearOpMode {
         r.armMotors[1].setPower(powTelescope);
         r.armMotors[2].setPower(powRotate);
         r.armMotors[3].setPower(powIntake);
+
+        r.servoMotors[1].setPosition(servoPosition);
     }
 
     private void setGamepads(double modifier) {
@@ -242,13 +259,12 @@ public class POVDriveRobot extends LinearOpMode {
 
     private void jamServoControl() {
 
-        if(gamepad1.left_bumper)
-            servoPosition+=step;
-        else if (gamepad1.right_bumper)
-            servoPosition-=step;
+        if(gamepad2.y)
+            servoPosition = 0;
+        else if(gamepad2.a)
+            servoPosition = 0.5;
 
 
-        r.servoMotors[1].setPosition(servoPosition);
 
         telemetry.addData("locker servo pos", r.servoMotors[1].getPosition());
 

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
-@Autonomous(name = "Auton Test", group = "Auton")
+@Autonomous(name = "Auton test 2", group = "Auton")
 public class Autontest extends LinearOpMode {
 
     Robot r = new Robot(this);
@@ -37,6 +37,11 @@ public class Autontest extends LinearOpMode {
         detector.useDefaults();
 
         detector.enable();
+
+
+
+        telemetry.addData("Stat:" ,"Initialized");
+        telemetry.update();
 
         waitForStart();
 
@@ -73,20 +78,33 @@ public class Autontest extends LinearOpMode {
 
 
         //for left mineral
-        r.rotate("ccw",45, 0.05);
-        r.positionDrive(0,-800,0.5);
-        r.rotate("cw",0.05,0);
+//        r.rotate("ccw",45, 0.05);
+//        r.positionDrive(0,-800,0.5);
+//        r.rotate("cw",0.05,0);
+        //18-19 or 11.6 degrees cw to rotate out of the hook
+        //drive 2 inches forward
+        //8 or 10 inches forward
+        //rotate 31 ccw degrees or 41
+        //28.5 inches forward
+        //rotate 21 degrees cw
+        //34 inches forward
+        r.rotate("cw",0.05,12);
+        r.translate(2,-0.05);
+        r.rotate("ccw",0.05,31);
+        r.translate(28.5,-0.05);
+        r.rotate("cw",0.05,20);
 
+//
 
-        r.translate(4,-0.1);
-        r.rotate("ccw", 0.1, 27);
-        r.translate(30.8, -0.1);
-        r.rotate("cw",0.05,35);
-        r.translate(39.3,-0.05);
-        sleep(1000);
-        r.rotate("ccw",0.1,40);
-        r.translate(65,0.1);
-        r.translate(10,0.05);
+//        r.translate(4,-0.1);
+//        r.rotate("ccw", 0.1, 27);
+//        r.translate(30.8, -0.1);
+//        r.rotate("cw",0.05,35);
+//        r.translate(39.3,-0.05);
+//        sleep(1000);
+//        r.rotate("ccw",0.1,40);
+//        r.translate(65,0.1);
+//        r.translate(10,0.05);
 
         /*
         // for right mineral

@@ -55,7 +55,7 @@ public class POVDriveImu extends LinearOpMode {
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
 
-    double modifier = 0.125;
+    double modifier = 0.05;
 
     double powL = 0;
     double powR = 0;
