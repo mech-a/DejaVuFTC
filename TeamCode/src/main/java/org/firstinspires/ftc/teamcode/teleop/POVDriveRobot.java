@@ -52,10 +52,8 @@ public class POVDriveRobot extends LinearOpMode {
     Robot r = new Robot(this);
 
 
-    Servo jamServo;
 
-    double servoPosition = 1;
-    double step = 0.05;
+    double servoPosition = 1, servoLocked = 0, servoUnlocked = 0.5;
 
 
 
@@ -64,7 +62,7 @@ public class POVDriveRobot extends LinearOpMode {
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
 
-    double modifier = 0.25;
+    double modifier = 0.25, speedSwitchSlow = 0.25, speedSwitchFast = 1;
 
     double powL = 0;
     double powR = 0;
@@ -89,6 +87,8 @@ public class POVDriveRobot extends LinearOpMode {
     boolean telescopingMax = false;
     boolean telescopingMin = false;
 
+    boolean runSlow = false, runFast = false, runExponential = false;
+
     //code spec:
     // powLift; 1 for raise, -1 for fall
     // powIntake; 1 for intake, -1 for expel
@@ -108,9 +108,7 @@ public class POVDriveRobot extends LinearOpMode {
         while (opModeIsActive()) {
             setGamepads(modifier);
 
-            powL = Range.clip(g1[1] + g1[2], -1, 1);
-            powR = Range.clip(g1[1] - g1[2], -1, 1);
-
+            adjustPowers();
 
             //Button handling
             //L/R Trigger, intake
@@ -187,6 +185,11 @@ public class POVDriveRobot extends LinearOpMode {
         }
     }
 
+    private void adjustPowers() {
+        powL = Range.clip(g1[1] + g1[2], -1, 1);
+        powR = Range.clip(g1[1] - g1[2], -1, 1);
+    }
+
     private void intake() {
         if(gamepad1.right_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMax;
@@ -253,16 +256,48 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
 
-    private void ramping() {
+    private void speedSwitch() {
+        if (gamepad1.y) {
+            runExponential = !runExponential;
+        }
+
+        if(gamepad1.left_bumper) {
+            runSlow = true;
+            runFast = false;
+        }
+        else if (gamepad1.right_bumper) {
+            runSlow = false;
+            runFast = true;
+        }
+
+        if(runFast) {
+            powL = speedSwitchFast * powL;
+            powR = speedSwitchFast * powR;
+            telemetry.addData("SpeedMod:", speedSwitchFast * modifier);
+        }
+        else if(runSlow) {
+            powL = speedSwitchSlow * powL;
+            powR = speedSwitchSlow * powR;
+            telemetry.addData("SpeedMod:", speedSwitchSlow * modifier);
+        }
+
+        if(runExponential) {
+            powL = Math.abs(powL) * powL;
+            powR = Math.abs(powR) * powR;
+            telemetry.addData("SpeedType:", "Exponential");
+        }
+
+        telemetry.addData("L:R", "%3f : %3f", powL, powR);
+
 
     }
 
     private void jamServoControl() {
 
         if(gamepad2.y)
-            servoPosition = 0;
+            servoPosition = servoLocked;
         else if(gamepad2.a)
-            servoPosition = 0.5;
+            servoPosition = servoUnlocked;
 
 
 
