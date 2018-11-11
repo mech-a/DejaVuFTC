@@ -58,6 +58,10 @@ public class POVDriveRobot extends LinearOpMode {
     double servoPosition = 1;
 
 
+    int count = 0;
+    int LIM = -300;
+
+
 
     double[] g1 = new double[4];
     double[] g2 = new double[4];
@@ -208,12 +212,27 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
     private void rotation() {
-        if(gamepad2.x)
-            powRotate = powRotateTowardsRobot;
-        else if (gamepad2.b)
-            powRotate = powRotateOutwards;
-        else
+        if(gamepad2.b) {
+            if(r.armMotors[3].getCurrentPosition() >= LIM) {
+                powRotate = powRotateTowardsRobot/2;
+                telemetry.addData("Rot:", "in, past lim");
+            }
+            else {
+                powRotate = powRotateTowardsRobot;
+            }
+        }
+        else if(gamepad2.x) {
+            if(r.armMotors[3].getCurrentPosition() <= LIM) {
+                powRotate = powRotateOutwards/2;
+                telemetry.addData("Rot:", "out, past lim");
+            }
+            else {
+                powRotate = powRotateOutwards;
+            }
+        }
+        else {
             powRotate = 0;
+        }
     }
 
     private void telescope() {
@@ -324,6 +343,7 @@ public class POVDriveRobot extends LinearOpMode {
 
 
     private void autonRotation() {
+
 
     }
 
