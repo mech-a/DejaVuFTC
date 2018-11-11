@@ -90,7 +90,7 @@ public class Autontest extends LinearOpMode {
         //34 inches forward
         r.rotate("cw",0.05,18);
         //TODO translate 4
-        r.translate(2,-0.05);
+        r.translate(4,-0.05);
         r.rotate("ccw",0.05,0);
 //        r.rotate("ccw",0.05,31);
 //        r.translate(28.5,-0.05);
@@ -107,6 +107,18 @@ public class Autontest extends LinearOpMode {
 //        r.rotate("ccw",0.1,40);
 //        r.translate(65,0.1);
 //        r.translate(10,0.05);
+        r.translate(4,-0.1);
+        r.rotate("cw", 0.05, 30.7);
+        r.translate(30.8, -0.1);
+        r.rotate("ccw",0.05,32);
+        r.translate(39.3,-0.05);
+        r.servoMotors[0].setPosition(0);
+
+//        r.rotate("ccw", 0.1, 35);
+//        r.translate(30.8, -0.1);
+//        r.rotate("cw",0.05,35);
+//        r.translate(39.3,-0.05);
+//        r.servoMotors[0].setPosition(0);
 
 
         //TODO check if last motor hits pos or first motor hits position
@@ -125,12 +137,13 @@ public class Autontest extends LinearOpMode {
         r.translate(65,0.1);
         r.translate(10,0.05);
         */
+        /*
 
 
 
             if (detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) {
                 telemetry.addData("Position:", "Center");
-                r.translate(62.5, -0.1);
+                r.translate(60.5, -0.1);
                 r.servoMotors[0].setPosition(0);
 
 
@@ -158,9 +171,10 @@ public class Autontest extends LinearOpMode {
                 }
 
             }
+            */
             //placeholder for dropping the team marker
             sleep(1000);
-            r.rotate("cw",0.1,44);
+            r.rotate("cw",0.1,47);
             r.translate(75,0.1);
 
 

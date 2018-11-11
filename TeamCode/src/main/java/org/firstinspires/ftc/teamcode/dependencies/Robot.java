@@ -132,6 +132,7 @@ public class Robot {
                 driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
             driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
@@ -159,7 +160,7 @@ public class Robot {
                 armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
             armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            
+            armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }

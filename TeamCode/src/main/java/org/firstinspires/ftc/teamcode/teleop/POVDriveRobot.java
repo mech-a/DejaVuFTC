@@ -108,6 +108,9 @@ public class POVDriveRobot extends LinearOpMode {
 
             adjustPowers();
 
+
+            telemetry.addData("Rotation", r.armMotors[2].getCurrentPosition());
+
             //Button handling
             //L/R Trigger, intake
             intake();
@@ -213,7 +216,7 @@ public class POVDriveRobot extends LinearOpMode {
 
     private void rotation() {
         if(gamepad2.b) {
-            if(r.armMotors[3].getCurrentPosition() >= LIM) {
+            if(r.armMotors[2].getCurrentPosition() >= LIM) {
                 powRotate = powRotateTowardsRobot/2;
                 telemetry.addData("Rot:", "in, past lim");
             }
@@ -222,7 +225,7 @@ public class POVDriveRobot extends LinearOpMode {
             }
         }
         else if(gamepad2.x) {
-            if(r.armMotors[3].getCurrentPosition() <= LIM) {
+            if(r.armMotors[2].getCurrentPosition() <= LIM) {
                 powRotate = powRotateOutwards/2;
                 telemetry.addData("Rot:", "out, past lim");
             }
@@ -233,6 +236,9 @@ public class POVDriveRobot extends LinearOpMode {
         else {
             powRotate = 0;
         }
+
+
+        telemetry.addData("Powrot", powRotate);
     }
 
     private void telescope() {
