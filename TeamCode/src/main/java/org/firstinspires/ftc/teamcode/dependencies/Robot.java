@@ -7,6 +7,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 
@@ -54,6 +55,8 @@ public class Robot {
 
     private CustomGoldDetector detector;
 
+    private OpModeType callerType = OpModeType.AUTON;
+
 
 
 
@@ -64,10 +67,18 @@ public class Robot {
         LEFT, MIDDLE, RIGHT, UNK
     }
 
+    public enum OpModeType {
+        TELEOP, AUTON
+    }
 
 
     public Robot(LinearOpMode initializer) {
         caller = initializer;
+    }
+
+    public Robot(LinearOpMode initializer, OpModeType opModeType) {
+        caller = initializer;
+        callerType = opModeType;
     }
 
     public void start(HardwareMap h, Telemetry t) {
@@ -85,16 +96,20 @@ public class Robot {
 
     }
     private void servoMotorsInit(){
-        for(int i =0; i<2; i++){
+        for(int i = 0; i<2 && !caller.isStopRequested(); i++){
             servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
-
         }
-        servoMotors[1].setPosition(0);
+
+        if(callerType == OpModeType.AUTON && !caller.isStopRequested()) {
+            servoMotors[0].setPosition(MARKER_HELD);
+            servoMotors[1].setPosition(SERVO_LOCKED);
+        }
+            //no need to change servos for teleop
 
     }
 
     private void driveMotorsInit() {
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
 
             //TODO standardize between robot and code the port numbers and i
@@ -122,7 +137,7 @@ public class Robot {
     }
 
     private void armMotorsInit() {
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
 
             //TODO change if needed: well, i did it, but must be changed for when telescoping works
@@ -216,7 +231,7 @@ public class Robot {
 
         driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setTargetPosition(driveMtrTarget);
             driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -225,11 +240,12 @@ public class Robot {
         // try this out
         // caller.sleep(750);
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(speed);
         }
 
-        while(!caller.isStopRequested() && driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() && driveMotors[3].isBusy()) {
+        while(!caller.isStopRequested() &&
+                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
             //TODO change telemetry name to enum
             telemetry.addData("0mtrFl", "%7d : %7d",
                     driveMotors[0].getCurrentPosition(), driveMtrTarget);
@@ -243,10 +259,10 @@ public class Robot {
             telemetry.update();
         }
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(0);
         }
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 

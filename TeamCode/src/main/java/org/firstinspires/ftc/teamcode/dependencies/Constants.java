@@ -52,6 +52,9 @@ public class Constants {
     public static final int RIGHT_BOUND = 400;
     public static final int LEFT_BOUND = 200;
 
+    public static final double SERVO_LOCKED = 0, SERVO_UNLOCKED = 0.5;
+    public static final double MARKER_HELD = 1, MARKER_DOWN = 0.3;
+
 
 
 

@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_LOCKED;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_MAX_POSITION;
 
 
@@ -53,7 +55,7 @@ public class POVDriveRobot extends LinearOpMode {
 
 
 
-    double servoPosition = 1, servoLocked = 0, servoUnlocked = 0.5;
+    double servoPosition = 1;
 
 
 
@@ -62,30 +64,23 @@ public class POVDriveRobot extends LinearOpMode {
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
 
-    double modifier = 0.25, speedSwitchSlow = 0.25, speedSwitchFast = 1;
+    double modifier = 0.25, speedSwitchSlow = 0.25, speedSwitchFast = 1, speedSwitchPow = 1;
 
     double powL = 0;
     double powR = 0;
     
-    double powIntake = 0;
-    double powIntakeMax = 1;
-    double powIntakeMin = -1;
+    double powIntake = 0, powIntakeMax = 1, powIntakeMin = -1;
 
-    double powLift = 0;
-    double powLiftMax = 1;
-    double powLiftMin = -1;
+    double powLift = 0, powLiftMax = 1, powLiftMin = -1;
 
-    double powRotate = 0;
-    double powRotateOutwards = 0.5;
-    double powRotateTowardsRobot = -0.5;
+    double powRotate = 0, powRotateOutwards = 0.5, powRotateTowardsRobot = -0.5;
 
 
     double powTelescope = 0;
     
     final double TRIGGER_DEADZONE = 0.3;
 
-    boolean telescopingMax = false;
-    boolean telescopingMin = false;
+    boolean telescopingMax = false, telescopingMin = false;
 
     boolean runSlow = false, runFast = false, runExponential = false;
 
@@ -123,6 +118,7 @@ public class POVDriveRobot extends LinearOpMode {
             //DPAD L, R telescoping
             telescope();
 
+            speedSwitch();
 
 
             //G2 LB + RB - Servo
@@ -130,9 +126,13 @@ public class POVDriveRobot extends LinearOpMode {
 
             setPowers();
 
+            telemetryStack();
+
 
             telemetry.update();
-            sleep(50);
+
+
+            sleep(100);
 
 
 
@@ -191,36 +191,36 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
     private void intake() {
-        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
+        if(gamepad2.right_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMax;
-        else if (gamepad1.left_trigger > TRIGGER_DEADZONE)
+        else if (gamepad2.left_trigger > TRIGGER_DEADZONE)
             powIntake = powIntakeMin;
         else
             powIntake = 0;
     }
 
     private void raise() {
-        if(gamepad1.dpad_up)
+        if(gamepad2.dpad_up)
             powLift = powLiftMax;
-        else if (gamepad1.dpad_down)
+        else if (gamepad2.dpad_down)
             powLift = powLiftMin;
         else
             powLift = 0;
     }
 
     private void rotation() {
-        if(gamepad1.x)
+        if(gamepad2.x)
             powRotate = powRotateTowardsRobot;
-        else if (gamepad1.b)
+        else if (gamepad2.b)
             powRotate = powRotateOutwards;
         else
             powRotate = 0;
     }
 
     private void telescope() {
-        if(gamepad1.dpad_left)
+        if(gamepad2.dpad_left)
             powTelescope = 0.5;
-        else if(gamepad1.dpad_right)
+        else if(gamepad2.dpad_right)
             powTelescope= -0.5;
         else
             powTelescope = 0;
@@ -261,50 +261,63 @@ public class POVDriveRobot extends LinearOpMode {
             runExponential = !runExponential;
         }
 
+
         if(gamepad1.left_bumper) {
             runSlow = true;
             runFast = false;
         }
+
         else if (gamepad1.right_bumper) {
             runSlow = false;
             runFast = true;
         }
 
         if(runFast) {
-            powL = speedSwitchFast * powL;
-            powR = speedSwitchFast * powR;
-            telemetry.addData("SpeedMod:", speedSwitchFast * modifier);
+            speedSwitchPow = speedSwitchFast;
         }
+
         else if(runSlow) {
-            powL = speedSwitchSlow * powL;
-            powR = speedSwitchSlow * powR;
-            telemetry.addData("SpeedMod:", speedSwitchSlow * modifier);
+            speedSwitchPow = speedSwitchSlow;
         }
 
         if(runExponential) {
-            powL = Math.abs(powL) * powL;
-            powR = Math.abs(powR) * powR;
+            g1[1] =  - (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)) * modifier;
+            g1[2] =  (gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x)) * modifier;
+
+            adjustPowers();
+
             telemetry.addData("SpeedType:", "Exponential");
         }
 
-        telemetry.addData("L:R", "%3f : %3f", powL, powR);
-
+        powL = speedSwitchPow * powL;
+        powR = speedSwitchPow * powR;
 
     }
 
     private void jamServoControl() {
-
         if(gamepad2.y)
-            servoPosition = servoLocked;
+            servoPosition = SERVO_LOCKED;
         else if(gamepad2.a)
-            servoPosition = servoUnlocked;
-
-
-
-        telemetry.addData("locker servo pos", r.servoMotors[1].getPosition());
+            servoPosition = SERVO_UNLOCKED;
 
 
         //start (zero) will be at 1
+
+    }
+
+    private void telemetryStack() {
+
+        telemetry.addData("Drive Powers", "L (%3f) : R (%3f)", powL, powR);
+        telemetry.addData("Servo Pos", "Marker (%3f) : Locker (%3f)",
+                r.servoMotors[0].getPosition(), r.servoMotors[1].getPosition());
+        telemetry.addData("Speed Mod:", speedSwitchPow * modifier);
+
+        if(runExponential) {
+            telemetry.addData("Speed Type", "Exponential");
+        }
+        else {
+            telemetry.addData("Speed Type", "Linear");
+        }
 
     }
 }

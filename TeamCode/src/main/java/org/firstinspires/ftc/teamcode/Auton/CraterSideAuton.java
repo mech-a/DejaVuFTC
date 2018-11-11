@@ -70,8 +70,79 @@ public class CraterSideAuton extends LinearOpMode {
         r.start(hardwareMap, telemetry);
         r.init();
         r.detectorInit();
+        //for center
+        //24 inches backward
+        //6 inches forward
+        //rotate 90 ccw
+        //drive backwards 43 in
+        //rotate 135 ccw
+        //39 inches backward
+        //60 +/-3 inches forward
+        //drop arm
+
+        //for left
+        //rotate 26 ccw
+        //25.5 inches backwards
+        //rotate 105 ccw
+        //33 inches backwards
+        //rotate 135 ccw
+        //37 inches backwards
+        //61 inches forward
+
+        //for right
+        //rotate 26 cw
+        //25.5 inches backwards
+        //6 inches forward
+        //rotate 90 ccw
+        //50 inches backwards
+        //rotate 135 ccw
+        //40 inches backwards
+        //59 inches forward
 
         waitForStart();
+
+        if(LEFT) {
+            r.rotate("ccw", 0.05, 26);
+            r.translate(25.5, -0.05);
+            r.rotate("ccw", 0.05, 105);
+            r.translate(33, -0.05);
+        }
+        else if(MID) {
+            r.translate(24, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 90, 0.05);
+            r.translate(43, -0.05);
+        }
+        else if(RIGHT) {
+            r.rotate("cw", 0.05, 26);
+            r.translate(25.5, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 0.05, 90);
+            r.translate(50, -0.05);
+        }
+
+        r.rotate("ccw", 0.05, 135);
+        sleep(500);
+        r.translate(40, -0.05);
+        sleep(500);
+        r.translate(60, 0.05);
+        sleep(500);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // run until the end of the match (driver presses STOP)
         sleep(3000);

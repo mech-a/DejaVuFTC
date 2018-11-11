@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
 @Autonomous(name = "Auton test 2", group = "Auton")
 public class Autontest extends LinearOpMode {
 
-    Robot r = new Robot(this);
+    Robot r = new Robot(this, Robot.OpModeType.AUTON);
 
 
     //constants that will probably be moved to the Constants class
@@ -64,7 +64,7 @@ public class Autontest extends LinearOpMode {
         r.positionDrive(0,840,0.2 );
 
 
-            sleep(3000);
+        sleep(3000);
 
             //28 inches to go forward to center
             //26.5 inches to center mineral for angle measuring
@@ -88,11 +88,13 @@ public class Autontest extends LinearOpMode {
         //28.5 inches forward
         //rotate 21 degrees cw
         //34 inches forward
-        r.rotate("cw",0.05,12);
+        r.rotate("cw",0.05,18);
+        //TODO translate 4
         r.translate(2,-0.05);
-        r.rotate("ccw",0.05,31);
-        r.translate(28.5,-0.05);
-        r.rotate("cw",0.05,20);
+        r.rotate("ccw",0.05,0);
+//        r.rotate("ccw",0.05,31);
+//        r.translate(28.5,-0.05);
+//        r.rotate("cw",0.05,20);
 
 //
 
@@ -105,6 +107,11 @@ public class Autontest extends LinearOpMode {
 //        r.rotate("ccw",0.1,40);
 //        r.translate(65,0.1);
 //        r.translate(10,0.05);
+
+
+        //TODO check if last motor hits pos or first motor hits position
+
+
 
         /*
         // for right mineral
@@ -120,42 +127,49 @@ public class Autontest extends LinearOpMode {
         */
 
 
-            /*
-            if (detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) {
 
+            if (detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) {
+                telemetry.addData("Position:", "Center");
                 r.translate(62.5, -0.1);
+                r.servoMotors[0].setPosition(0);
 
 
             }
             else {
                 r.translate(4,-0.1);
-                r.rotate("ccw", 0.1, 30.7);
-                sleep(500);
-                if (detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) {
+                r.rotate("ccw", 0.1, 35);
+                telemetry.addData("xpos",detector.getScreenPosition().x);
+                double currentXPos = detector.getScreenPosition().x;
+                telemetry.update();
+                sleep(2000);
+                if (currentXPos < 400 && currentXPos > 200) {
                     r.translate(30.8, -0.1);
                     r.rotate("cw",0.05,35);
                     r.translate(39.3,-0.05);
+                    r.servoMotors[0].setPosition(0);
                 }
                 else{
                     r.rotate("cw", 0.05, 30.7);
                     r.translate(30.8, -0.1);
-                    r.rotate("ccw",0.05,35);
+                    r.rotate("ccw",0.05,32);
                     r.translate(39.3,-0.05);
+                    r.servoMotors[0].setPosition(0);
 
                 }
 
             }
             //placeholder for dropping the team marker
             sleep(1000);
-            r.rotate("ccw",0.1,40);
+            r.rotate("cw",0.1,44);
             r.translate(75,0.1);
 
-            telemetry.addData("xpos",detector.getScreenPosition().x);
+
+            //.addData("xpos",detector.getScreenPosition().x);
 
 
 
             telemetry.update();
-            */
+
 
         detector.disable();
 

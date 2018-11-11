@@ -22,10 +22,10 @@ public class TestTranslate extends LinearOpMode {
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
-        telemetry.addData("Translating:", "12inches fwd @ 0.1");
+        telemetry.addData("Translating:", "11inches fwd @ 0.1");
         telemetry.update();
         sleep(750);
-        r.translate(11, 0.1);
+        r.translate(16, 0.1);
 
         telemetry.addData("Translating:", "16inches back @ 0.25");
         telemetry.update();

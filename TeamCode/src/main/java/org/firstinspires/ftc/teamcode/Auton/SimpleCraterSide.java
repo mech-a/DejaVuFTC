@@ -86,3 +86,8 @@ public class SimpleCraterSide  extends LinearOpMode {
         }
     }
 }
+/*
+CRATER SIDE LENGTHS
+
+
+ */
