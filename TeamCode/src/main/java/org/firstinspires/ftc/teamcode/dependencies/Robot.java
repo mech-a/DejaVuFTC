@@ -268,7 +268,11 @@ public class Robot {
 
 
     }
-    public boolean GoldinCenter = detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+
+
+    public boolean GoldinCenter() {
+        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+    }
 
 
 

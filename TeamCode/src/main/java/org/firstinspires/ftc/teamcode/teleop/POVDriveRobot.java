@@ -51,7 +51,7 @@ import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_
 public class POVDriveRobot extends LinearOpMode {
 
     // Declare OpMode members.
-    Robot r = new Robot(this);
+    Robot r = new Robot(this, Robot.OpModeType.TELEOP);
 
 
 
@@ -66,10 +66,9 @@ public class POVDriveRobot extends LinearOpMode {
 
     double modifier = 0.25, speedSwitchSlow = 0.25, speedSwitchFast = 1, speedSwitchPow = 1;
 
-    double powL = 0;
-    double powR = 0;
+    double powL = 0, powR = 0;
     
-    double powIntake = 0, powIntakeMax = 1, powIntakeMin = -1;
+    double powIntake = 0, powIntakeMax = 0.5, powIntakeMin = -0.5;
 
     double powLift = 0, powLiftMax = 1, powLiftMin = -1;
 
@@ -257,9 +256,9 @@ public class POVDriveRobot extends LinearOpMode {
 
 
     private void speedSwitch() {
-        if (gamepad1.y) {
-            runExponential = !runExponential;
-        }
+//        if (gamepad1.y) {
+//            runExponential = !runExponential;
+//        }
 
 
         if(gamepad1.left_bumper) {
@@ -280,14 +279,14 @@ public class POVDriveRobot extends LinearOpMode {
             speedSwitchPow = speedSwitchSlow;
         }
 
-        if(runExponential) {
-            g1[1] =  - (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)) * modifier;
-            g1[2] =  (gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x)) * modifier;
-
-            adjustPowers();
-
-            telemetry.addData("SpeedType:", "Exponential");
-        }
+//        if(runExponential) {
+//            g1[1] =  - (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)) * modifier;
+//            g1[2] =  (gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x)) * modifier;
+//
+//            adjustPowers();
+//
+//            telemetry.addData("SpeedType:", "Exponential");
+//        }
 
         powL = speedSwitchPow * powL;
         powR = speedSwitchPow * powR;
@@ -312,12 +311,21 @@ public class POVDriveRobot extends LinearOpMode {
                 r.servoMotors[0].getPosition(), r.servoMotors[1].getPosition());
         telemetry.addData("Speed Mod:", speedSwitchPow * modifier);
 
-        if(runExponential) {
-            telemetry.addData("Speed Type", "Exponential");
-        }
-        else {
-            telemetry.addData("Speed Type", "Linear");
-        }
+//        if(runExponential) {
+//            telemetry.addData("Speed Type", "Exponential");
+//        }
+//        else {
+//            telemetry.addData("Speed Type", "Linear");
+//        }
 
     }
+
+
+
+
+    private void autonRotation() {
+
+    }
+
+
 }

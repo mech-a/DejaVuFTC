@@ -107,7 +107,7 @@ public class CraterSideAuton extends LinearOpMode {
 
         waitForStart();
 
-        if (r.GoldinCenter) {
+        if (r.GoldinCenter()) {
             r.translate(24, -0.05);
             r.translate(6, 0.05);
             r.rotate("ccw", 90, 0.05);
