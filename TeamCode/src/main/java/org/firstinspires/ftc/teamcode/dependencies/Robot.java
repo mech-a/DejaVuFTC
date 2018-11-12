@@ -95,6 +95,7 @@ public class Robot {
         servoMotorsInit();
 
     }
+
     private void servoMotorsInit(){
         for(int i = 0; i<2 && !caller.isStopRequested(); i++){
             servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
@@ -159,9 +160,11 @@ public class Robot {
             else
                 armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
-            armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if(!caller.isStopRequested()) {
+                armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
         }
     }
 
@@ -172,9 +175,12 @@ public class Robot {
         gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         gyroParameters.loggingEnabled      = true;
         gyroParameters.loggingTag          = "IMU";
-        imu.initialize(gyroParameters);
-        //TODO using angles while opmode is not active could cause problems
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        if(!caller.isStopRequested()) {
+            imu.initialize(gyroParameters);
+            //TODO using angles while opmode is not active could cause problems
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+
     }
 
     public void detectorInit() {
@@ -192,7 +198,8 @@ public class Robot {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
-        detector.enable();
+        if(!caller.isStopRequested())
+            detector.enable();
     }
 
     //TODO again enum the motors.
@@ -203,8 +210,11 @@ public class Robot {
 
 
         armMotors[motorNum].setTargetPosition(counts);
-        armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(!caller.isStopRequested()) {
+            armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
         armMotors[motorNum].setPower(speed);
 
         while(!caller.isStopRequested() && armMotors[motorNum].isBusy()) {

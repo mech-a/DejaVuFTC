@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
-@Autonomous(name = "Depot Side ", group = "Auton")
+@Autonomous(name = "Not Depot", group = "Auton")
 public class SimpleDepotSide extends LinearOpMode {
 
     Robot r = new Robot(this);

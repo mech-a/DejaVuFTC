@@ -29,14 +29,24 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.ARM_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.DRIVE_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SENSOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SERVO_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.MARKER_HELD;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_LOCKED;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_MAX_POSITION;
@@ -216,21 +226,21 @@ public class POVDriveRobot extends LinearOpMode {
 
     private void rotation() {
         if(gamepad2.b) {
-            if(r.armMotors[2].getCurrentPosition() >= LIM) {
+            if(r.armMotors[2].getCurrentPosition() <= LIM) {
                 powRotate = powRotateTowardsRobot/2;
-                telemetry.addData("Rot:", "in, past lim");
+                telemetry.addData("Rot", "in, past lim");
             }
             else {
-                powRotate = powRotateTowardsRobot;
+                powRotate = powRotateTowardsRobot*2;
             }
         }
         else if(gamepad2.x) {
-            if(r.armMotors[2].getCurrentPosition() <= LIM) {
+            if(r.armMotors[2].getCurrentPosition() >= LIM) {
                 powRotate = powRotateOutwards/2;
-                telemetry.addData("Rot:", "out, past lim");
+                telemetry.addData("Rot", "out, past lim");
             }
             else {
-                powRotate = powRotateOutwards;
+                powRotate = powRotateOutwards*2;
             }
         }
         else {
@@ -242,12 +252,20 @@ public class POVDriveRobot extends LinearOpMode {
     }
 
     private void telescope() {
-        if(gamepad2.dpad_left)
+        if(gamepad2.left_bumper) {
+            if(r.armMotors[1].getCurrentPosition() <=20) {
+                powTelescope = 0;
+                telemetry.addData("Err", "Horizontal pulled!");
+            }
             powTelescope = 0.5;
-        else if(gamepad2.dpad_right)
+        }
+        else if(gamepad2.right_bumper) {
             powTelescope= -0.5;
-        else
+
+        }
+        else {
             powTelescope = 0;
+        }
     }
 
     private void setPowers() {
@@ -352,6 +370,93 @@ public class POVDriveRobot extends LinearOpMode {
 
 
     }
+
+
+
+
+//    private void servoMotorsInit(){
+//        for(int i = 0; i<2; i++){
+//            r.servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
+//        }
+//
+//
+//        //no need to change servos for teleop
+//
+//    }
+//
+//    private void driveMotorsInit() {
+//        for (int i = 0; i<4; i++) {
+//            r.driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
+//
+//            //TODO standardize between robot and code the port numbers and i
+//            /*
+//            switch (i) {
+//                case 0: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//                    break;
+//                case 1: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+//                    break;
+//                case 2: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+//                    break;
+//                case 3: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//                    break;
+//
+//            }*/
+//
+//            if(i%3==0)
+//                r.driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+//            else
+//                r.driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//
+//            r.driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            r.driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            r.driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        }
+//    }
+//
+//    private void armMotorsInit() {
+//        for (int i = 0; i<4; i++) {
+//            r.armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
+//
+//            //TODO change if needed: well, i did it, but must be changed for when telescoping works
+//            /*
+//            switch (i) {
+//                case 0: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//                        break;
+//                case 1: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//                    break;
+//                case 2: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//                    break;
+//                case 3: armMotors[i].setDirection(DcMotor.Direction.REVERSE);
+//                    break;
+//            }*/
+//
+//            if(i==3)
+//                armMotors[i].setDirection(DcMotor.Direction.REVERSE);
+//            else
+//                armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+//
+//            if(!caller.isStopRequested()) {
+//                armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//                armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
+//        }
+//    }
+//
+//    private void imuInit() {
+//        imu = hardwareMap.get(BNO055IMU.class, SENSOR_NAMES[0]);
+//        BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
+//        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+//        gyroParameters.loggingEnabled      = true;
+//        gyroParameters.loggingTag          = "IMU";
+//        if(!caller.isStopRequested()) {
+//            imu.initialize(gyroParameters);
+//            //TODO using angles while opmode is not active could cause problems
+//            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        }
+//
+//    }
 
 
 }

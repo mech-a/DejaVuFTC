@@ -106,6 +106,20 @@ public class CraterSideAuton extends LinearOpMode {
         //59 inches forward
 
         waitForStart();
+        r.armMotors[0].setPower(-0.25);
+
+        sleep(350);
+        r.servoMotors[1].setPosition(0.35);
+        sleep(350);
+
+
+
+
+        r.positionDrive(0,840,0.2 );
+        r.rotate("cw",0.05,18);
+        //TODO translate 4
+        r.translate(4,-0.05);
+        r.rotate("ccw",0.05,0);
 
         if (r.GoldinCenter()) {
             r.translate(24, -0.05);
@@ -126,7 +140,7 @@ public class CraterSideAuton extends LinearOpMode {
                 r.translate(25.5, -0.05);
                 r.rotate("ccw", 0.05, 105);
                 r.translate(33, -0.05);
-                r.servoMotors[0].setPosition(0);
+
             }
             else{
                 r.rotate("cw", 0.05, 26);
@@ -134,7 +148,7 @@ public class CraterSideAuton extends LinearOpMode {
                 r.translate(6, 0.05);
                 r.rotate("ccw", 0.05, 90);
                 r.translate(50, -0.05);
-                r.servoMotors[0].setPosition(0);
+
 
             }
 
@@ -165,6 +179,8 @@ public class CraterSideAuton extends LinearOpMode {
         r.rotate("ccw", 0.05, 135);
         sleep(500);
         r.translate(40, -0.05);
+        sleep(500);
+        r.servoMotors[0].setPosition(0);
         sleep(500);
         r.translate(60, 0.05);
         sleep(500);

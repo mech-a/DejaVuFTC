@@ -83,7 +83,9 @@ public class GoldDetectorTest extends OpMode
 
     @Override
     public void loop() {
-        telemetry.addData("X Pos" , detector.getScreenPosition().x); // Gold X pos.
+        telemetry.addData("X Pos" , detector.getScreenPosition().x);
+        telemetry.addData("Y Pos" , detector.getScreenPosition().y);// Gold X pos.
+
         telemetry.addData("alignment", detector.isAligned());
     }
 
