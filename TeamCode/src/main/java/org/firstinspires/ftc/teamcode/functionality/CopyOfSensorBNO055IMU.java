@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.reference;
+package org.firstinspires.ftc.teamcode.functionality;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -53,7 +53,7 @@ import java.util.Locale;
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
-@TeleOp(name = "Sensor: BNO055 IMU", group = "Sensor")
+@TeleOp(name = "FastIMU", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class CopyOfSensorBNO055IMU extends LinearOpMode
     {
@@ -80,6 +80,15 @@ public class CopyOfSensorBNO055IMU extends LinearOpMode
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+
+        //Adjusting bandwidth to update 523 times per second
+        parameters.gyroBandwidth       = BNO055IMU.GyroBandwidth.HZ523;
+        //TODO need to see if the slow-ness is caused by mtr.isbusy or low bandwidth
+        //TODO need to see if we can fetch only heading
+        //may need register reading
+
+
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";

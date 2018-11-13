@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.*;
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
+import static org.firstinspires.ftc.teamcode.dependencies.Enums.*;
 
 //TODO see if throw exception clause?
 public class Robot {
@@ -27,8 +28,10 @@ public class Robot {
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
     public Servo[] servoMotors = new Servo[2];
+
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
+
     private int adjustmentForangle = 3;
     private int adjustmentFortranslation = 1;
 
@@ -63,13 +66,9 @@ public class Robot {
 
 
 
-    public enum GoldPosition {
-        LEFT, MIDDLE, RIGHT, UNK
-    }
 
-    public enum OpModeType {
-        TELEOP, AUTON
-    }
+
+
 
 
     public Robot(LinearOpMode initializer) {
@@ -79,6 +78,7 @@ public class Robot {
     public Robot(LinearOpMode initializer, OpModeType opModeType) {
         caller = initializer;
         callerType = opModeType;
+
     }
 
     public void start(HardwareMap h, Telemetry t) {
@@ -93,7 +93,7 @@ public class Robot {
         armMotorsInit();
         imuInit();
         servoMotorsInit();
-
+        telemetry.addData("Stat", "Initialized!");
     }
 
     private void servoMotorsInit(){
@@ -441,7 +441,8 @@ public class Robot {
     public GoldPosition goldLocation() {
         double screenPos = detector.getScreenPosition().x;
 
-        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND)
+        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
+                )
             return GoldPosition.MIDDLE;
 
         else if (screenPos < LEFT_BOUND && screenPos > 0)
