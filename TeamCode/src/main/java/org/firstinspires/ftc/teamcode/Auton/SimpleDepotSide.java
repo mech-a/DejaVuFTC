@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+<<<<<<< HEAD
 /**
  * Depot Side
  * The purpose of this class is a simpler version of the
@@ -13,6 +14,9 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  * @since 2018-10-31
  */
 @Autonomous(name = "Depot Side ", group = "Auton")
+=======
+@Autonomous(name = "Not Depot", group = "Auton")
+>>>>>>> 662267215789463415df1db7982da2b5136915db
 public class SimpleDepotSide extends LinearOpMode {
 
     /**

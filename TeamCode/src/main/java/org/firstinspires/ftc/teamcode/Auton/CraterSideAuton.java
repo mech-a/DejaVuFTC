@@ -27,13 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.Auton;
 
+import android.os.WorkSource;
+
+import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
@@ -55,6 +59,7 @@ public class CraterSideAuton extends LinearOpMode {
      * class that holds motor and rotational control
      */
     Robot r = new Robot(this);
+    private CustomGoldDetector detector;
 
     boolean left = false;
     boolean middle = false;
@@ -77,9 +82,137 @@ public class CraterSideAuton extends LinearOpMode {
 
         r.start(hardwareMap, telemetry);
         r.init();
+
         r.detectorInit();
+        //for center
+        //24 inches backward
+        //6 inches forward
+        //rotate 90 ccw
+        //drive backwards 43 in
+        //rotate 135 ccw
+        //39 inches backward
+        //60 +/-3 inches forward
+        //drop arm
+
+        //for left
+        //rotate 26 ccw
+        //25.5 inches backwards
+        //rotate 105 ccw
+        //33 inches backwards
+        //rotate 135 ccw
+        //37 inches backwards
+        //61 inches forward
+
+        //for right
+        //rotate 26 cw
+        //25.5 inches backwards
+        //6 inches forward
+        //rotate 90 ccw
+        //50 inches backwards
+        //rotate 135 ccw
+        //40 inches backwards
+        //59 inches forward
 
         waitForStart();
+        r.armMotors[0].setPower(-0.25);
+
+        sleep(350);
+        r.servoMotors[1].setPosition(0.35);
+        sleep(350);
+
+
+
+
+        r.positionDrive(0,840,0.2 );
+        r.rotate("cw",0.05,18);
+        //TODO translate 4
+        r.translate(4,-0.05);
+        r.rotate("ccw",0.05,0);
+
+        if (r.GoldinCenter()) {
+            r.translate(24, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 90, 0.05);
+            r.translate(43, -0.05);
+
+
+        }
+        else {
+            r.translate(4,-0.1);
+            r.rotate("ccw", 0.05, 26);
+            telemetry.addData("xpos",detector.getScreenPosition().x);
+            double currentXPos = detector.getScreenPosition().x;
+            telemetry.update();
+            sleep(2000);
+            if (currentXPos < 400 && currentXPos > 200) {
+                r.translate(25.5, -0.05);
+                r.rotate("ccw", 0.05, 105);
+                r.translate(33, -0.05);
+
+            }
+            else{
+                r.rotate("cw", 0.05, 26);
+                r.translate(25.5, -0.05);
+                r.translate(6, 0.05);
+                r.rotate("ccw", 0.05, 90);
+                r.translate(50, -0.05);
+
+
+            }
+
+        }
+        /*
+
+        if(LEFT) {
+            r.rotate("ccw", 0.05, 26);
+            r.translate(25.5, -0.05);
+            r.rotate("ccw", 0.05, 105);
+            r.translate(33, -0.05);
+        }
+        else if(MID) {
+            r.translate(24, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 90, 0.05);
+            r.translate(43, -0.05);
+        }
+        else if(RIGHT) {
+            r.rotate("cw", 0.05, 26);
+            r.translate(25.5, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 0.05, 90);
+            r.translate(50, -0.05);
+        }
+        */
+
+        r.rotate("ccw", 0.05, 135);
+        sleep(500);
+        r.translate(40, -0.05);
+        sleep(500);
+        r.servoMotors[0].setPosition(0);
+        sleep(500);
+        r.translate(60, 0.05);
+        sleep(500);
+//        DOES NOT Work
+//                putting arm in the crater
+//        r.positionDrive(2,measure the counts, 0.05);
+//        r.positionDrive(1.measure the counts,0.05);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // run until the end of the match (driver presses STOP)
         sleep(3000);
@@ -98,6 +231,7 @@ public class CraterSideAuton extends LinearOpMode {
 //            directionForMineralSecond = "ccw";
 //            distanceForLineUp = baseDistance + 2*12*Math.sqrt(2);
 //        }
+        /*
 
         r.translate(4, -0.05);
         sleep(1000);
@@ -125,5 +259,6 @@ public class CraterSideAuton extends LinearOpMode {
         //Deploy marker
         sleep(1000);
         r.translate(inchesToCrater, 0.05);
+        */
     }
 }

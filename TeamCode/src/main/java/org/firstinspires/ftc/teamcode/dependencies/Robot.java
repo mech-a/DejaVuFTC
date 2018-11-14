@@ -7,6 +7,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.*;
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
+import static org.firstinspires.ftc.teamcode.dependencies.Enums.*;
 
 /**
  * Robot
@@ -38,8 +40,10 @@ public class Robot {
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
     public Servo[] servoMotors = new Servo[2];
+
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
+
     private int adjustmentForangle = 3;
     private int adjustmentFortranslation = 1;
 
@@ -66,12 +70,31 @@ public class Robot {
 
     private CustomGoldDetector detector;
 
+<<<<<<< HEAD
     public enum GoldPosition {
         LEFT, MIDDLE, RIGHT, UNK
     }
+=======
+    private OpModeType callerType = OpModeType.AUTON;
+
+
+
+
+
+
+
+
+
+>>>>>>> 662267215789463415df1db7982da2b5136915db
 
     public Robot(LinearOpMode initializer) {
         caller = initializer;
+    }
+
+    public Robot(LinearOpMode initializer, OpModeType opModeType) {
+        caller = initializer;
+        callerType = opModeType;
+
     }
 
     public void start(HardwareMap h, Telemetry t) {
@@ -90,19 +113,23 @@ public class Robot {
         armMotorsInit();
         imuInit();
         servoMotorsInit();
-
+        telemetry.addData("Stat", "Initialized!");
     }
 
     private void servoMotorsInit(){
-        for(int i =0; i<2; i++){
+        for(int i = 0; i<2 && !caller.isStopRequested(); i++){
             servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
-
         }
-        servoMotors[1].setPosition(0);
+
+        if(callerType == OpModeType.AUTON && !caller.isStopRequested()) {
+            servoMotors[0].setPosition(MARKER_HELD);
+            servoMotors[1].setPosition(SERVO_LOCKED);
+        }
+            //no need to change servos for teleop
 
     }
     private void driveMotorsInit() {
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
 
             //TODO standardize between robot and code the port numbers and i
@@ -125,11 +152,12 @@ public class Robot {
                 driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
             driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
     private void armMotorsInit() {
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
 
             //TODO change if needed: well, i did it, but must be changed for when telescoping works
@@ -150,9 +178,11 @@ public class Robot {
             else
                 armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
-            armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            
-            armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if(!caller.isStopRequested()) {
+                armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
         }
     }
     private void imuInit() {
@@ -162,9 +192,12 @@ public class Robot {
         gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         gyroParameters.loggingEnabled      = true;
         gyroParameters.loggingTag          = "IMU";
-        imu.initialize(gyroParameters);
-        //TODO using angles while opmode is not active could cause problems
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        if(!caller.isStopRequested()) {
+            imu.initialize(gyroParameters);
+            //TODO using angles while opmode is not active could cause problems
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+
     }
 
     public void detectorInit() {
@@ -182,7 +215,8 @@ public class Robot {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
-        detector.enable();
+        if(!caller.isStopRequested())
+            detector.enable();
     }
 
     //TODO again enum the motors.
@@ -200,8 +234,11 @@ public class Robot {
 
 
         armMotors[motorNum].setTargetPosition(counts);
-        armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(!caller.isStopRequested()) {
+            armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
         armMotors[motorNum].setPower(speed);
 
         while(!caller.isStopRequested() && armMotors[motorNum].isBusy()) {
@@ -235,7 +272,7 @@ public class Robot {
 
         driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setTargetPosition(driveMtrTarget);
             driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -244,11 +281,12 @@ public class Robot {
         // try this out
         // caller.sleep(750);
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(speed);
         }
 
-        while(!caller.isStopRequested() && driveMotors[0].isBusy() && driveMotors[1].isBusy() && driveMotors[2].isBusy() && driveMotors[3].isBusy()) {
+        while(!caller.isStopRequested() &&
+                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
             //TODO change telemetry name to enum
             telemetry.addData("0mtrFl", "%7d : %7d",
                     driveMotors[0].getCurrentPosition(), driveMtrTarget);
@@ -262,16 +300,17 @@ public class Robot {
             telemetry.update();
         }
 
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(0);
         }
-        for (int i = 0; i<4; i++) {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
 
     }
 
+<<<<<<< HEAD
     /**
      * Rotate is a method that uses he IMU within the Rev Hubs
      * and rotates within autonomous. This method takes params
@@ -284,6 +323,18 @@ public class Robot {
      * @param speed
      * @param angle
      */
+=======
+
+    public boolean GoldinCenter() {
+        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+    }
+
+
+
+
+
+
+>>>>>>> 662267215789463415df1db7982da2b5136915db
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
@@ -431,7 +482,8 @@ public class Robot {
     public GoldPosition goldLocation() {
         double screenPos = detector.getScreenPosition().x;
 
-        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND)
+        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
+                )
             return GoldPosition.MIDDLE;
 
         else if (screenPos < LEFT_BOUND && screenPos > 0)
