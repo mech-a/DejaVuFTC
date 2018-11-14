@@ -17,12 +17,24 @@ import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.*;
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
 
+/**
+ * Robot
+ * Robot is a dependency file that allows de-clutters
+ * the code by eliminating the need to redefine motor
+ * values in every
+ *
+ * @author Gaurav
+ * @version 1.19
+ * @since 2018 10 20
+ */
 //TODO see if throw exception clause?
 public class Robot {
     //TODO based on specification, add more motor slots
 
-
-
+    /**
+     * These variables are used to define new motors
+     * and their power values as arrays
+     */
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
     public Servo[] servoMotors = new Servo[2];
@@ -54,17 +66,9 @@ public class Robot {
 
     private CustomGoldDetector detector;
 
-
-
-
-
-
-
     public enum GoldPosition {
         LEFT, MIDDLE, RIGHT, UNK
     }
-
-
 
     public Robot(LinearOpMode initializer) {
         caller = initializer;
@@ -76,7 +80,11 @@ public class Robot {
     }
 
     //TODO implement enum for init
-    //currently will init all hardware
+
+    /**
+     * the init() and method initializes all the hardware
+     * for the robot
+     */
     public void init() {
         driveMotorsInit();
         armMotorsInit();
@@ -84,6 +92,7 @@ public class Robot {
         servoMotorsInit();
 
     }
+
     private void servoMotorsInit(){
         for(int i =0; i<2; i++){
             servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
@@ -92,7 +101,6 @@ public class Robot {
         servoMotors[1].setPosition(0);
 
     }
-
     private void driveMotorsInit() {
         for (int i = 0; i<4; i++) {
             driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
@@ -120,7 +128,6 @@ public class Robot {
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-
     private void armMotorsInit() {
         for (int i = 0; i<4; i++) {
             armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
@@ -148,7 +155,6 @@ public class Robot {
             armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-
     private void imuInit() {
         imu = hardwareMap.get(BNO055IMU.class, SENSOR_NAMES[0]);
         BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
@@ -182,7 +188,14 @@ public class Robot {
     //TODO again enum the motors.
     //TODO make position drive compatible with arm motors
     //TODO stability? waitfullhardwarecycle? not sure about this. check LinearOpMode to see if something could work
-    //Also rethink naming style, drive+whatever is getting really reptitive and long.
+
+    /**
+     * positionDrive is a method that moves the motor to a position
+     * @param motorNum
+     * @param counts
+     * @param speed
+     */
+    //Also rethink naming style, drive+whatever is getting really repetitive and long.
     public void positionDrive(int motorNum, int counts, double speed) {
 
 
@@ -206,6 +219,12 @@ public class Robot {
     //TODO just realized that position drive cannot be used for translate, it'll sequentially do each motor. mmmf
     //used to move forward and back
 
+    /**
+     * translate is a method that takes inches and translates them
+     * into counts for the motors
+     * @param inches
+     * @param speed
+     */
     public void translate(double inches, double speed) {
         double localizedInches;
 
@@ -253,12 +272,18 @@ public class Robot {
 
     }
 
-
-
-
-
-
-
+    /**
+     * Rotate is a method that uses he IMU within the Rev Hubs
+     * and rotates within autonomous. This method takes params
+     * that allow it to determine which motors go which way
+     * based on clockwise(cw) and counterclockwise(ccw). It uses
+     * other methods to determine when the desired angle has been
+     * reached and stop as well as a method to reset the gyroscopic
+     * sensor.
+     * @param direction
+     * @param speed
+     * @param angle
+     */
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
@@ -368,17 +393,13 @@ public class Robot {
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
     }
-
-
     private boolean reachedAngle(double angle) {
         if (ccwRotation)
             return heading < angle;
         else
             return heading > -angle;
     }
-
     //Currently normalizes angle as well
-
     public void refreshAngle() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);

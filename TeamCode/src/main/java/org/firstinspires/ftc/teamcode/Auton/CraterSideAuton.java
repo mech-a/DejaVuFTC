@@ -38,14 +38,22 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
 /**
- * CraterSide
+ * CraterSideAuton
+ * The CraterSideAuton program is the code and instructions for
+ * the robot based on starting on the Crater side of the lander.
+ *
+ * @author Gaurav
+ * @version 1.0
+ * @since 2018-10-29
  */
 
 @Autonomous(name="Crater Side Auton", group="Internal")
 //@Disabled
 public class CraterSideAuton extends LinearOpMode {
-
-    // Declare OpMode members.
+    /**
+     * This class extends the "Robot" class, a dependencies
+     * class that holds motor and rotational control
+     */
     Robot r = new Robot(this);
 
     boolean left = false;
@@ -103,7 +111,10 @@ public class CraterSideAuton extends LinearOpMode {
             r.translate(15,-0.05);
         }
 
-
+        /**
+         * The constants for motion around the field after the
+         * sampling portion of the Autonomous period.
+         */
         r.translate(4, -0.05);
         sleep(1000);
         r.translate(4, 0.05);

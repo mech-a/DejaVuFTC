@@ -3,13 +3,30 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+/**
+ * Depot Side
+ * The purpose of this class is a simpler version of the
+ * Depot side auton OpMode
+ *
+ * @author Gabriel
+ * @version 1.0
+ * @since 2018-10-31
+ */
 @Autonomous(name = "Depot Side ", group = "Auton")
 public class SimpleDepotSide extends LinearOpMode {
+
+    /**
+     * This class extends the "Robot" class, a dependencies
+     * class that holds motor and rotational control
+     */
 
     Robot r = new Robot(this);
 
 
-    //constants that will probably be moved to the Constants class
+    /**
+     * These constants are used to determine the sampling
+     * layout/
+     */
     public static final double DETECTOR_CENTER = 200;
     public static final double DETECTOR_CENTER_THRESHOLD = 15;
     public static final double SAMPLE_ANGLE = 25;
@@ -21,6 +38,11 @@ public class SimpleDepotSide extends LinearOpMode {
     private double samplex = 0;
     String samplePos = "center";
 
+    /**
+     * This method starts and runs the Auton code and uses
+     * constants we determined about the size of the field
+     * to move in a controlled manner
+     */
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
