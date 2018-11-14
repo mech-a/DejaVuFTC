@@ -314,7 +314,29 @@ public class Robot {
         return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
     }
 
+    /**
+     * polarTranslate is for mecanum wheels
+     */
+    public void polarTranslate(String direction, double inches, double speed, double angle) {
+        double forwardsVector;
+        double horizontalVector;
+        double localAngle;
 
+        if(direction == "cw") {
+            localAngle = angle;
+        } else if (direction == "ccw") {
+            localAngle = -angle;
+        }
+
+        forwardsVector = Math.cos(localAngle) * inches;
+        horizontalVector = Math.sin(localAngle) * inches;
+
+        //set FL and BR to the difference of forwards and horizontal vectors
+        //set FR and BL to the sum of the vectors
+        //Assumes strafing and normal movement are at the same speed (if not add a multiplier)
+
+
+    }
 
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
@@ -369,8 +391,6 @@ public class Robot {
 //        }
 //
 //        lastangle = heading;
-
-
 
         double powL, powR;
 
