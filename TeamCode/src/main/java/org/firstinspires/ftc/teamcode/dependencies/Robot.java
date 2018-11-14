@@ -70,22 +70,9 @@ public class Robot {
 
     private CustomGoldDetector detector;
 
-<<<<<<< HEAD
-    public enum GoldPosition {
-        LEFT, MIDDLE, RIGHT, UNK
-    }
-=======
     private OpModeType callerType = OpModeType.AUTON;
 
 
-
-
-
-
-
-
-
->>>>>>> 662267215789463415df1db7982da2b5136915db
 
     public Robot(LinearOpMode initializer) {
         caller = initializer;
@@ -310,7 +297,6 @@ public class Robot {
 
     }
 
-<<<<<<< HEAD
     /**
      * Rotate is a method that uses he IMU within the Rev Hubs
      * and rotates within autonomous. This method takes params
@@ -323,7 +309,6 @@ public class Robot {
      * @param speed
      * @param angle
      */
-=======
 
     public boolean GoldinCenter() {
         return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
@@ -331,10 +316,6 @@ public class Robot {
 
 
 
-
-
-
->>>>>>> 662267215789463415df1db7982da2b5136915db
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
@@ -433,12 +414,6 @@ public class Robot {
 
 
 
-
-
-
-
-
-
         //for (int i = 0; i<4; i++) {driveMtrPowers[i] = 0; }
 //        for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
@@ -471,12 +446,9 @@ public class Robot {
     }
 
 
-
-
     public void getStatus() {
         //TODO implement a status message, possibly useful for the invoker
     }
-
 
 
     public GoldPosition goldLocation() {
@@ -496,7 +468,4 @@ public class Robot {
         else
             return GoldPosition.UNK;
     }
-
-
-
 }
