@@ -421,6 +421,7 @@ public class Robot {
 //        heading = Range.clip(heading, -180.0, 180.0);
     }
     public double getHeading(){
+        refreshAngle();
         return heading;
     }
 

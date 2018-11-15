@@ -33,11 +33,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.dependencies.Enums;
+import org.firstinspires.ftc.teamcode.dependencies.Enums.*;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
+
 /**
- * Copy Me Linear
+ * MecanumIMU
+ * Read more about the code on https://www.chiefdelphi.com/media/papers/2390
  */
 
 @TeleOp(name="MecanumIMU", group="Teleops")
@@ -45,7 +49,22 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
 public class MecanumIMU extends LinearOpMode {
 
     // Declare OpMode members.
-    Robot r = new Robot(this);
+    Robot r = new Robot(this, OpModeType.TELEOP);
+
+    double[] g1 = new double[4];
+
+    double modifier = 0.125;
+
+    double powFL, powFR, powBR, powBL;
+
+    double fwd, strafe, rotate;
+
+
+    public enum DriveMode {
+        FIELD, ROBOT
+    }
+
+    DriveMode driveMode = DriveMode.FIELD;
 
     @Override
     public void runOpMode() {
@@ -58,8 +77,80 @@ public class MecanumIMU extends LinearOpMode {
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
+        //TODO create teleop parent class that extends linearopmode w gamepad f(x)s
+
         while (opModeIsActive()) {
+            //basic mecanum driving that is respective to the robot
+            setGamepads();
+
+            mecanum();
+
+            if(gamepad1.y) {
+                driveMode = DriveMode.ROBOT;
+            }
+            else if (gamepad1.a || driveMode == DriveMode.FIELD) {
+                driveMode = DriveMode.FIELD;
+            }
+
+            telemetry.addData("Mode", driveMode.toString());
+
+            setPowers();
+
+            telemetry.update();
+
+            sleep(50);
+        }
+    }
+
+    private void mecanum() {
+        if(driveMode == DriveMode.FIELD) {
+
+            double heading = Math.toRadians(r.getHeading());
+            if(heading > 0) {
+                //ccw
+                fwd = g1[1] * Math.cos(heading) - g1[0] * Math.sin(heading);
+                strafe = g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
+            }
+            else {
+                //cw
+                fwd = g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
+                strafe = -g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
+            }
+
+            rotate = g1[2];
+
+            powFL = fwd + rotate + strafe;
+            powFR = fwd - rotate - strafe;
+            powBL = fwd + rotate - strafe;
+            powBR = fwd - rotate + strafe;
+
+        }
+
+        else {
+
+            powFL = g1[1] + g1[2] + g1[0];
+            powFR = g1[1] - g1[2] - g1[0];
+            powBL = g1[1] + g1[2] - g1[0];
+            powBR = g1[1] - g1[2] + g1[0];
 
         }
     }
+
+    private void setGamepads() {
+        //left joystick x, y, right joystick x, y
+        g1[0] = gamepad1.left_stick_x * modifier;
+        g1[1] = -gamepad1.left_stick_y * modifier;
+        g1[2] = gamepad1.right_stick_x * modifier;
+        g1[3] = -gamepad1.right_stick_y * modifier;
+    }
+
+    private void setPowers() {
+        r.driveMotors[0].setPower(powFL);
+        r.driveMotors[1].setPower(powFR);
+        r.driveMotors[2].setPower(powBR);
+        r.driveMotors[3].setPower(powBL);
+    }
+
+
+
 }

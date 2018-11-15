@@ -10,6 +10,8 @@ public class Enums {
     }
 
     //TODO figure out enums for arrays
+    //TODO merge drivemotor and armmotor
+    //TODO add config names into enums
 
     public enum DriveMotor {
         FL(0), FR(1), BR(2), BL(3);
