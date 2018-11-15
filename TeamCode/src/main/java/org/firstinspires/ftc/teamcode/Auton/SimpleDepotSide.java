@@ -13,10 +13,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  * @version 1.0
  * @since 2018-10-31
  */
-@Autonomous(name = "Depot Side ", group = "Auton")
-=======
 @Autonomous(name = "Not Depot", group = "Auton")
->>>>>>> 662267215789463415df1db7982da2b5136915db
 public class SimpleDepotSide extends LinearOpMode {
 
     /**
