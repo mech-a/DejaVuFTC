@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.teamcode.dependencies;
 
+/**
+ * ConfigurationNames
+ * Defines the naming system for different hardware and
+ * software key terms to use within code.
+ *
+ * @author Gaurav
+ * @version 1.2
+ * @since 2018 10 20
+ */
 public class ConfigurationNames {
 
     public static final String[] DRIVE_MOTOR_NAMES = {

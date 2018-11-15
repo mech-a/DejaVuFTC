@@ -1,7 +1,17 @@
 //TODO javadocs for constants file
 
-
 package org.firstinspires.ftc.teamcode.dependencies;
+
+/**
+ * Constants
+ * This class defines constants to be used within the code to
+ * prevent redefinition and have and organized system to see
+ * the values of all constants.
+ *
+ * @author Gaurav
+ * @version 1.3
+ * @since 2018 10 20
+ */
 
 public class Constants {
     //keeping everything double so we don't accidentally int divide
@@ -68,7 +78,4 @@ public class Constants {
     }
 
     //TODO make constants based off of robot
-
-
-
 }
