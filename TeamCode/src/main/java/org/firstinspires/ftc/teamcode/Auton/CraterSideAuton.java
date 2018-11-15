@@ -259,6 +259,6 @@ public class CraterSideAuton extends LinearOpMode {
         //Deploy marker
         sleep(1000);
         r.translate(inchesToCrater, 0.05);
-        */
+
     }
 }

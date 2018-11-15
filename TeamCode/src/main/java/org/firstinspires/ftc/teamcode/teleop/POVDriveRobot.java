@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.ARM_MOTOR_NAMES;
@@ -61,7 +62,7 @@ import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_
 public class POVDriveRobot extends LinearOpMode {
 
     // Declare OpMode members.
-    Robot r = new Robot(this, Robot.OpModeType.TELEOP);
+    Robot r = new Robot(this, Enums.OpModeType.TELEOP);
 
 
 

@@ -65,6 +65,12 @@ public class Constants {
     public static final double SERVO_LOCKED = 0, SERVO_UNLOCKED = 0.5;
     public static final double MARKER_HELD = 1, MARKER_DOWN = 0.3;
 
+    public static final String VUFKEY = "ATGEr5L/////AAABmYnq4KJRRUulkTxdG7SCdjV35c13NGhbJe+qwXhqPR" +
+            "zqjK9ryYLttIulGhLJI6nTggolcWINTAbNJi6Jsp7He5PnLJSmxoaz7Bu571ZxNw9co6Xp+NNUVD8uWJe3+OMB" +
+            "r9yn0ftA/MK9RZ/rWvCivXu/qCRNoOXCeFv+8WA0+SfgGlI+u63eFeQtHixO1uUnioO8pu0GUYnlHwpyYgna5/" +
+            "QY2pxymvQXHdz8AEuz7cQRoEKsiSQ9pVPytLOL3PWDfqLKixxDSyA3+UzaV0ebUZUR9hDWX/mQ21yVZdWlCHFP" +
+            "9WnEIkiZ84NKb9G1JFBgDpfP50wWvcnJkPNxaBIBxER7noTp78sNQAHsBhRaLlWB\n";
+
 
 
 
