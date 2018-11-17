@@ -297,18 +297,7 @@ public class Robot {
 
     }
 
-    /**
-     * Rotate is a method that uses he IMU within the Rev Hubs
-     * and rotates within autonomous. This method takes params
-     * that allow it to determine which motors go which way
-     * based on clockwise(cw) and counterclockwise(ccw). It uses
-     * other methods to determine when the desired angle has been
-     * reached and stop as well as a method to reset the gyroscopic
-     * sensor.
-     * @param direction
-     * @param speed
-     * @param angle
-     */
+
 
     public boolean GoldinCenter() {
         return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
@@ -324,7 +313,7 @@ public class Robot {
 
         if(direction == "cw") {
             localAngle = angle;
-        } else if (direction == "ccw") {
+        } else {
             localAngle = -angle;
         }
 
@@ -341,6 +330,18 @@ public class Robot {
     //Rotate function that inputs a direction
     //Directions can be abbreviated to 'cw' or 'ccw'
     //It does not currently reset the gyro sensor
+    /**
+     * Rotate is a method that uses he IMU within the Rev Hubs
+     * and rotates within autonomous. This method takes params
+     * that allow it to determine which motors go which way
+     * based on clockwise(cw) and counterclockwise(ccw). It uses
+     * other methods to determine when the desired angle has been
+     * reached and stop as well as a method to reset the gyroscopic
+     * sensor.
+     * @param direction
+     * @param speed
+     * @param angle
+     */
     public void rotate(String direction, double speed, double angle) {
         angle = angle - adjustmentForangle;
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
