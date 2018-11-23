@@ -12,7 +12,7 @@
  * other materials provided with the distribution.
  *
  * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
+ * promote products derived from this software without specific prior written perm!isSion.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
  * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -52,35 +52,114 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.util.Locale;
 
-/**
- * {@link Turn90} gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- *
- * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
- */
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_INCH;
+
+
 @Autonomous(name = "Turn 90", group = "Sensor")
-//@Disabled                            // Comment this out to add to the opmode list
+//@Disabled
 public class Turn90 extends LinearOpMode {
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
     Robot r = new Robot(this);
+    private int driveMtrTarget;
+    private int angle = 45;
+    private double speed = 0.1;
+    int a,b;
+    String direction = "ccw";
 
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
 
         // Wait until we're told to go
+        telemetry.addData("Hz", r.getGyroHertz().toString());
+        telemetry.update();
+
         waitForStart();
 
-        // Start the logging of measured acceleration
-        // Loop and update the dashboard
-        while (opModeIsActive()) {
-            r.rotate("cw", 0.25, 90);
-            sleep(1024);
-            r.rotate("cw", 0.25, 135);
-        }
+        //todo direction enums
+
+
+        //todo rotate by counts
+
+
+        //while(opModeIsActive()) {
+            if(direction.equals("ccw")) {
+                a = -1;
+                b = 1;
+                direction = "c";
+            }
+            else {
+                a = 1;
+                b = -1;
+                direction = "ccw";
+            }
+
+
+            //counts per degree
+            //avg(723,733,728,737)/85.6875
+
+            double countsPerDegree = ((723+733+728+737)/4.0)/85.6875;
+
+            driveMtrTarget = (int) (angle * countsPerDegree);
+
+            for (int i = 0; i<4 && !isStopRequested(); i++) {
+                if(i % 3 == 0) {
+                    r.driveMotors[i].setTargetPosition(driveMtrTarget * a);
+                }
+                else {
+                    r.driveMotors[i].setTargetPosition(driveMtrTarget * b);
+                }
+
+                r.driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                r.driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+
+            telemetry.addData("S", "Run to position complete");
+            telemetry.update();
+            sleep(1000);
+
+            // try this out
+            // caller.sleep(750);
+
+            for (int i = 0; i<4 && !isStopRequested(); i++) {
+                r.driveMotors[i].setPower(speed);
+            }
+
+            telemetry.addData("S", "speed set");
+            telemetry.update();
+            sleep(1000);
+
+            while(!isStopRequested() &&
+                    ((r.driveMotors[0].isBusy()) && (r.driveMotors[1].isBusy()) && (r.driveMotors[2].isBusy()) && (r.driveMotors[3].isBusy())) ) {
+                //TODO change telemetry name to enum
+                telemetry.addData("0mtrFl", "%7d : %7d",
+                        r.driveMotors[0].getCurrentPosition(), driveMtrTarget);
+                telemetry.addData("1mtrFR", "%7d : %7d",
+                        r.driveMotors[1].getCurrentPosition(), driveMtrTarget);
+                telemetry.addData("2mtrBR", "%7d : %7d",
+                        r.driveMotors[2].getCurrentPosition(), driveMtrTarget);
+                telemetry.addData("3mtrBL", "%7d : %7d",
+                        r.driveMotors[3].getCurrentPosition(), driveMtrTarget);
+
+                telemetry.update();
+            }
+
+            for (int i = 0; i<4 && !isStopRequested(); i++) {
+                r.driveMotors[i].setPower(0);
+            }
+            for (int i = 0; i<4 && !isStopRequested(); i++) {
+                r.driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+            telemetry.addData("heading", "%7f : %7f", angle, r.getHeading());
+            telemetry.update();
+            sleep(1000);
+
+            //dont let it run past 180!
+            angle+=5;
+
+
+        //}
+        
+
     }
 }

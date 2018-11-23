@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
 @Autonomous(name = "Depot Side", group = "Auton")
 public class DepotSideAuton extends LinearOpMode {
 
-    Robot r = new Robot(this, Robot.OpModeType.AUTON);
+    Robot r = new Robot(this, Enums.OpModeType.AUTON);
 
 
     //constants that will probably be moved to the Constants class
@@ -181,6 +182,8 @@ public class DepotSideAuton extends LinearOpMode {
             sleep(100);
         r.servoMotors[0].setPosition(0);
         sleep(100);
+
+        //rotate to 45deg instead of .5?
             r.rotate("cw",0.1,45.5);
             r.translate(75,0.2);
 

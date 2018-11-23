@@ -32,10 +32,10 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Enums.*;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
+
 
 
 
@@ -44,8 +44,8 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  * Read more about the code on https://www.chiefdelphi.com/media/papers/2390
  */
 
-@TeleOp(name="MecanumIMU", group="Teleops")
-@Disabled
+@TeleOp(name="MecanumIMU", group="#")
+//@Disabled
 public class MecanumIMU extends LinearOpMode {
 
     // Declare OpMode members.
@@ -53,7 +53,23 @@ public class MecanumIMU extends LinearOpMode {
 
     double[] g1 = new double[4];
 
-    double modifier = 0.125;
+
+    //g2 f(x):
+    /*
+
+    dpad U/D raise
+    rt/lt in/ex
+
+
+     */
+
+
+    // 1/8 max
+    double modifier = 0.25;
+
+    // do tuning of lt/rt & see if counts can change
+    //
+
 
     double powFL, powFR, powBR, powBL;
 
@@ -61,7 +77,7 @@ public class MecanumIMU extends LinearOpMode {
 
 
     public enum DriveMode {
-        FIELD, ROBOT
+        FIELD, CARTESIAN, POLAR
     }
 
     DriveMode driveMode = DriveMode.FIELD;
@@ -86,13 +102,22 @@ public class MecanumIMU extends LinearOpMode {
             mecanum();
 
             if(gamepad1.y) {
-                driveMode = DriveMode.ROBOT;
+                driveMode = DriveMode.CARTESIAN;
             }
-            else if (gamepad1.a || driveMode == DriveMode.FIELD) {
+            else if (gamepad1.a) {
                 driveMode = DriveMode.FIELD;
+            }
+            else if(gamepad1.b) {
+                driveMode = DriveMode.POLAR;
+            }
+
+            if(gamepad1.dpad_up) {
+                //todo figure out reset angle
+                r.imuInit();
             }
 
             telemetry.addData("Mode", driveMode.toString());
+
 
             setPowers();
 
@@ -104,17 +129,21 @@ public class MecanumIMU extends LinearOpMode {
 
     private void mecanum() {
         if(driveMode == DriveMode.FIELD) {
+            double heading = r.getHeading();
+            telemetry.addData("Heading", heading);
 
-            double heading = Math.toRadians(r.getHeading());
+            heading = Math.toRadians(heading);
+
+
             if(heading > 0) {
                 //ccw
-                fwd = g1[1] * Math.cos(heading) - g1[0] * Math.sin(heading);
-                strafe = g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
+                fwd = g1[1] * Math.cos(Math.abs(heading)) - g1[0] * Math.sin(Math.abs(heading));
+                strafe = g1[1] * Math.sin(Math.abs(heading)) + g1[0] * Math.cos(Math.abs(heading));
             }
             else {
                 //cw
-                fwd = g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
-                strafe = -g1[1] * Math.cos(heading) + g1[0] * Math.sin(heading);
+                fwd = g1[1] * Math.cos(Math.abs(heading)) + g1[0] * Math.sin(Math.abs(heading));
+                strafe = -g1[1] * Math.sin(Math.abs(heading)) + g1[0] * Math.cos(Math.abs(heading));
             }
 
             rotate = g1[2];
@@ -123,6 +152,16 @@ public class MecanumIMU extends LinearOpMode {
             powFR = fwd - rotate - strafe;
             powBL = fwd + rotate - strafe;
             powBR = fwd - rotate + strafe;
+
+        }
+
+        else if (driveMode == DriveMode.POLAR) {
+            double radius = Math.hypot(g1[1], g1[0]);
+            double angle = Math.atan2(g1[1], g1[0]) - Math.PI / 4;
+            powFL = radius * Math.cos(angle) + g1[2];
+            powFR = radius * Math.sin(angle) - g1[2];
+            powBL = radius * Math.cos(angle) + g1[2];
+            powBR = radius * Math.sin(angle) - g1[2];
 
         }
 
@@ -137,11 +176,14 @@ public class MecanumIMU extends LinearOpMode {
     }
 
     private void setGamepads() {
+
         //left joystick x, y, right joystick x, y
         g1[0] = gamepad1.left_stick_x * modifier;
+        //g1[0] = ( )
         g1[1] = -gamepad1.left_stick_y * modifier;
         g1[2] = gamepad1.right_stick_x * modifier;
         g1[3] = -gamepad1.right_stick_y * modifier;
+
     }
 
     private void setPowers() {
@@ -150,7 +192,5 @@ public class MecanumIMU extends LinearOpMode {
         r.driveMotors[2].setPower(powBR);
         r.driveMotors[3].setPower(powBL);
     }
-
-
 
 }

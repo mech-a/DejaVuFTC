@@ -56,6 +56,7 @@ public class Robot {
     private int[] armMtrTargets = new int[4];
 
     private BNO055IMU imu;
+    private BNO055IMU.Parameters gyroParameters;
     //public VuforiaLocalizer vuf;
 
     private LinearOpMode caller;
@@ -172,13 +173,18 @@ public class Robot {
             }
         }
     }
-    private void imuInit() {
+    public void imuInit() {
         imu = hardwareMap.get(BNO055IMU.class, SENSOR_NAMES[0]);
-        BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
+        gyroParameters = new BNO055IMU.Parameters();
         gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         gyroParameters.loggingEnabled      = true;
         gyroParameters.loggingTag          = "IMU";
+
+        //Default is 32
+        gyroParameters.gyroBandwidth = BNO055IMU.GyroBandwidth.HZ523;
+
+
         if(!caller.isStopRequested()) {
             imu.initialize(gyroParameters);
             //TODO using angles while opmode is not active could cause problems
@@ -250,13 +256,15 @@ public class Robot {
      * @param speed
      */
     public void translate(double inches, double speed) {
-        double localizedInches;
+        double localizedInches = inches;
 
-        if(speed > 0)
-            localizedInches = inches - adjustmentFortranslation;
-        else
-            localizedInches =  -inches + adjustmentFortranslation;
 
+//        double localizedInches;
+//        if(speed > 0)
+//            localizedInches = inches - adjustmentFortranslation;
+//        else
+//            localizedInches =  -inches + adjustmentFortranslation;
+//
         driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
 
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
@@ -264,6 +272,9 @@ public class Robot {
             driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
+        //27
+        //11
 
         // try this out
         // caller.sleep(750);
@@ -343,7 +354,7 @@ public class Robot {
      * @param angle
      */
     public void rotate(String direction, double speed, double angle) {
-        angle = angle - adjustmentForangle;
+
 //        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
 //
 //        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
@@ -393,6 +404,12 @@ public class Robot {
 //
 //        lastangle = heading;
 
+        //todo deprecated rotation documentation
+
+
+
+        //angle = angle - adjustmentForangle;
+
         double powL, powR;
 
         if(direction.equals("cw") || direction.equals("clockwise")) {
@@ -424,10 +441,11 @@ public class Robot {
 
         while(reachedAngle(angle) && !caller.isStopRequested()) {
             refreshAngle();
-            telemetry.addData("heading","%7f %7f", heading, angle);
-            telemetry.update();
             //telemetry.addData("Angle", "%7d : %7d", imu.getAngularOrientation(), angle);
         }
+
+        telemetry.addData("heading","%7f %7f", heading, angle);
+        telemetry.update();
 
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(0);
@@ -490,4 +508,9 @@ public class Robot {
         else
             return GoldPosition.UNK;
     }
+
+    public BNO055IMU.GyroBandwidth getGyroHertz() {
+        return gyroParameters.gyroBandwidth;
+    }
+
 }
