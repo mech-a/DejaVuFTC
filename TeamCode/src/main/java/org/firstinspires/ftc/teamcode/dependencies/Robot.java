@@ -11,10 +11,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
+import java.util.List;
+
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.*;
 import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.*;
 import static org.firstinspires.ftc.teamcode.dependencies.Enums.*;
@@ -73,6 +81,9 @@ public class Robot {
 
     private OpModeType callerType = OpModeType.AUTON;
 
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+
 
 
     public Robot(LinearOpMode initializer) {
@@ -101,8 +112,75 @@ public class Robot {
         armMotorsInit();
         imuInit();
         servoMotorsInit();
+        //cvInit();
         telemetry.addData("Stat", "Initialized!");
     }
+
+    public void cvInit() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFKEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+    public GoldPosition getGoldPosition() {
+        tfod.activate();
+
+        List<Recognition> updatedRecognitions = null;
+
+        for (int i = 0; i < 5; i++) {
+            updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                if (updatedRecognitions.size() == 2) {
+                    break;
+                }
+            }
+            caller.sleep(250);
+        }
+
+        int goldMineralX = -1;
+        int silverMineral1X = -1;
+        int silverMineral2X = -1;
+
+        for (Recognition recognition : updatedRecognitions) {
+            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                goldMineralX = (int) recognition.getLeft();
+            } else if (silverMineral1X == -1) {
+                silverMineral1X = (int) recognition.getLeft();
+            } else {
+                silverMineral2X = (int) recognition.getLeft();
+            }
+        }
+
+        GoldPosition pos;
+
+        if (goldMineralX == -1) {
+            telemetry.addData("GoldMineral Pos", "RIGHT");
+            pos = GoldPosition.RIGHT;
+        } else if (goldMineralX != -1 && goldMineralX > silverMineral1X) {
+            telemetry.addData("GoldMineral Pos", "MIDDLE");
+            pos = GoldPosition.MIDDLE;
+        } else {
+            telemetry.addData("GoldMineral Pos", "LEFT");
+            pos = GoldPosition.LEFT;
+        }
+
+        telemetry.update();
+        ///tfod.deactivate();
+        tfod.shutdown();
+        return pos;
+    }
+
 
     private void servoMotorsInit(){
         for(int i = 0; i<2 && !caller.isStopRequested(); i++){
@@ -166,6 +244,8 @@ public class Robot {
             else
                 armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
+            //Telescoping has to be init'd reverse
+
             if(!caller.isStopRequested()) {
                 armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -182,6 +262,7 @@ public class Robot {
         gyroParameters.loggingTag          = "IMU";
 
         //Default is 32
+        //TODO check powerdrain
         gyroParameters.gyroBandwidth = BNO055IMU.GyroBandwidth.HZ523;
 
 
@@ -193,6 +274,7 @@ public class Robot {
 
     }
 
+    //deprecated
     public void detectorInit() {
         detector = new CustomGoldDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -256,8 +338,8 @@ public class Robot {
      * @param speed
      */
     public void translate(double inches, double speed) {
-        double localizedInches = inches;
-
+        //double localizedInches = inches;
+        double localizedInches = (speed > 0 ? inches : -inches);
 
 //        double localizedInches;
 //        if(speed > 0)
