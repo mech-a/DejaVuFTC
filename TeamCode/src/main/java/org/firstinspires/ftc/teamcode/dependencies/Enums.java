@@ -32,4 +32,8 @@ public class Enums {
 
         public int getIndex() { return index; }
     }
+
+    public enum Direction {
+        FWD,BACK,LEFT,RIGHT
+    }
 }

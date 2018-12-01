@@ -390,6 +390,80 @@ public class Robot {
 
     }
 
+    public void translate(Direction dir, double inches, double speed) {
+        driveMtrTarget = (int) (Math.abs(inches) * (dir.equals(Direction.FWD) || dir.equals(Direction.BACK) ? HD_COUNTS_PER_INCH : HD_COUNTS_PER_INCH_SIDEWAYS));
+
+        int a, b;
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            switch (dir) {
+                case LEFT:
+                    a = -1;
+                    b = 1;
+                    break;
+                case RIGHT:
+                    a = 1;
+                    b = -1;
+                    break;
+                case FWD:
+                    a = 1;
+                    b = 1;
+                    break;
+                case BACK:
+                    a = -1;
+                    b = -1;
+                    break;
+                default:
+                    telemetry.addData("Err", "Unknown dir %s", dir.toString());
+                    telemetry.update();
+                    a=0;
+                    b=0;
+                    break;
+            }
+
+            if(i%2 == 0)
+                driveMotors[i].setTargetPosition(a * driveMtrTarget);
+            else
+                driveMotors[i].setTargetPosition(b * driveMtrTarget);
+
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        //27
+        //11
+
+        // try this out
+        // caller.sleep(750);
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(speed);
+        }
+
+        while(!caller.isStopRequested() &&
+                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
+            //TODO change telemetry name to enum
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+
+            telemetry.update();
+        }
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(0);
+        }
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+
+    }
+
 
 
     public boolean GoldinCenter() {
