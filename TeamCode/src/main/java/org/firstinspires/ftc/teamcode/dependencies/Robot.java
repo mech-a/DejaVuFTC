@@ -390,55 +390,6 @@ public class Robot {
 
     }
 
-    //super messy strafing function for auton - will probably be replaced with a polar translation function
-    //positive inches will go right
-
-    public void strafe(double inches, double speed) {
-        double distanceModifier = 1;
-        double localizedInches = (speed > 0 ? inches : -inches);
-
-        driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
-
-        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
-            if (i%2==0) {
-                driveMotors[i].setTargetPosition(-driveMtrTarget);
-                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            } else {
-                driveMotors[i].setTargetPosition(-driveMtrTarget);
-                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-        }
-
-        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
-            driveMotors[i].setPower(speed);
-        }
-
-        while(!caller.isStopRequested() &&
-                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
-            //TODO change telemetry name to enum
-            telemetry.addData("0mtrFl", "%7d : %7d",
-                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
-            telemetry.addData("1mtrFR", "%7d : %7d",
-                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
-            telemetry.addData("2mtrBR", "%7d : %7d",
-                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
-            telemetry.addData("3mtrBL", "%7d : %7d",
-                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
-
-            telemetry.update();
-        }
-
-        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
-            driveMotors[i].setPower(0);
-        }
-
-        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
-            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
 
 
     public boolean GoldinCenter() {
