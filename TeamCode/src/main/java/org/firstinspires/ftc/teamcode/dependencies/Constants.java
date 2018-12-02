@@ -26,8 +26,6 @@ public class Constants {
     public static final double HD_COUNTS_PER_INCH =
             getCountsPerInch(DRIVE_GEAR_RATIO, HD_COUNTS_PER_REV, WHEEL_DIAM);
 
-    //TODO
-    public static final double HD_COUNTS_PER_INCH_SIDEWAYS = 0;
 
 
 
