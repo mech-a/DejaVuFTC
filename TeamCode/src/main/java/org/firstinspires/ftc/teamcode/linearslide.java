@@ -71,7 +71,7 @@ public class linearslide extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            joystick = -gamepad1.left_stick_y;
+            joystick = -gamepad1.left_stick_y * 0.75;
 
 
             //if(Math.abs(joystick-power)>epsilon)

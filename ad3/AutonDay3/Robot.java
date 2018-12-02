@@ -24,16 +24,16 @@ import java.util.List;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
-import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.ARM_MOTOR_NAMES;
-import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.DRIVE_MOTOR_NAMES;
-import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SENSOR_NAMES;
-import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SERVO_MOTOR_NAMES;
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_INCH;
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.MARKER_HELD;
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_LOCKED;
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.VUFKEY;
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.OpModeType;
+import static org.firstinspires.ftc.teamcode.AutonDay3.ConfigurationNames.ARM_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.AutonDay3.ConfigurationNames.DRIVE_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.AutonDay3.ConfigurationNames.SENSOR_NAMES;
+import static org.firstinspires.ftc.teamcode.AutonDay3.ConfigurationNames.SERVO_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Constants.HD_COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Constants.MARKER_HELD;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Constants.SERVO_LOCKED;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Constants.VUFKEY;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.GoldPosition;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.OpModeType;
 
 //import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 

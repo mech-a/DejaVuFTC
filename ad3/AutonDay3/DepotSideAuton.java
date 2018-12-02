@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.AutonDay3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.dependencies.Enums;
-import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
 @Autonomous(name = "Depot Side", group = "Auton")

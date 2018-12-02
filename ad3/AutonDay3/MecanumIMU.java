@@ -32,13 +32,13 @@ package org.firstinspires.ftc.teamcode.AutonDay3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.dependencies.Enums.OpModeType;
-import org.firstinspires.ftc.teamcode.dependencies.Robot;
+import org.firstinspires.ftc.teamcode.AutonDay3.Enums.OpModeType;
+import org.firstinspires.ftc.teamcode.AutonDay3.Robot;
 
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.INTAKE;
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.RAISE;
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.ROTATE;
-import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.TELESCOPE;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.ArmMotor.INTAKE;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.ArmMotor.RAISE;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.ArmMotor.ROTATE;
+import static org.firstinspires.ftc.teamcode.AutonDay3.Enums.ArmMotor.TELESCOPE;
 
 
 /**
