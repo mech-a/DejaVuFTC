@@ -1,0 +1,659 @@
+// Cleaned up version of HWRobot to be used for 1st Competition.
+// Will be deprecated after extended classes for dcmotor are made/subassemblies/class
+
+package org.firstinspires.ftc.teamcode.AutonDay3;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
+
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.ARM_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.DRIVE_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SENSOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.ConfigurationNames.SERVO_MOTOR_NAMES;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.MARKER_HELD;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_LOCKED;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.VUFKEY;
+import static org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
+import static org.firstinspires.ftc.teamcode.dependencies.Enums.OpModeType;
+
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+
+/**
+ * Robot
+ * Robot is a dependency file that allows de-clutters
+ * the code by eliminating the need to redefine motor
+ * values in every
+ *
+ * @author Gaurav
+ * @version 1.19
+ * @since 2018 10 20
+ */
+//TODO see if throw exception clause?
+public class Robot {
+    //TODO based on specification, add more motor slots
+
+    /**
+     * These variables are used to define new motors
+     * and their power values as arrays
+     */
+    //FL,FR,BR,BR
+    public DcMotor[] driveMotors = new DcMotor[4];
+    public Servo[] servoMotors = new Servo[2];
+
+    //Raise, Telescope, Rotation, Intake
+    public DcMotor[] armMotors = new DcMotor[4];
+
+    private int adjustmentForangle = 3;
+    private int adjustmentFortranslation = 1;
+
+
+    private double[] driveMtrPowers = new double[4];
+    private double[] armMtrPowers = new double[4];
+
+    private int[] driveMtrTargets = new int[4];
+    private int driveMtrTarget;
+    private int[] armMtrTargets = new int[4];
+
+    private BNO055IMU imu;
+    private BNO055IMU.Parameters gyroParameters;
+    //public VuforiaLocalizer vuf;
+
+    private LinearOpMode caller;
+    private Telemetry telemetry;
+    private HardwareMap hardwareMap;
+    private Orientation angles;
+
+    private double heading;
+    private double lastangle = 0;
+    private boolean ccwRotation = false;
+
+
+    //private CustomGoldDetector detector;
+
+    private OpModeType callerType = OpModeType.AUTON;
+
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+
+
+
+    public Robot(LinearOpMode initializer) {
+        caller = initializer;
+    }
+
+    public Robot(LinearOpMode initializer, OpModeType opModeType) {
+        caller = initializer;
+        callerType = opModeType;
+
+    }
+
+    public void start(HardwareMap h, Telemetry t) {
+        hardwareMap = h;
+        telemetry = t;
+    }
+
+    //TODO implement enum for init
+
+    /**
+     * the init() and method initializes all the hardware
+     * for the robot
+     */
+    public void init() {
+        driveMotorsInit();
+        armMotorsInit();
+        imuInit();
+        servoMotorsInit();
+        //cvInit();
+        telemetry.addData("Stat", "Initialized!");
+    }
+
+    public void cvInit() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFKEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+    public GoldPosition getGoldPosition() {
+        tfod.activate();
+
+        List<Recognition> updatedRecognitions = null;
+
+        for (int i = 0; i < 20; i++) {
+            updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                if (updatedRecognitions.size() == 2) {
+                    break;
+                }
+            }
+            caller.sleep(250);
+        }
+
+        int goldMineralX = -1;
+        int silverMineral1X = -1;
+        int silverMineral2X = -1;
+
+        for (Recognition recognition : updatedRecognitions) {
+            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                goldMineralX = (int) recognition.getLeft();
+            } else if (silverMineral1X == -1) {
+                silverMineral1X = (int) recognition.getLeft();
+            } else {
+                silverMineral2X = (int) recognition.getLeft();
+            }
+        }
+
+        GoldPosition pos;
+
+        telemetry.addData("GoldX: ", goldMineralX);
+
+        if (goldMineralX == -1) {
+            telemetry.addData("GoldMineral Pos", "LEFT");
+            pos = GoldPosition.LEFT;
+        } else if (goldMineralX != -1 && goldMineralX > 250) {
+            telemetry.addData("GoldMineral Pos", "RIGHT");
+            pos = GoldPosition.RIGHT;
+        } else {
+            telemetry.addData("GoldMineral Pos", "MIDDLE");
+            pos = GoldPosition.MIDDLE;
+        }
+
+        telemetry.update();
+        //tfod.deactivate();
+        //tfod.shutdown();
+        return pos;
+    }
+
+
+    private void servoMotorsInit(){
+        for(int i = 0; i<2 && !caller.isStopRequested(); i++){
+            servoMotors[i] = hardwareMap.servo.get(SERVO_MOTOR_NAMES[i]);
+        }
+
+        if(callerType == OpModeType.AUTON && !caller.isStopRequested()) {
+            servoMotors[0].setPosition(MARKER_HELD);
+            servoMotors[1].setPosition(SERVO_LOCKED);
+        }
+            //no need to change servos for teleop
+
+    }
+    private void driveMotorsInit() {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
+
+            //TODO standardize between robot and code the port numbers and i
+            /*
+            switch (i) {
+                case 0: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 1: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+                case 2: driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+                case 3: driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+
+            }*/
+
+            if(i%3==0)
+                driveMotors[i].setDirection(DcMotor.Direction.REVERSE);
+            else
+                driveMotors[i].setDirection(DcMotor.Direction.FORWARD);
+
+            driveMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    private void armMotorsInit() {
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
+
+            //TODO change if needed: well, i did it, but must be changed for when telescoping works
+            /*
+            switch (i) {
+                case 0: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                        break;
+                case 1: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 2: armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+                    break;
+                case 3: armMotors[i].setDirection(DcMotor.Direction.REVERSE);
+                    break;
+            }*/
+
+            if(i==3)
+                armMotors[i].setDirection(DcMotor.Direction.REVERSE);
+            else
+                armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+
+            //Telescoping has to be init'd reverse
+
+            if(!caller.isStopRequested()) {
+                armMotors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                armMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+    }
+    public void imuInit() {
+        imu = hardwareMap.get(BNO055IMU.class, SENSOR_NAMES[0]);
+        gyroParameters = new BNO055IMU.Parameters();
+        gyroParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        gyroParameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        gyroParameters.loggingEnabled      = true;
+        gyroParameters.loggingTag          = "IMU";
+
+        //Default is 32
+        //TODO check powerdrain
+        gyroParameters.gyroBandwidth = BNO055IMU.GyroBandwidth.HZ523;
+
+
+        if(!caller.isStopRequested()) {
+            imu.initialize(gyroParameters);
+            //TODO using angles while opmode is not active could cause problems
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+
+    }
+
+    //deprecated
+//    public void detectorInit() {
+//        detector = new CustomGoldDetector();
+//        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+//        detector.useDefaults();
+//
+//        // Optional Tuning
+//        detector.downscale = 0.4; // How much to downscale the input frames
+//
+//        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+//        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+//        detector.maxAreaScorer.weight = 0.005;
+//
+//        detector.ratioScorer.weight = 5;
+//        detector.ratioScorer.perfectRatio = 1.0;
+//
+//        if(!caller.isStopRequested())
+//            detector.enable();
+//    }
+
+    //TODO again enum the motors.
+    //TODO make position drive compatible with arm motors
+    //TODO stability? waitfullhardwarecycle? not sure about this. check LinearOpMode to see if something could work
+
+    /**
+     * positionDrive is a method that moves the motor to a position
+     * @param motorNum
+     * @param counts
+     * @param speed
+     */
+    //Also rethink naming style, drive+whatever is getting really repetitive and long.
+    public void positionDrive(int motorNum, int counts, double speed) {
+
+
+        armMotors[motorNum].setTargetPosition(counts);
+        if(!caller.isStopRequested()) {
+            armMotors[motorNum].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armMotors[motorNum].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        armMotors[motorNum].setPower(speed);
+
+        while(!caller.isStopRequested() && armMotors[motorNum].isBusy()) {
+            //TODO change telemetry name to enum
+            telemetry.addData(motorNum + ":", "%7d : %7d",
+                    armMotors[motorNum].getCurrentPosition(), counts);
+            telemetry.update();
+        }
+
+        armMotors[motorNum].setPower(0);
+        armMotors[motorNum].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    //TODO just realized that position drive cannot be used for translate, it'll sequentially do each motor. mmmf
+    //used to move forward and back
+
+    /**
+     * translate is a method that takes inches and translates them
+     * into counts for the motors
+     * @param inches
+     * @param speed
+     */
+    public void translate(double inches, double speed) {
+        //double localizedInches = inches;
+        double localizedInches = (speed > 0 ? inches : -inches);
+
+//        double localizedInches;
+//        if(speed > 0)
+//            localizedInches = inches - adjustmentFortranslation;
+//        else
+//            localizedInches =  -inches + adjustmentFortranslation;
+//
+        driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setTargetPosition(driveMtrTarget);
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        //27
+        //11
+
+        // try this out
+        // caller.sleep(750);
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(speed);
+        }
+
+        while(!caller.isStopRequested() &&
+                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
+            //TODO change telemetry name to enum
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+
+            telemetry.update();
+        }
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(0);
+        }
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+
+    }
+
+    //super messy strafing function for auton - will probably be replaced with a polar translation function
+    //positive inches will go right
+
+    public void strafe(double inches, double speed) {
+        double distanceModifier = 1;
+        double localizedInches = (speed > 0 ? inches : -inches);
+
+        driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            if (i%2==0) {
+                driveMotors[i].setTargetPosition(driveMtrTarget);
+                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            } else {
+                driveMotors[i].setTargetPosition(-driveMtrTarget);
+                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+        }
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(speed);
+        }
+
+        while(!caller.isStopRequested() &&
+                ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
+            //TODO change telemetry name to enum
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+
+            telemetry.update();
+        }
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(0);
+        }
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+
+
+//    public boolean GoldinCenter() {
+//        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+//    }
+
+    /**
+     * polarTranslate is for mecanum wheels
+     */
+    public void polarTranslate(String direction, double inches, double speed, double angle) {
+        double forwardsVector;
+        double horizontalVector;
+        double localAngle;
+
+        if(direction == "cw") {
+            localAngle = angle;
+        } else {
+            localAngle = -angle;
+        }
+
+        forwardsVector = Math.cos(localAngle) * inches;
+        horizontalVector = Math.sin(localAngle) * inches;
+
+        //set FL and BR to the difference of forwards and horizontal vectors
+        //set FR and BL to the sum of the vectors
+        //Assumes strafing and normal movement are at the same speed (if not add a multiplier)
+
+
+    }
+
+    //Rotate function that inputs a direction
+    //Directions can be abbreviated to 'cw' or 'ccw'
+    //It does not currently reset the gyro sensor
+    /**
+     * Rotate is a method that uses he IMU within the Rev Hubs
+     * and rotates within autonomous. This method takes params
+     * that allow it to determine which motors go which way
+     * based on clockwise(cw) and counterclockwise(ccw). It uses
+     * other methods to determine when the desired angle has been
+     * reached and stop as well as a method to reset the gyroscopic
+     * sensor.
+     * @param direction
+     * @param speed
+     * @param angle
+     */
+    public void rotate(String direction, double speed, double angle) {
+
+//        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
+//
+//        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES);
+//
+//        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+//        heading = Math.floor(heading);
+//        heading = Range.clip(heading, -180.0, 180.0);
+//
+//        //boolean beforeAngle = (direction.equals("cw") ? heading > angle | heading<angle);
+//
+//        if (direction.equals("cw") || direction.equals("clockwise")) {
+//            while (Math.abs(heading) > angle && !caller.isStopRequested()) {
+//
+//                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//                heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+//
+//                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+//
+//                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+//                    if(i%3==0)
+//                        driveMtrPowers[i] = speed;
+//                    else
+//                        driveMtrPowers[i] = -speed;
+//                }
+//
+//                for (int i = 0; i<4 && !caller.isStopRequested(); i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
+//
+//            }
+//        } else if (direction.equals("counterclockwise") || direction.equals("ccw")) {
+//            while (heading < angle && !caller.isStopRequested()) {
+//
+//                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//                heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+//
+//                for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+//
+//                for (int i = 0; i<4; i++) {
+//                    if(i%3==0)
+//                        driveMtrPowers[i] = -speed;
+//                    else
+//                        driveMtrPowers[i] = speed;
+//                }
+//
+//                for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
+//            }
+//        }
+//
+//        lastangle = heading;
+
+        //todo deprecated rotation documentation
+
+
+
+        //angle = angle - adjustmentForangle;
+
+        double powL, powR;
+
+        if(direction.equals("cw") || direction.equals("clockwise")) {
+            ccwRotation = false;
+            powL = speed;
+            powR = -speed;
+        }
+        else {
+            ccwRotation = true;
+            powL = -speed;
+            powR = speed;
+        }
+
+
+
+        //TODO make into function
+        for(int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            if(i%3==0)
+                driveMotors[i].setPower(powL);
+            else
+                driveMotors[i].setPower(powR);
+        }
+
+        //telemetry.addData("Rotating:", "%7d, %7s");
+
+        //priming
+        refreshAngle();
+
+
+        while(reachedAngle(angle) && !caller.isStopRequested()) {
+            refreshAngle();
+            //telemetry.addData("Angle", "%7d : %7d", imu.getAngularOrientation(), angle);
+        }
+
+        telemetry.addData("heading","%7f %7f", heading, angle);
+        telemetry.update();
+
+        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+            driveMotors[i].setPower(0);
+        }
+
+
+
+        //for (int i = 0; i<4; i++) {driveMtrPowers[i] = 0; }
+//        for (int i = 0; i<4; i++) {driveMotors[i].setPower(driveMtrPowers[i]);}
+//        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
+//        for (int i = 0; i<4; i++) {driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
+    }
+    private boolean reachedAngle(double angle) {
+        if (ccwRotation)
+            return heading < angle;
+        else
+            return heading > -angle;
+    }
+    //Currently normalizes angle as well
+    public void refreshAngle() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+
+        heading = AngleUnit.DEGREES.normalize(heading);
+
+
+//        heading = Math.floor(heading);
+//        heading = Range.clip(heading, -180.0, 180.0);
+    }
+    public double getHeading(){
+        refreshAngle();
+        return heading;
+    }
+
+
+//    public double goldPos() {
+//        return detector.getScreenPosition().x;
+//    }
+
+
+    public void getStatus() {
+        //TODO implement a status message, possibly useful for the invoker
+    }
+
+
+//    public GoldPosition goldLocation() {
+//        double screenPos = detector.getScreenPosition().x;
+//
+//        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
+//                )
+//            return GoldPosition.MIDDLE;
+//
+//        else if (screenPos < LEFT_BOUND && screenPos > 0)
+//            return GoldPosition.LEFT;
+//
+//        else if (screenPos > RIGHT_BOUND)
+//                //&& screenPos < 480
+//            return GoldPosition.RIGHT;
+//
+//        else
+//            return GoldPosition.UNK;
+//    }
+
+    public BNO055IMU.GyroBandwidth getGyroHertz() {
+        return gyroParameters.gyroBandwidth;
+    }
+
+}
