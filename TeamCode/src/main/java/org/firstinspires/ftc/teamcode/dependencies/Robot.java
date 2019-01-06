@@ -394,6 +394,7 @@ public class Robot {
 
     }
 
+<<<<<<< HEAD
     //super messy strafing function for auton - will probably be replaced with a polar translation function
     //positive inches will go right
 
@@ -443,6 +444,8 @@ public class Robot {
         }
     }
 
+=======
+>>>>>>> parent of 7ee7e7d... comp2 cv and translation
 
 
 //    public boolean GoldinCenter() {
