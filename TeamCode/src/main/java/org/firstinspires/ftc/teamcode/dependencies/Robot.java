@@ -3,16 +3,20 @@
 
 package org.firstinspires.ftc.teamcode.dependencies;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 import java.util.List;
 
@@ -73,7 +77,7 @@ public class Robot {
     private boolean ccwRotation = false;
 
 
-    //private CustomGoldDetector detector;
+    private CustomGoldDetector detector;
 
     private OpModeType callerType = OpModeType.AUTON;
 
@@ -133,7 +137,7 @@ public class Robot {
 
         List<Recognition> updatedRecognitions = null;
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 5; i++) {
             updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
@@ -141,14 +145,8 @@ public class Robot {
                     break;
                 }
             }
-            caller.sleep(50);
+            caller.sleep(250);
         }
-
-        if (updatedRecognitions == null) {
-            return GoldPosition.UNK;
-            //telemetry.addData("Sampl")
-        }
-
 
         int goldMineralX = -1;
         int silverMineral1X = -1;
@@ -166,22 +164,20 @@ public class Robot {
 
         GoldPosition pos;
 
-        telemetry.addData("GoldX: ", goldMineralX);
-
         if (goldMineralX == -1) {
-            telemetry.addData("GoldMineral Pos", "LEFT");
-            pos = GoldPosition.LEFT;
-        } else if (goldMineralX != -1 && goldMineralX > 500) {
             telemetry.addData("GoldMineral Pos", "RIGHT");
             pos = GoldPosition.RIGHT;
-        } else {
+        } else if (goldMineralX != -1 && goldMineralX > silverMineral1X) {
             telemetry.addData("GoldMineral Pos", "MIDDLE");
             pos = GoldPosition.MIDDLE;
+        } else {
+            telemetry.addData("GoldMineral Pos", "LEFT");
+            pos = GoldPosition.LEFT;
         }
 
         telemetry.update();
-        //tfod.deactivate();
-        //tfod.shutdown();
+        ///tfod.deactivate();
+        tfod.shutdown();
         return pos;
     }
 
@@ -279,24 +275,24 @@ public class Robot {
     }
 
     //deprecated
-//    public void detectorInit() {
-//        detector = new CustomGoldDetector();
-//        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-//        detector.useDefaults();
-//
-//        // Optional Tuning
-//        detector.downscale = 0.4; // How much to downscale the input frames
-//
-//        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-//        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-//        detector.maxAreaScorer.weight = 0.005;
-//
-//        detector.ratioScorer.weight = 5;
-//        detector.ratioScorer.perfectRatio = 1.0;
-//
-//        if(!caller.isStopRequested())
-//            detector.enable();
-//    }
+    public void detectorInit() {
+        detector = new CustomGoldDetector();
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.useDefaults();
+
+        // Optional Tuning
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        if(!caller.isStopRequested())
+            detector.enable();
+    }
 
     //TODO again enum the motors.
     //TODO make position drive compatible with arm motors
@@ -372,14 +368,14 @@ public class Robot {
         while(!caller.isStopRequested() &&
                 ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
             //TODO change telemetry name to enum
-//            //telemetry.addData("0mtrFl", "%7d : %7d",
-//                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
-//            //telemetry.addData("1mtrFR", "%7d : %7d",
-//                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
-//            //telemetry.addData("2mtrBR", "%7d : %7d",
-//                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
-//            //telemetry.addData("3mtrBL", "%7d : %7d",
-//                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
 
             telemetry.update();
         }
@@ -394,26 +390,50 @@ public class Robot {
 
     }
 
-    //super messy strafing function for auton - will probably be replaced with a polar translation function
-    //positive inches will go right
+    public void translate(Direction dir, double inches, double speed) {
+        driveMtrTarget = (int) (Math.abs(inches) * (dir.equals(Direction.FWD) || dir.equals(Direction.BACK) ? HD_COUNTS_PER_INCH : HD_COUNTS_PER_INCH_SIDEWAYS));
 
-    public void strafe(double inches, double speed) {
-        double distanceModifier = 1;
-        double localizedInches = (speed > 0 ? inches : -inches);
-
-        driveMtrTarget = (int) (localizedInches * HD_COUNTS_PER_INCH);
-
+        int a, b;
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
-            if (i%2==0) {
-                driveMotors[i].setTargetPosition(driveMtrTarget);
-                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            } else {
-                driveMotors[i].setTargetPosition(-driveMtrTarget);
-                driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            switch (dir) {
+                case LEFT:
+                    a = -1;
+                    b = 1;
+                    break;
+                case RIGHT:
+                    a = 1;
+                    b = -1;
+                    break;
+                case FWD:
+                    a = 1;
+                    b = 1;
+                    break;
+                case BACK:
+                    a = -1;
+                    b = -1;
+                    break;
+                default:
+                    telemetry.addData("Err", "Unknown dir %s", dir.toString());
+                    telemetry.update();
+                    a=0;
+                    b=0;
+                    break;
             }
+
+            if(i%2 == 0)
+                driveMotors[i].setTargetPosition(a * driveMtrTarget);
+            else
+                driveMotors[i].setTargetPosition(b * driveMtrTarget);
+
+            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+
+        //27
+        //11
+
+        // try this out
+        // caller.sleep(750);
 
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(speed);
@@ -422,14 +442,14 @@ public class Robot {
         while(!caller.isStopRequested() &&
                 ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
             //TODO change telemetry name to enum
-//            telemetry.addData("0mtrFl", "%7d : %7d",
-//                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
-//            telemetry.addData("1mtrFR", "%7d : %7d",
-//                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
-//            telemetry.addData("2mtrBR", "%7d : %7d",
-//                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
-//            telemetry.addData("3mtrBL", "%7d : %7d",
-//                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("0mtrFl", "%7d : %7d",
+                    driveMotors[0].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("1mtrFR", "%7d : %7d",
+                    driveMotors[1].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("2mtrBR", "%7d : %7d",
+                    driveMotors[2].getCurrentPosition(), driveMtrTarget);
+            telemetry.addData("3mtrBL", "%7d : %7d",
+                    driveMotors[3].getCurrentPosition(), driveMtrTarget);
 
             telemetry.update();
         }
@@ -437,17 +457,18 @@ public class Robot {
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setPower(0);
         }
-
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+
+
     }
 
 
 
-//    public boolean GoldinCenter() {
-//        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
-//    }
+    public boolean GoldinCenter() {
+        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+    }
 
     /**
      * polarTranslate is for mecanum wheels
@@ -616,9 +637,9 @@ public class Robot {
     }
 
 
-//    public double goldPos() {
-//        return detector.getScreenPosition().x;
-//    }
+    public double goldPos() {
+        return detector.getScreenPosition().x;
+    }
 
 
     public void getStatus() {
@@ -626,23 +647,23 @@ public class Robot {
     }
 
 
-//    public GoldPosition goldLocation() {
-//        double screenPos = detector.getScreenPosition().x;
-//
-//        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
-//                )
-//            return GoldPosition.MIDDLE;
-//
-//        else if (screenPos < LEFT_BOUND && screenPos > 0)
-//            return GoldPosition.LEFT;
-//
-//        else if (screenPos > RIGHT_BOUND)
-//                //&& screenPos < 480
-//            return GoldPosition.RIGHT;
-//
-//        else
-//            return GoldPosition.UNK;
-//    }
+    public GoldPosition goldLocation() {
+        double screenPos = detector.getScreenPosition().x;
+
+        if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
+                )
+            return GoldPosition.MIDDLE;
+
+        else if (screenPos < LEFT_BOUND && screenPos > 0)
+            return GoldPosition.LEFT;
+
+        else if (screenPos > RIGHT_BOUND)
+                //&& screenPos < 480
+            return GoldPosition.RIGHT;
+
+        else
+            return GoldPosition.UNK;
+    }
 
     public BNO055IMU.GyroBandwidth getGyroHertz() {
         return gyroParameters.gyroBandwidth;

@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_REV;
@@ -48,26 +47,20 @@ import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_
  */
 
 @TeleOp(name="Tilting arm test", group="Internal")
-//@Disabled
+@Disabled
 public class Armtesting extends LinearOpMode {
 
-    Robot r = new Robot(this, Enums.OpModeType.TELEOP);
+    Robot r = new Robot(this);
     // Declare OpMode members.
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
-        r.start(hardwareMap, telemetry);
-        r.init();
 
         waitForStart();
 
-        while(opModeIsActive()) {
-
-            // run until the end of the match (driver presses STOP)
-            telemetry.addData("Mode", r.armMotors[1].getCurrentPosition());
-            telemetry.update();
-        }
+        // run until the end of the match (driver presses STOP)
+        r.positionDrive(2, (int)HD_COUNTS_PER_REV/4, 0.25);
     }
 }
 //-260

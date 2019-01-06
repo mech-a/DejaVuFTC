@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
-import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
@@ -75,7 +74,7 @@ public class CraterSideAuton extends LinearOpMode {
     double inchesToDepot = 60;
     double inchesToCrater = 70;
 
-    String samplePos = "center";
+
 
     @Override
     public void runOpMode() {
@@ -83,9 +82,8 @@ public class CraterSideAuton extends LinearOpMode {
 
         r.start(hardwareMap, telemetry);
         r.init();
-        r.cvInit();
 
-        //r.detectorInit();
+        r.detectorInit();
         //for center
         //24 inches backward
         //6 inches forward
@@ -118,132 +116,51 @@ public class CraterSideAuton extends LinearOpMode {
         waitForStart();
         r.armMotors[0].setPower(-0.25);
 
-        r.positionDrive(2, -40, 0.2);
-
-
         sleep(350);
         r.servoMotors[1].setPosition(0.35);
         sleep(350);
 
 
-        //drop from lander
 
-        r.armMotors[0].setPower(0.5);
-        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 840) {}
-        r.armMotors[0].setPower(0);
 
-        //position to read
+        r.positionDrive(0,840,0.2 );
+        r.rotate("cw",0.05,18);
+        //TODO translate 4
+        r.translate(4,-0.05);
+        r.rotate("ccw",0.05,0);
 
-        r.strafe(4, 0.1);
-        sleep(100);
-        r.translate(-5, 0.15);
-        sleep(100);
-        r.strafe(-6, 0.1);
-        sleep(100);
+        if (r.GoldinCenter()) {
+            r.translate(24, -0.05);
+            r.translate(6, 0.05);
+            r.rotate("ccw", 90, 0.05);
+            r.translate(43, -0.05);
 
-        //read samples
 
-        if (r.getGoldPosition() == Enums.GoldPosition.RIGHT) {
-            samplePos = "right";
-        } else if (r.getGoldPosition() == Enums.GoldPosition.MIDDLE) {
-            samplePos = "center";
-        } else if (r.getGoldPosition() == Enums.GoldPosition.LEFT) {
-            samplePos = "left";
         }
+        else {
+            r.translate(4,-0.1);
+            r.rotate("ccw", 0.05, 26);
+            telemetry.addData("xpos",detector.getScreenPosition().x);
+            double currentXPos = detector.getScreenPosition().x;
+            telemetry.update();
+            sleep(2000);
+            if (currentXPos < 400 && currentXPos > 200) {
+                r.translate(25.5, -0.05);
+                r.rotate("ccw", 0.05, 105);
+                r.translate(33, -0.05);
 
-        r.translate(-6, 0.15);
-        sleep(500);
-        // movement for knocking off jewel
-        if(samplePos == "right") {
-            r.strafe(-12, 0.1);
-            sleep(100);
-            r.translate(-10, 0.1);
-            sleep(100);
-            r.translate(10, 0.1);
-            sleep(100);
-            r.rotate("ccw", 0.1, 90);
-            sleep(100);
-            r.translate(-48, 0.1);
-            sleep(100);
-        } else if (samplePos == "center") {
-            //r.strafe(4, 0.4);
-            sleep(100);
-            r.translate(-10, 0.1);
-            sleep(100);
-            r.translate(10, 0.1);
-            sleep(100);
-            r.rotate("ccw", 0.1, 90);
-            sleep(100);
-            r.translate(-36, 0.1);
-            sleep(100);
-        } else {
-            r.strafe(16, 0.1);
-            sleep(100);
-            r.translate(-10, 0.1);
-            sleep(100);
-            r.translate(10, 0.1);
-            sleep(100);
-            r.rotate("ccw", 0.1, 90);
-            sleep(100);
-            r.translate(-20, 0.1);
-            sleep(100);
+            }
+            else{
+                r.rotate("cw", 0.05, 26);
+                r.translate(25.5, -0.05);
+                r.translate(6, 0.05);
+                r.rotate("ccw", 0.05, 90);
+                r.translate(50, -0.05);
+
+
+            }
+
         }
-        // move to align with wall
-        r.rotate("ccw", 0.1, 45.5);
-        sleep(100);
-
-        // strafe into wall to straighten out robot
-        r.strafe(-11, 0.1);
-        sleep(100);
-        r.strafe(3, 0.1);
-        sleep(100);
-
-        // move to depot
-        r.translate(-60,0.2);
-        sleep(100);
-
-        // dump team marker
-        r.servoMotors[1].setPosition(0);
-        sleep(100);
-
-        // park on crater
-        r.translate(70, 0.1);
-
-        telemetry.update();
-        detector.disable();
-
-//        if (r.GoldinCenter()) {
-//            r.translate(24, -0.05);
-//            r.translate(6, 0.05);
-//            r.rotate("ccw", 90, 0.05);
-//            r.translate(43, -0.05);
-//
-//
-//        }
-//        else {
-//            r.translate(4,-0.1);
-//            r.rotate("ccw", 0.05, 26);
-//            telemetry.addData("xpos",detector.getScreenPosition().x);
-//            double currentXPos = detector.getScreenPosition().x;
-//            telemetry.update();
-//            sleep(2000);
-//            if (currentXPos < 400 && currentXPos > 200) {
-//                r.translate(25.5, -0.05);
-//                r.rotate("ccw", 0.05, 105);
-//                r.translate(33, -0.05);
-//
-//            }
-//            else{
-//                r.rotate("cw", 0.05, 26);
-//                r.translate(25.5, -0.05);
-//                r.translate(6, 0.05);
-//                r.rotate("ccw", 0.05, 90);
-//                r.translate(50, -0.05);
-//
-//
-//            }
-//
-//        }
         /*
 
         if(LEFT) {
@@ -267,14 +184,14 @@ public class CraterSideAuton extends LinearOpMode {
         }
         */
 
-//        r.rotate("ccw", 0.05, 135);
-//        sleep(500);
-//        r.translate(40, -0.05);
-//        sleep(500);
-//        r.servoMotors[0].setPosition(0);
-//        sleep(500);
-//        r.translate(60, 0.05);
-//        sleep(500);
+        r.rotate("ccw", 0.05, 135);
+        sleep(500);
+        r.translate(40, -0.05);
+        sleep(500);
+        r.servoMotors[0].setPosition(0);
+        sleep(500);
+        r.translate(60, 0.05);
+        sleep(500);
 //        DOES NOT Work
 //                putting arm in the crater
 //        r.positionDrive(2,measure the counts, 0.05);
@@ -298,7 +215,7 @@ public class CraterSideAuton extends LinearOpMode {
 
 
         // run until the end of the match (driver presses STOP)
-        //sleep(3000);
+        sleep(3000);
 
 //        if(r.goldLocation() == Robot.GoldPosition.LEFT){
 //            directionForMineralFirst = "ccw";
@@ -332,16 +249,16 @@ public class CraterSideAuton extends LinearOpMode {
          * The constants for motion around the field after the
          * sampling portion of the Autonomous period.
          */
-//        r.translate(4, -0.05);
-//        sleep(1000);
-//        r.translate(4, 0.05);
-//        r.rotate("ccw", 0.05, 90);
-//        r.translate(distanceForLineUp, -0.05);
-//        r.rotate("ccw", 0.05, 135);
-//        r.translate(inchesToDepot, -0.05);
-//        //Deploy marker
-//        sleep(1000);
-//        r.translate(inchesToCrater, 0.05);
+        r.translate(4, -0.05);
+        sleep(1000);
+        r.translate(4, 0.05);
+        r.rotate("ccw", 0.05, 90);
+        r.translate(distanceForLineUp, -0.05);
+        r.rotate("ccw", 0.05, 135);
+        r.translate(inchesToDepot, -0.05);
+        //Deploy marker
+        sleep(1000);
+        r.translate(inchesToCrater, 0.05);
 
     }
 }

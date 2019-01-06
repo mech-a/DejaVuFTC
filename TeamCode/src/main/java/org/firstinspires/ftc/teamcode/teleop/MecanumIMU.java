@@ -70,11 +70,9 @@ public class MecanumIMU extends LinearOpMode {
 
 
     // 1/8 max
-    double modifier = 0.25, speedSwitchSlow = 0.25, speedSwitchFast = 1, speedSwitchPow = 1;
-    static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.3;
-
-    boolean runSlow = false, runFast = false;
-
+    double modifier = 0.25;
+    static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
+    
     double powIntakeMax, powIntakeMin;
     
     // do tuning of lt/rt & see if counts can change
@@ -92,11 +90,9 @@ public class MecanumIMU extends LinearOpMode {
     //todo make into enum or constant
     double[][] armMotorPows = {
             {0,0,0,0},
-            {-1,-0.75,-0.5,-0.6},
+            {-1,-0.75,-0.5,-1},
             {1,0.75,0.5,1}
     };
-
-    double intakepower = 0;
 
     double servoPosition;
 
@@ -126,10 +122,7 @@ public class MecanumIMU extends LinearOpMode {
             //basic mecanum driving that is respective to the robot
             setGamepads();
 
-            speedSwitch();
-
             mecanum();
-            //intake();
 
             if(gamepad1.y) {
                 driveMode = DriveMode.CARTESIAN;
@@ -148,7 +141,6 @@ public class MecanumIMU extends LinearOpMode {
             telemetry.addData("Mode", driveMode.toString());
 
 
-
             setPowers();
 
             telemetry.update();
@@ -158,7 +150,6 @@ public class MecanumIMU extends LinearOpMode {
     }
     
     private void armMotors() {
-
         raise();
         telescope();
         rotate();
@@ -168,34 +159,24 @@ public class MecanumIMU extends LinearOpMode {
     //TODO auto buttons
     //TODO make this function able to take in an object of 3 different vals (dcmotor, upper, lower) and does this exact thing : )
     private void raise() {
-        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 0,-840);
+        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 0,0);
     }
 
     private void telescope() {
-        boundedMotor(gamepad2.right_bumper, gamepad2.left_bumper, TELESCOPE.getIndex(), 0, -879);
+        boundedMotor(gamepad2.right_bumper, gamepad2.left_bumper, TELESCOPE.getIndex(), 0, 0);
     }
 
     private void rotate() {
-        boundedMotor(gamepad2.b, gamepad2.x, ROTATE.getIndex(), 0, -431);
+        boundedMotor(gamepad2.b, gamepad2.x, ROTATE.getIndex(), 0, 0);
     }
 
     private void intake() {
-        telemetry.addData("RT:", gamepad2.right_trigger);
-        telemetry.addData("LT:", gamepad2.left_trigger);
-        if(gamepad2.right_trigger > TRIGGER_DEADZONE) {
-            telemetry.addData("intake:", "inwards");
-            telemetry.update();
-            //intakepower = -0.5;
+        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
             armMotorPows[0][INTAKE.getIndex()] = armMotorPows[2][INTAKE.getIndex()];
-        } else if(gamepad2.left_trigger > TRIGGER_DEADZONE) {
+        else if(gamepad1.left_trigger > TRIGGER_DEADZONE)
             armMotorPows[0][INTAKE.getIndex()] = armMotorPows[1][INTAKE.getIndex()];
-            telemetry.addData("intake:", "outwards");
-            telemetry.update();
-            //intakepower = 0.5;
-        } else if(gamepad2.right_trigger < TRIGGER_DEADZONE && gamepad2.left_trigger < TRIGGER_DEADZONE) {
+        else
             armMotorPows[0][INTAKE.getIndex()] = 0;
-            //intakepower = 0;
-        }
     }
 
     //make each motor enum'd with two parts; the motor and an identifier, so we can reference the correct
@@ -259,55 +240,36 @@ public class MecanumIMU extends LinearOpMode {
         }
     }
 
-    private void speedSwitch() {
+    private void setGamepads() {
 
-        if (gamepad1.left_trigger > TRIGGER_DEADZONE) {
-            runSlow = true;
-            runFast = false;
-        } else if (gamepad1.right_trigger > TRIGGER_DEADZONE) {
-            runSlow = false;
-            runFast = true;
-        }
+        //left joystick x, y, right joystick x, y
+        g1[0] = gamepad1.left_stick_x;
+        g1[1] = -gamepad1.left_stick_y;
+        g1[2] = gamepad1.right_stick_x;
+        g1[3] = -gamepad1.right_stick_y;
 
-        if (runFast) {
-            speedSwitchPow = speedSwitchFast;
-        } else if (runSlow) {
-            speedSwitchPow = speedSwitchSlow;
-        }
+        for(int i = 0; i < g1.length; i++)
+            g1[i] = (g1[i] > DEADZONE ? g1[i] : 0) * modifier;
+
+
     }
 
-        private void setGamepads () {
+    private void setPowers() {
+        r.driveMotors[0].setPower(powFL);
+        r.driveMotors[1].setPower(powFR);
+        r.driveMotors[2].setPower(powBR);
+        r.driveMotors[3].setPower(powBL);
 
-            //left joystick x, y, right joystick x, y
-            g1[0] = gamepad1.left_stick_x;
-            g1[1] = -gamepad1.left_stick_y;
-            g1[2] = gamepad1.right_stick_x;
-            g1[3] = -gamepad1.right_stick_y;
-
-            for (int i = 0; i < g1.length; i++)
-                g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
-
-
+        for(int i = 0; i < armMotorPows.length; i++) {
+            r.armMotors[i].setPower(armMotorPows[0][i]);
         }
-
-        private void setPowers () {
-            r.driveMotors[0].setPower(powFL);
-            r.driveMotors[1].setPower(powFR);
-            r.driveMotors[2].setPower(powBR);
-            r.driveMotors[3].setPower(powBL);
-
-            // r.armMotors[3].setPower(intakepower);
-
-            for (int i = 0; i <= armMotorPows.length; i++) {
-                r.armMotors[i].setPower(armMotorPows[0][i]);
-            }
 
 //        r.armMotors[0].setPower(powRaise);
 //        r.armMotors[1].setPower(powTelescope);
 //        r.armMotors[2].setPower(powRotate);
 //        r.armMotors[3].setPower(powIntake);
 
-            r.servoMotors[1].setPosition(servoPosition);
-        }
+        r.servoMotors[1].setPosition(servoPosition);
+    }
 
 }

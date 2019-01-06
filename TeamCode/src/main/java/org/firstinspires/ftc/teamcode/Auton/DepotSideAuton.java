@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
@@ -14,7 +12,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
 @Autonomous(name = "Depot Side", group = "Auton")
 public class DepotSideAuton extends LinearOpMode {
 
-    Robot r = new Robot(this);
+    Robot r = new Robot(this, Enums.OpModeType.AUTON);
 
 
     //constants that will probably be moved to the Constants class
@@ -28,19 +26,18 @@ public class DepotSideAuton extends LinearOpMode {
     public static final double ROTATE_SPEED = 0.25;
 
     double samplex = 0;
-    String samplePos = "left";
+    String samplePos = "center";
 
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
-        r.cvInit();
         //r.driveMotors[0].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //r.driveMotors[0].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        detector = new CustomGoldDetector();
-//        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-//        detector.useDefaults();
-//
-//        detector.enable();
+        detector = new CustomGoldDetector();
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.useDefaults();
+
+        detector.enable();
 
 
 
@@ -55,8 +52,6 @@ public class DepotSideAuton extends LinearOpMode {
 
 
         r.armMotors[0].setPower(-0.25);
-
-        r.positionDrive(2, -40, 0.2);
 
         sleep(100);
         r.servoMotors[1].setPosition(0.35);
@@ -96,39 +91,10 @@ public class DepotSideAuton extends LinearOpMode {
         //28.5 inches forward
         //rotate 21 degrees cw
         //34 inches forward
-
-          r.strafe(4, 0.1);
-          sleep(100);
-          r.translate(-5, 0.15);
-          sleep(100);
-          r.strafe(-7, 0.1);
-          sleep(100);
-
-
-          // detect mineral
-
-          if (r.getGoldPosition() == Enums.GoldPosition.RIGHT) {
-              telemetry.addData("side:", "right");
-              samplePos = "right";
-          } else if (r.getGoldPosition() == Enums.GoldPosition.MIDDLE) {
-              telemetry.addData("side:", "middle");
-              samplePos = "center";
-          } else if (r.getGoldPosition() == Enums.GoldPosition.LEFT) {
-              telemetry.addData("side:", "left");
-              samplePos = "left";
-          }
-          sleep(300);
-          r.translate(-6, 0.15);
-          sleep(500);
-
-
-
-
-//        r.rotate("cw",0.1,18);
-//        //TODO translate 4
-//        r.translate(4,-0.15);
-//        r.rotate("ccw",0.1,0);
-
+        r.rotate("cw",0.1,18);
+        //TODO translate 4
+        r.translate(4,-0.15);
+        r.rotate("ccw",0.1,0);
 //        r.rotate("ccw",0.05,31);
 //        r.translate(28.5,-0.05);
 //        r.rotate("cw",0.05,20);
@@ -171,63 +137,43 @@ public class DepotSideAuton extends LinearOpMode {
         */
 
 
-        if(samplePos == "right") {
-            r.strafe(-12, 0.1);
-            sleep(100);
-            r.translate(-20, 0.1);
-            sleep(100);
-            r.rotate("ccw", 0.1, 23);
-            sleep(100);
-            r.translate(-23.3,0.15);
-        } else if (samplePos == "center") {
-            r.strafe(4, 0.4);
-            r.translate(-40, 0.1);
-        } else {
-            r.strafe(16, 0.1);
-            sleep(100);
-            r.translate(-20, 0.1);
-            sleep(100);
-            r.rotate("cw", 0.1, 23);
-            sleep(100);
-            r.translate(-23.3,0.15);
-        }
-        sleep(100);
 
-//            if ((detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) && detector.getScreenPosition().y >= 250) {
-//                telemetry.addData("Position:", "Center");
-//                telemetry.update();
-//                //make this less before running
-//
-//                //TODO yesterday it was 56, i changed to 54, need to test
-//                r.translate(54, -0.15);
-//
-//
-//
-//            }
-//            else {
-//                r.translate(4,-0.15);
-//                r.rotate("ccw", 0.15, 35);
-//                telemetry.addData("xpos", detector.getScreenPosition().x);
-//                double currentXPos = detector.getScreenPosition().x;
-//                double currentYPos = detector.getScreenPosition().y;
-//                telemetry.update();
-//                sleep(1000);
-//                if ((currentXPos < 400 && currentXPos > 200) && currentYPos >= 250){
-//                    r.translate(30.8, -0.15);
-//                    r.rotate("cw",0.1,33);
-//                    r.translate(33.3,-0.15);
-//
-//                }
-//                else{
-//                    r.rotate("cw", 0.1, 35);
-//                    r.translate(30.8, -0.15);
-//                    r.rotate("ccw",0.05,32);
-//                    r.translate(33.3,-0.15);
-//
-//
-//                }
-//
-//            }
+
+            if ((detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200) && detector.getScreenPosition().y >= 250) {
+                telemetry.addData("Position:", "Center");
+                telemetry.update();
+                //make this less before running
+
+                //TODO yesterday it was 56, i changed to 54, need to test
+                r.translate(54, -0.15);
+
+
+
+            }
+            else {
+                r.translate(4,-0.15);
+                r.rotate("ccw", 0.15, 35);
+                telemetry.addData("xpos", detector.getScreenPosition().x);
+                double currentXPos = detector.getScreenPosition().x;
+                double currentYPos = detector.getScreenPosition().y;
+                telemetry.update();
+                sleep(1000);
+                if ((currentXPos < 400 && currentXPos > 200) && currentYPos >= 250){
+                    r.translate(30.8, -0.15);
+                    r.rotate("cw",0.1,33);
+                    r.translate(33.3,-0.15);
+
+                }
+                else{
+                    r.rotate("cw", 0.1, 35);
+                    r.translate(30.8, -0.15);
+                    r.rotate("ccw",0.05,32);
+                    r.translate(33.3,-0.15);
+
+
+                }
+
+            }
 
 
 
@@ -239,11 +185,6 @@ public class DepotSideAuton extends LinearOpMode {
 
         //rotate to 45deg instead of .5?
             r.rotate("cw",0.1,45.5);
-            sleep(100);
-            r.strafe(11, 0.1);
-            sleep(100);
-            r.strafe(-3, 0.1);
-            sleep(100);
             r.translate(75,0.2);
 
 
