@@ -55,15 +55,11 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.HD_COUNTS_PER_INCH;
 
 
-@TeleOp(name = "Turn 90", group = "Sensor")
+@TeleOp(name = "Disconnecting Testing", group = "Sensor")
 //@Disabled
 public class DisconnectingTesting extends LinearOpMode {
     Robot r = new Robot(this);
-    private int driveMtrTarget;
-    private int angle = 45;
-    private double speed = 0.1;
-    int a,b;
-    String direction = "ccw";
+    private double angle = 45;
 
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
