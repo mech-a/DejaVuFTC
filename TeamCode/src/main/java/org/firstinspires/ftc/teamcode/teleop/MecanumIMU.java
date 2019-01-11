@@ -249,7 +249,7 @@ public class MecanumIMU extends LinearOpMode {
         g1[3] = -gamepad1.right_stick_y;
 
         for(int i = 0; i < g1.length; i++)
-            g1[i] = (g1[i] > DEADZONE ? g1[i] : 0) * modifier;
+            g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0) * modifier;
 
 
     }
