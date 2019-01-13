@@ -114,6 +114,7 @@ public class Robot {
         servoMotorsInit();
         //cvInit();
         telemetry.addData("Stat", "Initialized!");
+        telemetry.update();
     }
 
     public void cvInit() {
@@ -138,7 +139,7 @@ public class Robot {
         List<Recognition> updatedRecognitions = null;
 
         for (int i = 0; i < 5; i++) {
-            updatedRecognitions = tfod.getUpdatedRecognitions();
+            updatedRecognitions = tfod.getRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 if (updatedRecognitions.size() == 2) {
@@ -161,7 +162,6 @@ public class Robot {
                 silverMineral2X = (int) recognition.getLeft();
             }
         }
-
         GoldPosition pos;
 
         if (goldMineralX == -1) {
@@ -177,7 +177,7 @@ public class Robot {
 
         telemetry.update();
         ///tfod.deactivate();
-        tfod.shutdown();
+        //tfod.shutdown();
         return pos;
     }
 
