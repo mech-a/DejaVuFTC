@@ -112,7 +112,7 @@ public class Robot {
         armMotorsInit();
         imuInit();
         servoMotorsInit();
-        //cvInit();
+        cvInit();
         telemetry.addData("Stat", "Initialized!");
         telemetry.update();
     }

@@ -1,264 +1,134 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode.Auton;
-
-import android.os.WorkSource;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 
-/**
- * CraterSideAuton
- * The CraterSideAuton program is the code and instructions for
- * the robot based on starting on the Crater side of the lander.
- *
- * @author Gaurav
- * @version 1.0
- * @since 2018-10-29
- */
-
-@Autonomous(name="Crater Side Auton", group="Internal")
-//@Disabled
+@Autonomous(name = "Crater Side", group = "Auton")
 public class CraterSideAuton extends LinearOpMode {
-    /**
-     * This class extends the "Robot" class, a dependencies
-     * class that holds motor and rotational control
-     */
-    Robot r = new Robot(this);
+
+    Robot r = new Robot(this, Enums.OpModeType.AUTON);
+
+
+    //constants that will probably be moved to the Constants class
     private CustomGoldDetector detector;
+    private double speed = 0.15;
+    private int time = 50;
+    public static final double DETECTOR_CENTER = 200;
+    public static final double DETECTOR_CENTER_THRESHOLD = 15;
+    public static final double SAMPLE_ANGLE = 25;
+    public static final double SAMPLE_DISTANCE_CENTER = 35;
+    public static final double SAMPLE_DISTANCE_OTHER = 42;
+    public static final double TRANSLATE_SPEED = 0.25;
+    public static final double ROTATE_SPEED = 0.25;
 
-    boolean left = false;
-    boolean middle = false;
-    boolean right = false;
-    //TODO better names
-    String directionForMineralFirst = "";
-    String directionForMineralSecond = "";
-    double distanceForLineUp = 0;
+    double samplex = 0;
+    String samplePos = "center";
 
-    double baseDistance = 30;
-
-    double inchesToDepot = 60;
-    double inchesToCrater = 70;
-
-
-
-    @Override
-    public void runOpMode() {
-        // Wait for the game to start (driver presses PLAY)
-
+    @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
+        //r.driveMotors[0].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //r.driveMotors[0].setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        r.detectorInit();
-        //for center
-        //24 inches backward
-        //6 inches forward
-        //rotate 90 ccw
-        //drive backwards 43 in
-        //rotate 135 ccw
-        //39 inches backward
-        //60 +/-3 inches forward
-        //drop arm
+        //detector = new CustomGoldDetector();
+        //detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        //detector.useDefaults();
 
-        //for left
-        //rotate 26 ccw
-        //25.5 inches backwards
-        //rotate 105 ccw
-        //33 inches backwards
-        //rotate 135 ccw
-        //37 inches backwards
-        //61 inches forward
+        //detector.enable();
 
-        //for right
-        //rotate 26 cw
-        //25.5 inches backwards
-        //6 inches forward
-        //rotate 90 ccw
-        //50 inches backwards
-        //rotate 135 ccw
-        //40 inches backwards
-        //59 inches forward
+        telemetry.addData("Stat:" ,"Initialized");
+        telemetry.update();
 
         waitForStart();
+
         r.armMotors[0].setPower(-0.25);
 
-        sleep(350);
+        sleep(100);
         r.servoMotors[1].setPosition(0.35);
-        sleep(350);
+        sleep(100);
+
+        //r.positionDrive(0,840,0.3 );
+
+        r.armMotors[0].setPower(0.5);
+        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 840) {}
+        r.armMotors[0].setPower(0);
 
 
+        sleep(100);
+
+        //Enum goldPos = r.getGoldPosition();
+        Enum goldPos = Enums.GoldPosition.MIDDLE;
+
+        r.translate(Enums.Direction.RIGHT, 2, 0.25);
+
+        r.translate(4,-0.15);
+
+        //TODO check if last motor hits pos or first motor hits position
 
 
-        r.positionDrive(0,840,0.2 );
-        r.rotate("cw",0.05,18);
-        //TODO translate 4
-        r.translate(4,-0.05);
-        r.rotate("ccw",0.05,0);
-
-        if (r.GoldinCenter()) {
-            r.translate(24, -0.05);
-            r.translate(6, 0.05);
-            r.rotate("ccw", 90, 0.05);
-            r.translate(43, -0.05);
-
-
-        }
-        else {
-            r.translate(4,-0.1);
-            r.rotate("ccw", 0.05, 26);
-            telemetry.addData("xpos",detector.getScreenPosition().x);
-            double currentXPos = detector.getScreenPosition().x;
+        if (goldPos==Enums.GoldPosition.MIDDLE) {
+            telemetry.addData("Position:", "Center");
             telemetry.update();
-            sleep(2000);
-            if (currentXPos < 400 && currentXPos > 200) {
-                r.translate(25.5, -0.05);
-                r.rotate("ccw", 0.05, 105);
-                r.translate(33, -0.05);
-
+            //make this less before running
+            r.translate(Enums.Direction.LEFT, 2, speed);
+            sleep(time);
+            r.translate(Enums.Direction.BACK,24, speed);
+            sleep(time);
+            r.translate(Enums.Direction.FWD, 10, speed);
+            sleep(time);
+            r.rotate("ccw", speed, 80);
+            sleep(time);
+            r.translate(Enums.Direction.BACK, 40, speed);
             }
-            else{
-                r.rotate("cw", 0.05, 26);
-                r.translate(25.5, -0.05);
-                r.translate(6, 0.05);
-                r.rotate("ccw", 0.05, 90);
-                r.translate(50, -0.05);
-
-
-            }
-
-        }
-        /*
-
-        if(LEFT) {
-            r.rotate("ccw", 0.05, 26);
-            r.translate(25.5, -0.05);
-            r.rotate("ccw", 0.05, 105);
-            r.translate(33, -0.05);
-        }
-        else if(MID) {
-            r.translate(24, -0.05);
-            r.translate(6, 0.05);
-            r.rotate("ccw", 90, 0.05);
-            r.translate(43, -0.05);
-        }
-        else if(RIGHT) {
-            r.rotate("cw", 0.05, 26);
-            r.translate(25.5, -0.05);
-            r.translate(6, 0.05);
-            r.rotate("ccw", 0.05, 90);
-            r.translate(50, -0.05);
-        }
-        */
-
-        r.rotate("ccw", 0.05, 135);
-        sleep(500);
-        r.translate(40, -0.05);
-        sleep(500);
-        r.servoMotors[0].setPosition(0);
-        sleep(500);
-        r.translate(60, 0.05);
-        sleep(500);
-//        DOES NOT Work
-//                putting arm in the crater
-//        r.positionDrive(2,measure the counts, 0.05);
-//        r.positionDrive(1.measure the counts,0.05);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // run until the end of the match (driver presses STOP)
-        sleep(3000);
-
-//        if(r.goldLocation() == Robot.GoldPosition.LEFT){
-//            directionForMineralFirst = "ccw";
-//            directionForMineralSecond = "cw";
-//            distanceForLineUp = baseDistance;
-//        }
-//        else if (r.goldLocation() == Robot.GoldPosition.MIDDLE) {
-//            distanceForLineUp = baseDistance + 12*Math.sqrt(2);
-//
-//        }
-//        else if (r.goldLocation() == Robot.GoldPosition.RIGHT) {
-//            directionForMineralFirst = "cw";
-//            directionForMineralSecond = "ccw";
-//            distanceForLineUp = baseDistance + 2*12*Math.sqrt(2);
-//        }
-        /*
-
-        r.translate(4, -0.05);
-        sleep(1000);
-
-        if(!directionForMineralFirst.equals("")) {
-            r.rotate(directionForMineralFirst, 0.05, 44.5);
-            r.translate(22.45, -0.05);
-            r.rotate(directionForMineralSecond, 0.05, 0);
-        }
-        else {
-            r.translate(15,-0.05);
+        else if (goldPos==Enums.GoldPosition.RIGHT) {
+            r.translate(Enums.Direction.BACK, 13,speed);
+            sleep(time);
+            r.translate(Enums.Direction.LEFT, 14, speed);
+            sleep(time);
+            r.translate(Enums.Direction.BACK,11, speed);
+            sleep(time);
+            r.translate(Enums.Direction.FWD, 10, speed);
+            sleep(time);
+            r.rotate("ccw", speed, 80);
+            sleep(time);
+            r.translate(Enums.Direction.BACK, 52, speed);
+            sleep(time);
+        }else{
+            r.translate(Enums.Direction.BACK, 13,speed);
+            sleep(time);
+            r.translate(Enums.Direction.RIGHT, 10, speed);
+            sleep(time);
+            r.translate(Enums.Direction.BACK,11, speed);
+            sleep(time);
+            r.translate(Enums.Direction.FWD, 10, speed);
+            sleep(time);
+            r.rotate("ccw", speed, 80);
+            sleep(time);
+            r.translate(Enums.Direction.BACK, 38, speed);
+            sleep(time);
         }
 
-        /**
-         * The constants for motion around the field after the
-         * sampling portion of the Autonomous period.
-         */
-        r.translate(4, -0.05);
-        sleep(1000);
-        r.translate(4, 0.05);
-        r.rotate("ccw", 0.05, 90);
-        r.translate(distanceForLineUp, -0.05);
-        r.rotate("ccw", 0.05, 135);
-        r.translate(inchesToDepot, -0.05);
-        //Deploy marker
-        sleep(1000);
-        r.translate(inchesToCrater, 0.05);
+        r.rotate("ccw", speed, 135);
+        sleep(time);
+        r.translate(Enums.Direction.LEFT, 14, speed+0.1);
+        sleep(time);
+        r.translate(Enums.Direction.RIGHT, 2, speed);
+        sleep(time);
+        r.translate(Enums.Direction.BACK,32,0.2);
 
+        //placeholder for dropping the team marker
+        r.positionDrive(2, 800,0.5);
+        sleep(100);
+        r.positionDrive(2, 0, 0.5);
+
+        r.translate(Enums.Direction.FWD, 75, 0.5);
+
+        telemetry.update();
+        detector.disable();
     }
 }

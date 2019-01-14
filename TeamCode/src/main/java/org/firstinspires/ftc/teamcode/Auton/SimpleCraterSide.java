@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.dependencies.Robot;
  * @version 1.0
  * @since 2018-10-31
  */
-@Autonomous(name = "Crater Side", group = "Auton")
+@Autonomous(name = "Simple Crater Side", group = "Auton")
 public class SimpleCraterSide  extends LinearOpMode {
 
     /**
