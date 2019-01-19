@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * CB: Gaurav
  */
 
-@TeleOp(name="linearslide", group="Internal")
+@TeleOp(name="Motor Run/Counts", group="Internal")
 
 public class linearslide extends LinearOpMode {
 
@@ -71,7 +71,7 @@ public class linearslide extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            joystick = -gamepad1.left_stick_y;
+            joystick = -gamepad1.left_stick_y * 0.1;
 
 
             //if(Math.abs(joystick-power)>epsilon)
@@ -82,6 +82,11 @@ public class linearslide extends LinearOpMode {
 
             telemetry.addData("Joystick", joystick);
             telemetry.addData("counts of motor",mtr.getCurrentPosition());
+
+            if(gamepad1.b) {
+                mtr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                mtr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
 
             //telemetry.addData("power", power);
 

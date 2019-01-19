@@ -38,6 +38,9 @@ import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Enums.*;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_LOCKED;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_GEAR_RATIO;
 import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.INTAKE;
 import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.RAISE;
 import static org.firstinspires.ftc.teamcode.dependencies.Enums.ArmMotor.ROTATE;
@@ -90,19 +93,22 @@ public class MecanumIMU extends LinearOpMode {
     //todo make into enum or constant
     double[][] armMotorPows = {
             {0,0,0,0},
-            {-1,-0.75,-0.5,-1},
-            {1,0.75,0.5,1}
+            {-1,-0.75,-0.75,-1},
+            {1,0.75,0.75,0.5}
     };
 
     double servoPosition;
 
     double fwd, strafe, rotate;
 
+    boolean isServoLocked = false;
+
 
     public enum DriveMode {
         FIELD, CARTESIAN
     }
 
+    //Keep default as field or cartesian?
     DriveMode driveMode = DriveMode.FIELD;
 
     @Override
@@ -112,6 +118,8 @@ public class MecanumIMU extends LinearOpMode {
         r.start(hardwareMap,telemetry);
         r.init();
 
+        telemetry.addData("Stat", "Initialized!");
+        telemetry.update();
 
         waitForStart();
 
@@ -140,12 +148,27 @@ public class MecanumIMU extends LinearOpMode {
 
             telemetry.addData("Mode", driveMode.toString());
 
+            servoLock();
 
             setPowers();
+
+
+            telemetryStack();
 
             telemetry.update();
 
             sleep(50);
+        }
+    }
+
+    private void servoLock() {
+        if(gamepad2.y) {
+            servoPosition = SERVO_LOCKED;
+            isServoLocked = true;
+        }
+        else if(gamepad2.a) {
+            servoPosition = SERVO_UNLOCKED;
+            isServoLocked = false;
         }
     }
     
@@ -159,21 +182,21 @@ public class MecanumIMU extends LinearOpMode {
     //TODO auto buttons
     //TODO make this function able to take in an object of 3 different vals (dcmotor, upper, lower) and does this exact thing : )
     private void raise() {
-        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 0,0);
+        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 9999999,0);
     }
 
     private void telescope() {
-        boundedMotor(gamepad2.right_bumper, gamepad2.left_bumper, TELESCOPE.getIndex(), 0, 0);
+        boundedMotor(gamepad2.right_bumper, gamepad2.left_bumper, TELESCOPE.getIndex(), 9999999, -9999999);
     }
 
     private void rotate() {
-        boundedMotor(gamepad2.b, gamepad2.x, ROTATE.getIndex(), 0, 0);
+        boundedMotor(gamepad2.x, gamepad2.b, ROTATE.getIndex(), 9999999, 0);
     }
 
     private void intake() {
-        if(gamepad1.right_trigger > TRIGGER_DEADZONE)
+        if(gamepad2.left_trigger > TRIGGER_DEADZONE)
             armMotorPows[0][INTAKE.getIndex()] = armMotorPows[2][INTAKE.getIndex()];
-        else if(gamepad1.left_trigger > TRIGGER_DEADZONE)
+        else if(gamepad2.right_trigger > TRIGGER_DEADZONE)
             armMotorPows[0][INTAKE.getIndex()] = armMotorPows[1][INTAKE.getIndex()];
         else
             armMotorPows[0][INTAKE.getIndex()] = 0;
@@ -260,7 +283,8 @@ public class MecanumIMU extends LinearOpMode {
         r.driveMotors[2].setPower(powBR);
         r.driveMotors[3].setPower(powBL);
 
-        for(int i = 0; i < armMotorPows.length; i++) {
+        //redo armmotors.length
+        for(int i = 0; i < 4; i++) {
             r.armMotors[i].setPower(armMotorPows[0][i]);
         }
 
@@ -270,6 +294,19 @@ public class MecanumIMU extends LinearOpMode {
 //        r.armMotors[3].setPower(powIntake);
 
         r.servoMotors[1].setPosition(servoPosition);
+    }
+
+    private void telemetryStack() {
+        telemetry.addData("Is Servo Locked?", isServoLocked);
+        telemetry.addData("Drive Pwrs", "FL (%3f) : FR (%3f)", powFL, powFR);
+        telemetry.addData("Drive Pwrs", "BL (%3f) : BR (%3f)", powBL, powBR);
+        //telemetry.addData("Speed Mod", speedSwitchPow * modifier);
+        telemetry.addData("Motor Counts", "Raise (%3d) | Telescope (%3d) | Rotate (%3d)",
+                r.armMotors[RAISE.getIndex()].getCurrentPosition(),
+                r.armMotors[TELESCOPE.getIndex()].getCurrentPosition(),
+                r.armMotors[ROTATE.getIndex()].getCurrentPosition());
+        telemetry.addData("Intake","(%3f)", armMotorPows[0][INTAKE.getIndex()]);
+
     }
 
 }
