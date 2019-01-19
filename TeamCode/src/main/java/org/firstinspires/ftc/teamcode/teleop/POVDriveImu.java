@@ -72,6 +72,7 @@ public class POVDriveImu extends LinearOpMode {
     double powRotateOutwards = 0.5;
     double powRotateTowardsRobot = -0.5;
 
+    double powFL, powFR, powBR, powBL;
 
     double powTelescope = 0;
     
@@ -104,8 +105,10 @@ public class POVDriveImu extends LinearOpMode {
         while (opModeIsActive()) {
             setGamepads(modifier);
 
-            powL = Range.clip(g1[1] + g1[2], -1, 1);
-            powR = Range.clip(g1[1] - g1[2], -1, 1);
+            powFL = Range.clip(g1[1] + g1[2] + g1[0], -1, 1);
+            powFR = Range.clip(g1[1] - g1[2] - g1[0], -1, 1);
+            powBL = Range.clip(g1[1] + g1[2] - g1[0], -1, 1);
+            powBR = Range.clip(g1[1] - g1[2] + g1[0], -1, 1);
 
 
             //Button handling
@@ -139,7 +142,7 @@ public class POVDriveImu extends LinearOpMode {
 
             telemetry.update();
 
-            setPowers(powL, powR);
+            setPowers(powFL, powFR, powBL, powBR);
 
 
             sleep(100);
@@ -220,11 +223,11 @@ public class POVDriveImu extends LinearOpMode {
             powRotate = 0;
     }
 
-    private void setPowers(double powL, double powR) {
-        r.driveMotors[0].setPower(powL);
-        r.driveMotors[1].setPower(powR);
-        r.driveMotors[2].setPower(powR);
-        r.driveMotors[3].setPower(powL);
+    private void setPowers(double powFL, double powFR, double powBL, double powBR) {
+        r.driveMotors[0].setPower(powFL);
+        r.driveMotors[1].setPower(powFR);
+        r.driveMotors[2].setPower(powBR);
+        r.driveMotors[3].setPower(powBL);
 
     }
 
@@ -244,7 +247,7 @@ public class POVDriveImu extends LinearOpMode {
     }
 
 
-    private void ramping() {
-
-    }
+//    private void ramping() {
+//
+//    }
 }
