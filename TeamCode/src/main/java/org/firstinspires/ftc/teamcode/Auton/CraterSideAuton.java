@@ -27,11 +27,13 @@ public class CraterSideAuton extends LinearOpMode {
 
         waitForStart();
 
+        //detach from lander
+
         r.armMotors[0].setPower(-0.25);
 
         sleep(100);
         r.servoMotors[1].setPosition(0.35);
-        sleep(100);
+        sleep(500);
 
         //r.positionDrive(0,840,0.3 );
 
@@ -41,15 +43,19 @@ public class CraterSideAuton extends LinearOpMode {
 
         sleep(100);
 
-        //Enum goldPos = r.getGoldPosition();
+        //save the detected mineral's position
         GoldPosition x = r.getGoldPosition();
-        //Enum goldPos = Enums.Goldosition.MIDDLE;
+
+        //unhook from the lander
 
         r.translate(Enums.Direction.RIGHT, 2, 0.25);
 
         r.translate(Enums.Direction.BACK, 4,-0.15);
 
         //TODO check if last motor hits pos or first motor hits position
+
+        //different movements depending on the position of the gold mineral
+        //net backwards movement is 
 
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.addData("Position:", "Center");
