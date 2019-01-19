@@ -55,7 +55,8 @@ public class CraterSideAuton extends LinearOpMode {
         //TODO check if last motor hits pos or first motor hits position
 
         //different movements depending on the position of the gold mineral
-        //net backwards movement is 
+        //net backwards movement is 24 inches
+        //ends near the wall to the left of the crater
 
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.addData("Position:", "Center");
@@ -99,6 +100,8 @@ public class CraterSideAuton extends LinearOpMode {
             sleep(time);
         }
 
+        //align to the wall and translate to the depot
+
         r.rotate("ccw", speed, 135);
         sleep(time);
         r.translate(Enums.Direction.LEFT, 14, speed+0.1);
@@ -107,11 +110,12 @@ public class CraterSideAuton extends LinearOpMode {
         sleep(time);
         r.translate(Enums.Direction.BACK,32,0.2);
 
-        //placeholder for dropping the team marker
+        //drop the team marker in the depot
         r.positionDrive(2, 800,0.5);
         sleep(100);
         r.positionDrive(2, 0, 0.5);
 
+        //translate into the crater on our alliance's side
         r.translate(Enums.Direction.FWD, 75, 0.5);
 
         telemetry.update();
