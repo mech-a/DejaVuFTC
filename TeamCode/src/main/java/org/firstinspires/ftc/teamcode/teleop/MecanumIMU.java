@@ -72,9 +72,12 @@ public class MecanumIMU extends LinearOpMode {
      */
 
 
-    // 1/8 max
-    double modifier = 0.25;
+
+    double[] speedSwitch = {0.05,0.25};
+    boolean runFast = true, runSlow = false;
+    double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
+
     
     double powIntakeMax, powIntakeMin;
     
@@ -116,7 +119,8 @@ public class MecanumIMU extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
 
         r.start(hardwareMap,telemetry);
-        r.init();
+        r.teleopinit();
+        r.servoMotors[1].setPosition(SERVO_UNLOCKED);
 
         telemetry.addData("Stat", "Initialized!");
         telemetry.update();
@@ -128,6 +132,8 @@ public class MecanumIMU extends LinearOpMode {
 
         while (opModeIsActive()) {
             //basic mecanum driving that is respective to the robot
+            speedSwitch();
+
             setGamepads();
 
             mecanum();
@@ -161,6 +167,24 @@ public class MecanumIMU extends LinearOpMode {
         }
     }
 
+
+    private void speedSwitch() {
+        if(gamepad1.right_trigger>TRIGGER_DEADZONE){
+            runFast = true;
+            runSlow = false;
+        }
+        else if(gamepad1.left_trigger>TRIGGER_DEADZONE){
+            runFast = false;
+            runSlow = true;
+        }
+        if(runFast){
+            modifier = speedSwitch[1];
+        }
+        if(runSlow){
+            modifier = speedSwitch[0];
+        }
+    }
+
     private void servoLock() {
         if(gamepad2.y) {
             servoPosition = SERVO_LOCKED;
@@ -182,7 +206,7 @@ public class MecanumIMU extends LinearOpMode {
     //TODO auto buttons
     //TODO make this function able to take in an object of 3 different vals (dcmotor, upper, lower) and does this exact thing : )
     private void raise() {
-        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 9999999,0);
+        boundedMotor(gamepad2.dpad_up, gamepad2.dpad_down, RAISE.getIndex(), 9999999,-9999999);
     }
 
     private void telescope() {
@@ -190,7 +214,7 @@ public class MecanumIMU extends LinearOpMode {
     }
 
     private void rotate() {
-        boundedMotor(gamepad2.x, gamepad2.b, ROTATE.getIndex(), 9999999, 0);
+        boundedMotor(gamepad2.x, gamepad2.b, ROTATE.getIndex(), 9999999, -999999);
     }
 
     private void intake() {
@@ -300,7 +324,7 @@ public class MecanumIMU extends LinearOpMode {
         telemetry.addData("Is Servo Locked?", isServoLocked);
         telemetry.addData("Drive Pwrs", "FL (%3f) : FR (%3f)", powFL, powFR);
         telemetry.addData("Drive Pwrs", "BL (%3f) : BR (%3f)", powBL, powBR);
-        //telemetry.addData("Speed Mod", speedSwitchPow * modifier);
+        telemetry.addData("Speed Mod", modifier);
         telemetry.addData("Motor Counts", "Raise (%3d) | Telescope (%3d) | Rotate (%3d)",
                 r.armMotors[RAISE.getIndex()].getCurrentPosition(),
                 r.armMotors[TELESCOPE.getIndex()].getCurrentPosition(),

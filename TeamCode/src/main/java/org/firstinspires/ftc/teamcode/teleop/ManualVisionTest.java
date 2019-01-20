@@ -52,14 +52,15 @@ public class ManualVisionTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         r.start(hardwareMap, telemetry);
         r.cvInit();
-        r.init();
+        //r.init();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if(gamepad1.a) {
-                telemetry.addData("Pos", r.getGoldPosition().toString());
+                //telemetry.addData("Pos", r.getGoldPosition().toString());
+                r.getGoldPosition();
             }
             telemetry.update();
         }

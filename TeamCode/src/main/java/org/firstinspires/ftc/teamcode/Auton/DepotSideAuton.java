@@ -38,61 +38,62 @@ public class DepotSideAuton extends LinearOpMode {
 
         //r.positionDrive(0,840,0.3 );
 
-        r.armMotors[0].setPower(0.5);
-        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 840) {}
+          r.armMotors[0].setPower(0.5);
+        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 780) {}
         r.armMotors[0].setPower(0);
 
         sleep(100);
 
         //this is an enum
         //save the detected position of the gold mineral
-        GoldPosition x = r.getGoldPosition();
+        GoldPosition x =Enums.GoldPosition.LEFT;
+                //r.getGoldPosition();
 
         //translate out of the hook
 
-        r.translate(Enums.Direction.RIGHT, 3, 0.25);
+        r.translate(Enums.Direction.RIGHT, 4, 0.1);
 
-        r.translate(Enums.Direction.BACK, 4,-0.15);
+        r.translate(Enums.Direction.BACK, 13,-0.15);
 
         //TODO check if last motor hits pos or first motor hits position
 
         //the robot moves to knock out the detected mineral in its position
         //net backwards distance is 45 inches in every case
+        telemetry.addData("Position:", x);
+        telemetry.update();
+
+
+
 
         if (x==Enums.GoldPosition.MIDDLE) {
-            telemetry.addData("Position:", "Center");
             telemetry.update();
-            r.translate(Enums.Direction.LEFT, 2, speed);
-            r.translate(Enums.Direction.BACK,45, speed);
-            }
+            r.translate(Enums.Direction.LEFT,4, speed);
+            r.translate(Enums.Direction.BACK,38, speed);
+        }
         else if (x==Enums.GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.BACK, 13,speed);
+            r.translate(Enums.Direction.LEFT, 4+15, speed);
+            sleep(time);
+            r.translate(Enums.Direction.BACK,30, speed);
+            sleep(time);
+            r.translate(Enums.Direction.RIGHT, 14, speed);
+            sleep(time);
+        }else{
+            r.translate(Enums.Direction.RIGHT, 12, speed);
+            sleep(time);
+            r.translate(Enums.Direction.BACK,30, speed);
             sleep(time);
             r.translate(Enums.Direction.LEFT, 14, speed);
-            sleep(time);
-            r.translate(Enums.Direction.BACK,32, speed);
-            sleep(time);
-            r.translate(Enums.Direction.RIGHT, 12, speed);
-                sleep(time);
-        }else{
-            r.translate(Enums.Direction.BACK, 13,speed);
-            sleep(time);
-            r.translate(Enums.Direction.RIGHT, 12, speed);
-            sleep(time);
-            r.translate(Enums.Direction.BACK,32, speed);
-            sleep(time);
-            r.translate(Enums.Direction.LEFT, 12, speed);
             sleep(time);
         }
 
         //Drop the team marker in the depot
-        r.positionDrive(2, 800,0.5);
+        r.positionDrive(2, 600,0.75);
         sleep(100);
-        r.positionDrive(2, 0, 0.5);
+
 
         //Use wall to align and translate into the opposing alliance's crater
-        r.rotate("cw",0.1,42);
-        sleep(time);
+        r.rotate("cw",0.1,30);
+
         r.translate(Enums.Direction.RIGHT, 16, speed+0.1);
         sleep(time);
         r.translate(Enums.Direction.LEFT, 2, speed);
