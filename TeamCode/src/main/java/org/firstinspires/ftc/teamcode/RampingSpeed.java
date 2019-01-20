@@ -80,10 +80,11 @@ public class RampingSpeed extends LinearOpMode {
             joystick = -gamepad1.left_stick_y * modifier;
 
 
+            //Every five repetitions of the drive loop, the oldJoystick value updates
             if(count % 5 == 0)
                 oldJoystick = joystick;
 
-
+            //If the robot is decelerating, we want it to ramp faster than if it is accelerating
             if(Math.abs(oldJoystick)< Math.abs(joystick)) {
                 numSteps = numStepsMin;
             }
@@ -91,11 +92,13 @@ public class RampingSpeed extends LinearOpMode {
                 numSteps = numStepsMax;
             }
 
-
+            //If the difference between the motor power and joystick value is negligible, the driver
+            //is trying to change the speed of the robot, so the code limits the rate at which the
+            //motor power can be changed
             if(Math.abs(joystick-power)>epsilon)
                 power += (joystick-power)/numSteps;
 
-
+            //If the joystick values are non-negligible, set the motor power to 0
             if(Math.abs(oldJoystick) < epsilon && Math.abs(joystick) < epsilon)
                 power = 0;
 
