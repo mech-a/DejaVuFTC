@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
+import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
+
 
 @Autonomous(name = "Depot Side", group = "Auton")
 public class DepotSideAuton extends LinearOpMode {
@@ -28,13 +30,18 @@ public class DepotSideAuton extends LinearOpMode {
 
         waitForStart();
 
+
+
+        r.positionDrive(2, 100,0.75);
+
+
         //detach from the lander
 
-        r.armMotors[0].setPower(-0.25);
+        r.armMotors[0].setPower(-1);
 
-        sleep(100);
+        sleep(200);
         r.servoMotors[1].setPosition(0.35);
-        sleep(500);
+        sleep(100);
 
         //r.positionDrive(0,840,0.3 );
 
@@ -42,12 +49,12 @@ public class DepotSideAuton extends LinearOpMode {
         while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 780) {}
         r.armMotors[0].setPower(0);
 
+
         sleep(100);
 
         //this is an enum
         //save the detected position of the gold mineral
-        GoldPosition x =Enums.GoldPosition.LEFT;
-                //r.getGoldPosition();
+        GoldPosition x = r.getGoldPosition();
 
         //translate out of the hook
 
@@ -71,6 +78,7 @@ public class DepotSideAuton extends LinearOpMode {
             r.translate(Enums.Direction.BACK,38, speed);
         }
         else if (x==Enums.GoldPosition.RIGHT) {
+            sleep(4*1000);
             r.translate(Enums.Direction.LEFT, 4+15, speed);
             sleep(time);
             r.translate(Enums.Direction.BACK,30, speed);
@@ -92,13 +100,36 @@ public class DepotSideAuton extends LinearOpMode {
 
 
         //Use wall to align and translate into the opposing alliance's crater
-        r.rotate("cw",0.1,30);
+        r.rotate("cw",0.1,32);
 
-        r.translate(Enums.Direction.RIGHT, 16, speed+0.1);
+//        r.translate(Enums.Direction.RIGHT, 16, speed+0.1);
+//        sleep(time);
+//        r.translate(Enums.Direction.LEFT, 4, speed);
+//        sleep(time);
+
+
+        if(x== Enums.GoldPosition.RIGHT) {
+            r.translate(Enums.Direction.RIGHT, 15, speed+0.1);
+        }
+        else if (x== Enums.GoldPosition.LEFT) {
+            r.translate(Enums.Direction.RIGHT, 12, speed+0.1);
+        }
+        else {
+            r.translate(Enums.Direction.RIGHT, 10, speed+0.1);
+        }
+        //IF MIDDLE GO 7INCHES towards the wall
+        //
+        //two inch more on left
+        //75-71
+
+
+
+
+
+
+        //MAKE THIS RUN LESS INCHES
         sleep(time);
-        r.translate(Enums.Direction.LEFT, 2, speed);
-        sleep(time);
-        r.translate(Enums.Direction.FWD,75,0.2);
+        r.translate(Enums.Direction.FWD,70,0.2);
 
         telemetry.update();
     }

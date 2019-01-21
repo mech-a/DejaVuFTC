@@ -155,7 +155,7 @@ public class Robot {
 
         List<Recognition> updatedRecognitions = null;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
             updatedRecognitions = tfod.getRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
@@ -170,6 +170,12 @@ public class Robot {
         int goldMineralX = -1;
         int silverMineral1X = -1;
         int silverMineral2X = -1;
+
+//        for(Recognition recognition : updatedRecognitions) {
+//            if(recognition.getTop() < 410) {
+//                updatedRecognitions.remove(recognition);
+//            }
+//        }s
 
         for (Recognition recognition : updatedRecognitions) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) && goldMineralX==-1) {
