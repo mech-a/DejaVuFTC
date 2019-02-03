@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -116,6 +117,14 @@ public class Robot {
         telemetry.addData("Stat", "Initialized!");
         telemetry.update();
     }
+    public void teleopinit() {
+        driveMotorsInit();
+        armMotorsInit();
+        imuInit();
+        servoMotorsInit();
+        telemetry.addData("Stat", "Initialized!");
+        telemetry.update();
+    }
 
     public void cvInit() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -123,8 +132,14 @@ public class Robot {
         parameters.vuforiaLicenseKey = VUFKEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
 
+
+
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        CameraDevice.getInstance().setFlashTorchMode(true);
+
+
 
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -136,15 +151,18 @@ public class Robot {
     public GoldPosition getGoldPosition() {
         tfod.activate();
 
+        //caller.sleep(500);
+
         List<Recognition> updatedRecognitions = null;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
             updatedRecognitions = tfod.getRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 if (updatedRecognitions.size() == 2) {
                     break;
                 }
+                telemetry.update();
             }
             caller.sleep(250);
         }
@@ -153,8 +171,14 @@ public class Robot {
         int silverMineral1X = -1;
         int silverMineral2X = -1;
 
+//        for(Recognition recognition : updatedRecognitions) {
+//            if(recognition.getTop() < 410) {
+//                updatedRecognitions.remove(recognition);
+//            }
+//        }s
+
         for (Recognition recognition : updatedRecognitions) {
-            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) && goldMineralX==-1) {
                 goldMineralX = (int) recognition.getLeft();
             } else if (silverMineral1X == -1) {
                 silverMineral1X = (int) recognition.getLeft();
@@ -162,20 +186,37 @@ public class Robot {
                 silverMineral2X = (int) recognition.getLeft();
             }
         }
+
+        telemetry.addData("GoldMineralPos", goldMineralX);
+        telemetry.addData("silvermin1", silverMineral1X);
+        telemetry.addData("silvermin2", silverMineral2X);
+
+
         GoldPosition pos;
 
+//        if (goldMineralX == -1) {
+//            telemetry.addData("GoldMineral Pos", "RIGHT");
+//            pos = GoldPosition.RIGHT;
+//        } else if (goldMineralX != -1 && goldMineralX > silverMineral1X) {
+//            telemetry.addData("GoldMineral Pos", "MIDDLE");
+//            pos = GoldPosition.MIDDLE;
+//        } else {
+//            telemetry.addData("GoldMineral Pos", "LEFT");
+//            pos = GoldPosition.LEFT;
+//        }
         if (goldMineralX == -1) {
-            telemetry.addData("GoldMineral Pos", "RIGHT");
-            pos = GoldPosition.RIGHT;
-        } else if (goldMineralX != -1 && goldMineralX > silverMineral1X) {
+            telemetry.addData("GoldMineral Pos", "LEFT");
+            pos = GoldPosition.LEFT;
+        } else if (goldMineralX != -1 && (goldMineralX < silverMineral1X || goldMineralX < silverMineral2X)) {
             telemetry.addData("GoldMineral Pos", "MIDDLE");
             pos = GoldPosition.MIDDLE;
         } else {
-            telemetry.addData("GoldMineral Pos", "LEFT");
-            pos = GoldPosition.LEFT;
+            telemetry.addData("GoldMineral Pos", "RIGHT");
+            pos = GoldPosition.RIGHT;
         }
 
         telemetry.update();
+        CameraDevice.getInstance().setFlashTorchMode(false);
         ///tfod.deactivate();
         //tfod.shutdown();
         return pos;
@@ -391,7 +432,7 @@ public class Robot {
     }
 
     public void translate(Direction dir, double inches, double speed) {
-        driveMtrTarget = (int) (Math.abs(inches) * (dir.equals(Direction.FWD) || dir.equals(Direction.BACK) ? HD_COUNTS_PER_INCH : HD_COUNTS_PER_INCH_SIDEWAYS));
+        driveMtrTarget = (int) (Math.abs(inches) * HD_COUNTS_PER_INCH);
 
         int a, b;
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {

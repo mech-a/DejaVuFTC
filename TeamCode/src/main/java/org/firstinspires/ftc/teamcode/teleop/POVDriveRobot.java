@@ -60,19 +60,16 @@ import static org.firstinspires.ftc.teamcode.dependencies.Constants.TELESCOPING_
 @TeleOp(name="POV Drive", group="Competition")
 //@Disabled
 public class POVDriveRobot extends LinearOpMode {
+    //slower teleop that keeps track of distances traveled
+    //and turn angles to be used in the auton
 
     // Declare OpMode members.
     Robot r = new Robot(this, Enums.OpModeType.TELEOP);
 
-
-
     double servoPosition = 1;
-
 
     int count = 0;
     int LIM = -300;
-
-
 
     double[] g1 = new double[4];
     double[] g2 = new double[4];
@@ -88,7 +85,6 @@ public class POVDriveRobot extends LinearOpMode {
     double powLift = 0, powLiftMax = 1, powLiftMin = -1;
 
     double powRotate = 0, powRotateOutwards = 0.5, powRotateTowardsRobot = -0.5;
-
 
     double powTelescope = 0;
     
@@ -119,7 +115,6 @@ public class POVDriveRobot extends LinearOpMode {
 
             adjustPowers();
 
-
             telemetry.addData("Rotation", r.armMotors[2].getCurrentPosition());
 
             //Button handling
@@ -137,7 +132,6 @@ public class POVDriveRobot extends LinearOpMode {
 
             speedSwitch();
 
-
             //G2 LB + RB - Servo
             jamServoControl();
 
@@ -145,21 +139,11 @@ public class POVDriveRobot extends LinearOpMode {
 
             telemetryStack();
 
-
             telemetry.update();
-
 
             sleep(100);
 
-
-
-
-
-
             //TODO see if vertical motor can be floated due to surgical tubing 
-            
-
-
 
             //TODO a "bug" is that if the next tick the current position is instantaneously less than or equal to 0,
             // both telescopingMax and Min will be true, therefore the motor will lock.
@@ -174,9 +158,7 @@ public class POVDriveRobot extends LinearOpMode {
 //            else {
 //                telescopingMax = false;
 //            }
-//
-//
-//            //TODO check if hardware cycle will allow this to run correctly
+//           //TODO check if hardware cycle will allow this to run correctly
 //            if(telescopingMax) {
 //                if(powTelescope > 0)
 //                    powTelescope = 0;
@@ -186,19 +168,6 @@ public class POVDriveRobot extends LinearOpMode {
 //                if(powTelescope < 0)
 //                    powTelescope = 0;
 //            }
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 
@@ -247,7 +216,6 @@ public class POVDriveRobot extends LinearOpMode {
         else {
             powRotate = 0;
         }
-
 
         telemetry.addData("Powrot", powRotate);
     }
@@ -298,12 +266,10 @@ public class POVDriveRobot extends LinearOpMode {
         //TODO deadzones
     }
 
-
     private void speedSwitch() {
 //        if (gamepad1.y) {
 //            runExponential = !runExponential;
 //        }
-
 
         if(gamepad1.left_bumper) {
             runSlow = true;
@@ -343,7 +309,6 @@ public class POVDriveRobot extends LinearOpMode {
         else if(gamepad2.a)
             servoPosition = SERVO_UNLOCKED;
 
-
         //start (zero) will be at 1
 
     }
@@ -364,16 +329,10 @@ public class POVDriveRobot extends LinearOpMode {
 
     }
 
-
-
-
     private void autonRotation() {
 
 
     }
-
-
-
 
 //    private void servoMotorsInit(){
 //        for(int i = 0; i<2; i++){
