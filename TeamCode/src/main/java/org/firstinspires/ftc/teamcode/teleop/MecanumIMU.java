@@ -204,16 +204,20 @@ public class MecanumIMU extends LinearOpMode {
 
     //make each motor enum'd with two parts; the motor and an identifier, so we can reference the correct
     //TODO make telem for bounds
+
+    //boundedMotor assigns a motor to two buttons (out and in) and gives it boundings
     private void boundedMotor(boolean out, boolean in, int motorNum, double upperBound, double lowerBound) {
-        if(out
-                && r.armMotors[motorNum].getCurrentPosition() < upperBound)
+
+        //The motor can only move if the specified input button is pressed and the motor's position
+        //is within the specified bounds
+        if(out && r.armMotors[motorNum].getCurrentPosition() < upperBound)
             armMotorPows[0][motorNum] = armMotorPows[2][motorNum];
-        else if (in
-                && r.armMotors[motorNum].getCurrentPosition() > lowerBound)
+        else if (in && r.armMotors[motorNum].getCurrentPosition() > lowerBound)
             armMotorPows[0][motorNum] = armMotorPows[1][motorNum];
         else
             armMotorPows[0][motorNum] = 0;
     }
+
 
     private void mecanum() {
         if(driveMode == DriveMode.FIELD) {
@@ -242,18 +246,8 @@ public class MecanumIMU extends LinearOpMode {
             powBR = fwd - rotate + strafe;
 
         }
-
-//        else if (driveMode == DriveMode.POLAR) {
-//            double radius = Math.hypot(g1[1], g1[0]);
-//            double angle = Math.atan2(g1[1], g1[0]) - Math.PI / 4;
-//            powFL = radius * Math.cos(angle) + g1[2];
-//            powFR = radius * Math.sin(angle) - g1[2];
-//            powBL = radius * Math.cos(angle) + g1[2];
-//            powBR = radius * Math.sin(angle) - g1[2];
-//
-//        }
-
         else {
+            //If the drive mode is Cartesian, we run the standard mecanum drive drive system
 
             powFL = g1[1] + g1[2] + g1[0];
             powFR = g1[1] - g1[2] - g1[0];
