@@ -47,7 +47,8 @@ public class CraterSideFull extends LinearOpMode {
 
         //this is an enum
         //save the detected position of the gold mineral
-        GoldPosition x = r.getGoldPosition();
+        //GoldPosition x = r.getGoldPosition();
+        GoldPosition x = GoldPosition.MIDDLE;
 
         //translate out of the hook
 
@@ -72,28 +73,32 @@ public class CraterSideFull extends LinearOpMode {
         //translate 46 inches left +/- distance to mineral
         //drive forward for a while
 
-        r.translate(Enums.Direction.RIGHT, 46, speed);
+        r.translate(Enums.Direction.RIGHT, 41, speed);
         sleep(time);
-        r.rotate("ccw", speed, 150);
+        r.rotate("ccw", speed, 130);
         sleep(time);
-        r.translate(Enums.Direction.BACK, 30, speed);
+        r.translate(Enums.Direction.LEFT, 3, speed);
+        sleep(time);
+        r.translate(Enums.Direction.BACK, 31, speed);
         sleep(time);
         r.positionDrive(2, 600,0.75);
         sleep(500);
         r.positionDrive(2, -600,0.75);
         sleep(time);
-        r.translate(Enums.Direction.FWD, 30, speed);
+        r.translate(Enums.Direction.FWD, 31, speed);
         sleep(time);
-        r.rotate("ccw", speed, 180);
+        r.translate(Enums.Direction.RIGHT, 3, speed);
+        sleep(time);
+        r.rotate("cw", speed, -28);
         sleep(time);
 
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.update();
-            r.translate(Enums.Direction.LEFT,36+10, speed);
+            r.translate(Enums.Direction.LEFT,36+13, speed);
             r.translate(Enums.Direction.BACK,10, speed);
         }
         else if (x==Enums.GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.LEFT, 36+20, speed);
+            r.translate(Enums.Direction.LEFT, 36+33, speed);
             sleep(time);
             r.translate(Enums.Direction.BACK,10, speed);
             sleep(time);
@@ -102,7 +107,7 @@ public class CraterSideFull extends LinearOpMode {
         }else{
             r.translate(Enums.Direction.LEFT, 36, speed);
             sleep(time);
-            r.translate(Enums.Direction.BACK,10, speed);
+            r.translate(Enums.Direction.BACK,15, speed);
             sleep(time);
 //            r.translate(Enums.Direction.LEFT, 14, speed);
 //            sleep(time);

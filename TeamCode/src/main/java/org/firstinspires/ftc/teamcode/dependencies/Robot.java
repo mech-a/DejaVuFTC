@@ -115,7 +115,7 @@ public class Robot {
         imuInit();
         servoMotorsInit();
         cvInit();
-        sensorInit();
+        //sensorInit();
         telemetry.addData("Stat", "Initialized!");
         telemetry.update();
     }
