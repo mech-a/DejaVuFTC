@@ -72,20 +72,35 @@ public class CraterSideFull extends LinearOpMode {
         //translate 46 inches left +/- distance to mineral
         //drive forward for a while
 
+        r.translate(Enums.Direction.RIGHT, 46, speed);
+        sleep(time);
+        r.rotate("ccw", speed, 150);
+        sleep(time);
+        r.translate(Enums.Direction.BACK, 30, speed);
+        sleep(time);
+        r.positionDrive(2, 600,0.75);
+        sleep(500);
+        r.positionDrive(2, -600,0.75);
+        sleep(time);
+        r.translate(Enums.Direction.FWD, 30, speed);
+        sleep(time);
+        r.rotate("ccw", speed, 180);
+        sleep(time);
+
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.update();
-            r.translate(Enums.Direction.LEFT,4, speed);
+            r.translate(Enums.Direction.LEFT,36+10, speed);
             r.translate(Enums.Direction.BACK,10, speed);
         }
         else if (x==Enums.GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.LEFT, 4+15, speed);
+            r.translate(Enums.Direction.LEFT, 36+20, speed);
             sleep(time);
             r.translate(Enums.Direction.BACK,10, speed);
             sleep(time);
 //            r.translate(Enums.Direction.RIGHT, 14, speed);
 //            sleep(time);
         }else{
-            r.translate(Enums.Direction.RIGHT, 12, speed);
+            r.translate(Enums.Direction.LEFT, 36, speed);
             sleep(time);
             r.translate(Enums.Direction.BACK,10, speed);
             sleep(time);
