@@ -49,6 +49,7 @@ public class Robot {
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
     public Servo[] servoMotors = new Servo[2];
+    //public DistanceSensor[] distanceSensors = new DistanceSensor[2];
 
     //Raise, Telescope, Rotation, Intake
     public DcMotor[] armMotors = new DcMotor[4];
@@ -114,6 +115,7 @@ public class Robot {
         imuInit();
         servoMotorsInit();
         cvInit();
+        sensorInit();
         telemetry.addData("Stat", "Initialized!");
         telemetry.update();
     }
@@ -235,6 +237,11 @@ public class Robot {
             //no need to change servos for teleop
 
     }
+//    private void sensorInit() {
+//        for (int i = 0; i<2 && !caller.isStopRequested(); i++) {
+//            distanceSensors[i] = hardwareMap.get(DistanceSensor.class, DISTANCE_SENSOR_NAMES[i]);
+//        }
+//    }
     private void driveMotorsInit() {
         for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
             driveMotors[i] = hardwareMap.dcMotor.get(DRIVE_MOTOR_NAMES[i]);
@@ -430,6 +437,53 @@ public class Robot {
 
 
     }
+
+//    public void controlled_translate(Direction dir, double inches, double speed) {
+//        driveMtrTarget = (int) (Math.abs(inches) * HD_COUNTS_PER_INCH);
+//
+//        int polarity;
+//        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+//            switch (dir) {
+//                case FWD:
+//                    polarity = 1;
+//                    break;
+//                case BACK:
+//                    polarity = -1;
+//                    break;
+//                default:
+//                    telemetry.addData("Err", "Unknown dir %s", dir.toString());
+//                    telemetry.update();
+//                    polarity = 0;
+//                    break;
+//            }
+//
+//            driveMotors[i].setTargetPosition(polarity * driveMtrTarget);
+//
+//            driveMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            driveMotors[i].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
+//
+//        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+//                driveMotors[i].setPower(speed);
+//            }
+//
+//            while(!caller.isStopRequested() &&
+//                    ((driveMotors[0].isBusy()) && (driveMotors[1].isBusy()) && (driveMotors[2].isBusy()) && (driveMotors[3].isBusy())) ) {
+//                //TODO change telemetry name to enum
+//                telemetry.addData("0mtrFl", "%7d : %7d",
+//                        driveMotors[0].getCurrentPosition(), driveMtrTarget);
+//                telemetry.addData("1mtrFR", "%7d : %7d",
+//                        driveMotors[1].getCurrentPosition(), driveMtrTarget);
+//                telemetry.addData("2mtrBR", "%7d : %7d",
+//                        driveMotors[2].getCurrentPosition(), driveMtrTarget);
+//                telemetry.addData("3mtrBL", "%7d : %7d",
+//                        driveMotors[3].getCurrentPosition(), driveMtrTarget);
+//
+//                telemetry.update();
+//
+//                double frontDistance;
+//            }
+//    }
 
     public void translate(Direction dir, double inches, double speed) {
         driveMtrTarget = (int) (Math.abs(inches) * HD_COUNTS_PER_INCH);
