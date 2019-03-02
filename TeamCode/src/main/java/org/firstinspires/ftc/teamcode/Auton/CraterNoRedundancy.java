@@ -86,10 +86,10 @@ public class CraterNoRedundancy extends LinearOpMode {
             r.translate(Enums.Direction.RIGHT,39+7, speed);
         }
         else if (x==GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.RIGHT, 21+39, speed);
+            r.translate(Enums.Direction.RIGHT, 22+39, speed);
         }
         else {
-            r.translate(Enums.Direction.RIGHT, 39-7, speed);
+            r.translate(Enums.Direction.RIGHT, 39-8, speed);
         }
 
         r.rotate("ccw", speed, 130);
