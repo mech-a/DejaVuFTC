@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
@@ -17,12 +18,15 @@ public class CraterSideFull extends LinearOpMode {
     Robot r = new Robot(this, Enums.OpModeType.AUTON);
 
     //constants that will probably be moved to the Constants class
-    private double speed = 0.15;
+    private double speed = 0.2;
     private int time = 50;
 
     @Override public void runOpMode() {
         r.start(hardwareMap, telemetry);
         r.init();
+
+        CameraDevice.getInstance().setFlashTorchMode(false);
+
 
         telemetry.addData("Stat:" ,"Initialized");
         telemetry.update();
@@ -48,7 +52,7 @@ public class CraterSideFull extends LinearOpMode {
         //this is an enum
         //save the detected position of the gold mineral
         //GoldPosition x = r.getGoldPosition();
-        GoldPosition x = GoldPosition.MIDDLE;
+        GoldPosition x = GoldPosition.LEFT;
 
         //translate out of the hook
 
@@ -95,19 +99,19 @@ public class CraterSideFull extends LinearOpMode {
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.update();
             r.translate(Enums.Direction.LEFT,36+13, speed);
-            r.translate(Enums.Direction.BACK,10, speed);
+            r.translate(Enums.Direction.BACK,20, speed);
         }
         else if (x==Enums.GoldPosition.RIGHT) {
             r.translate(Enums.Direction.LEFT, 36+33, speed);
             sleep(time);
-            r.translate(Enums.Direction.BACK,10, speed);
+            r.translate(Enums.Direction.BACK,20, speed);
             sleep(time);
 //            r.translate(Enums.Direction.RIGHT, 14, speed);
 //            sleep(time);
         }else{
             r.translate(Enums.Direction.LEFT, 36, speed);
             sleep(time);
-            r.translate(Enums.Direction.BACK,15, speed);
+            r.translate(Enums.Direction.BACK,20, speed);
             sleep(time);
 //            r.translate(Enums.Direction.LEFT, 14, speed);
 //            sleep(time);

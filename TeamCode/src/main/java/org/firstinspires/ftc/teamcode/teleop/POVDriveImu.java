@@ -244,6 +244,13 @@ public class POVDriveImu extends LinearOpMode {
         g2[3] = -gamepad2.right_stick_y * modifier;
 
         //TODO deadzones
+        for(int i = 0; i < g1.length; i++)
+            g1[i] = (Math.abs(g1[i]) > 0.15 ? g1[i] : 0);
+
+        telemetry.addData("left stick x:", "%4f", gamepad1.left_stick_x);
+        telemetry.addData("left stick y:", "%4f", gamepad1.left_stick_y);
+        telemetry.addData("right stick x:", "%4f", gamepad1.right_stick_x);
+        telemetry.addData("right stick y:", "%4f", gamepad1.right_stick_y);
     }
 
 
