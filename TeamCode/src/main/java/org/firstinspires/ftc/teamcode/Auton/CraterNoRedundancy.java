@@ -68,7 +68,7 @@ public class CraterNoRedundancy extends LinearOpMode {
             r.translate(Enums.Direction.LEFT,7, speed);
         }
         else if (x==GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.LEFT, 4+17, speed);
+            r.translate(Enums.Direction.LEFT, 21, speed);
         }
         else {
             r.translate(Enums.Direction.RIGHT, 8, speed);
@@ -78,18 +78,18 @@ public class CraterNoRedundancy extends LinearOpMode {
         r.translate(Enums.Direction.FWD, 7, speed);
 
         if(x==GoldPosition.MIDDLE) {
-            r.translate(Enums.Direction.RIGHT,44-3, speed);
+            r.translate(Enums.Direction.RIGHT,39+7, speed);
         }
         else if (x==GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.RIGHT, 4+17+41-3, speed);
+            r.translate(Enums.Direction.RIGHT, 21+39, speed);
         }
         else {
-            r.translate(Enums.Direction.RIGHT, 41-8-3, speed);
+            r.translate(Enums.Direction.RIGHT, 39-8, speed);
         }
 
         r.rotate("ccw", speed, 130);
         sleep(time);
-        r.translate(Enums.Direction.LEFT, 7, speed);
+        r.translate(Enums.Direction.LEFT, 5, speed);
         sleep(time);
         r.translate(Enums.Direction.BACK, 37, speed);
         sleep(time);
