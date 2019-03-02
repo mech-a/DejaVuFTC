@@ -3,7 +3,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;

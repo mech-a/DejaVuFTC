@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class Robot {
     private boolean ccwRotation = false;
 
 
-    private CustomGoldDetector detector;
+    //private CustomGoldDetector detector;
 
     private OpModeType callerType = OpModeType.AUTON;
 
@@ -322,8 +322,9 @@ public class Robot {
 
     }
 
-    //deprecated
+    @Deprecated
     public void detectorInit() {
+        /*
         detector = new CustomGoldDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
@@ -339,7 +340,7 @@ public class Robot {
         detector.ratioScorer.perfectRatio = 1.0;
 
         if(!caller.isStopRequested())
-            detector.enable();
+            detector.enable();*/
     }
 
     //TODO again enum the motors.
@@ -560,9 +561,9 @@ public class Robot {
     }
 
 
-
+    @Deprecated
     public boolean GoldinCenter() {
-        return detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
+        return false; //detector.getScreenPosition().x < 400 && detector.getScreenPosition().x > 200;
     }
 
     /**
@@ -731,9 +732,9 @@ public class Robot {
         return heading;
     }
 
-
+    @Deprecated
     public double goldPos() {
-        return detector.getScreenPosition().x;
+        return  -0.1; //detector.getScreenPosition().x;
     }
 
 
@@ -741,9 +742,9 @@ public class Robot {
         //TODO implement a status message, possibly useful for the invoker
     }
 
-
+    @Deprecated
     public GoldPosition goldLocation() {
-        double screenPos = detector.getScreenPosition().x;
+        double screenPos = 0.0; //detector.getScreenPosition().x;
 
         if (screenPos < RIGHT_BOUND && screenPos > LEFT_BOUND //&&
                 )

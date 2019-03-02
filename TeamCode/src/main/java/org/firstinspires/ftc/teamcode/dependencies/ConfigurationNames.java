@@ -25,6 +25,9 @@ public class ConfigurationNames {
     public static final String[] SERVO_MOTOR_NAMES = {
             "marker", "locker"
     };
+    public static final String[] DISTANCE_SENSOR_NAMES = {
+            "sensor_color_distance_1", "sensor_color_distance_2"
+    };
 
 
     //add servos, sensors, when and if needed.

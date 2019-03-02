@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.CameraDevice;
 
-import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
 import org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
@@ -18,7 +18,7 @@ public class CraterSideFull extends LinearOpMode {
     Robot r = new Robot(this, Enums.OpModeType.AUTON);
 
     //constants that will probably be moved to the Constants class
-    private double speed = 0.2;
+    private double speed = 0.22;
     private int time = 50;
 
     @Override public void runOpMode() {
@@ -52,7 +52,7 @@ public class CraterSideFull extends LinearOpMode {
         //this is an enum
         //save the detected position of the gold mineral
         //GoldPosition x = r.getGoldPosition();
-        GoldPosition x = GoldPosition.LEFT;
+        GoldPosition x = GoldPosition.MIDDLE;
 
         //translate out of the hook
 
@@ -79,7 +79,7 @@ public class CraterSideFull extends LinearOpMode {
 
         r.translate(Enums.Direction.RIGHT, 41, speed);
         sleep(time);
-        r.rotate("ccw", speed, 130);
+        r.rotate("ccw", speed, 126);
         sleep(time);
         r.translate(Enums.Direction.LEFT, 3, speed);
         sleep(time);
@@ -93,12 +93,12 @@ public class CraterSideFull extends LinearOpMode {
         sleep(time);
         r.translate(Enums.Direction.RIGHT, 3, speed);
         sleep(time);
-        r.rotate("cw", speed, -28);
+        r.rotate("cw", speed, -30);
         sleep(time);
 
         if (x==Enums.GoldPosition.MIDDLE) {
             telemetry.update();
-            r.translate(Enums.Direction.LEFT,36+13, speed);
+            r.translate(Enums.Direction.LEFT,33+13, speed);
             r.translate(Enums.Direction.BACK,20, speed);
         }
         else if (x==Enums.GoldPosition.RIGHT) {
@@ -109,7 +109,7 @@ public class CraterSideFull extends LinearOpMode {
 //            r.translate(Enums.Direction.RIGHT, 14, speed);
 //            sleep(time);
         }else{
-            r.translate(Enums.Direction.LEFT, 36, speed);
+            r.translate(Enums.Direction.LEFT, 31, speed);
             sleep(time);
             r.translate(Enums.Direction.BACK,20, speed);
             sleep(time);

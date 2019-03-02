@@ -4,9 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
-import org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
+import org.firstinspires.ftc
+        .teamcode.dependencies.Enums.GoldPosition;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
 import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
