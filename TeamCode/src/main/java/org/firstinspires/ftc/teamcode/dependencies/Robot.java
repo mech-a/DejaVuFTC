@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 //import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
@@ -156,20 +157,18 @@ public class Robot {
         //caller.sleep(500);
 
         List<Recognition> allRecognitions = null;
-        List<Recognition> cleanRecognitions = null;
+        //List<Recognition> cleanRecognitions = new ArrayList<Recognition>();
 
         for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
             allRecognitions = tfod.getRecognitions();
             if (allRecognitions != null) {
-
-                for(Recognition recognition : allRecognitions) {
-                    if(recognition.getBottom()>750) {
-                        cleanRecognitions.add(recognition);
-                    }
+                telemetry.addData("# Object Detected", allRecognitions.size());
+                if (allRecognitions.size() == 2) {
+                    break;
                 }
-
-                telemetry.addData("# Object Detected", cleanRecognitions.size());
                 telemetry.update();
+
+
             }
             caller.sleep(250);
         }
@@ -191,6 +190,99 @@ public class Robot {
 //                updatedRecognitions.remove(recognition);
 //            }
 //        }
+        telemetry.addData("# Object Detected", allRecognitions.size());
+        telemetry.update();
+
+        for (Recognition recognition : allRecognitions) {
+            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) && goldMineralX==-1) {
+                goldMineralX = (int) recognition.getLeft();
+            } else if (silverMineral1X == -1) {
+                silverMineral1X = (int) recognition.getLeft();
+            } else {
+                silverMineral2X = (int) recognition.getLeft();
+            }
+        }
+
+        telemetry.addData("GoldMineralPos", goldMineralX);
+        telemetry.addData("silvermin1", silverMineral1X);
+        telemetry.addData("silvermin2", silverMineral2X);
+
+
+        GoldPosition pos;
+
+//        if (goldMineralX == -1) {
+//            telemetry.addData("GoldMineral Pos", "RIGHT");
+//            pos = GoldPosition.RIGHT;
+//        } else if (goldMineralX != -1 && goldMineralX > silverMineral1X) {
+//            telemetry.addData("GoldMineral Pos", "MIDDLE");
+//            pos = GoldPosition.MIDDLE;
+//        } else {
+//            telemetry.addData("GoldMineral Pos", "LEFT");
+//            pos = GoldPosition.LEFT;
+//        }
+        if (goldMineralX == -1) {
+            telemetry.addData("GoldMineral Pos", "LEFT");
+            pos = GoldPosition.LEFT;
+        } else if (goldMineralX != -1 && (goldMineralX < silverMineral1X || goldMineralX < silverMineral2X)) {
+            telemetry.addData("GoldMineral Pos", "MIDDLE");
+            pos = GoldPosition.MIDDLE;
+        } else {
+            telemetry.addData("GoldMineral Pos", "RIGHT");
+            pos = GoldPosition.RIGHT;
+        }
+
+        telemetry.update();
+        CameraDevice.getInstance().setFlashTorchMode(false);
+        ///tfod.deactivate();
+        //tfod.shutdown();
+        return pos;
+    }
+
+
+    public GoldPosition getGoldPositionBoundaries() {
+        tfod.activate();
+
+        //caller.sleep(500);
+
+        List<Recognition> allRecognitions;
+        List<Recognition> cleanRecognitions = new ArrayList<Recognition>();
+
+        for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
+            allRecognitions = tfod.getRecognitions();
+            if (allRecognitions != null) {
+
+                for(Recognition recognition : allRecognitions) {
+                    if(
+                        //recognition.getBottom()>790 && recognition.getHeight()>150
+                            true) {
+                        cleanRecognitions.add(recognition);
+                    }
+                }
+
+
+            }
+            caller.sleep(250);
+        }
+
+
+
+        int goldMineralX = -1;
+        int silverMineral1X = -1;
+        int silverMineral2X = -1;
+
+//        for(int i = updatedRecognitions.size()-1; i>=0; i--) {
+//            if(updatedRecognitions.get(i).getTop() < 410) {
+//                updatedRecognitions.remove(i);
+//            }
+//        }
+
+//        for(Recognition recognition : updatedRecognitions) {
+//            if(recognition.getTop() < 410) {
+//                updatedRecognitions.remove(recognition);
+//            }
+//        }
+        telemetry.addData("# Object Detected", cleanRecognitions.size());
+        telemetry.update();
 
         for (Recognition recognition : cleanRecognitions) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) && goldMineralX==-1) {
