@@ -155,31 +155,44 @@ public class Robot {
 
         //caller.sleep(500);
 
-        List<Recognition> updatedRecognitions = null;
+        List<Recognition> allRecognitions = null;
+        List<Recognition> cleanRecognitions = null;
 
         for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
-            updatedRecognitions = tfod.getRecognitions();
-            if (updatedRecognitions != null) {
-                telemetry.addData("# Object Detected", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 2) {
-                    break;
+            allRecognitions = tfod.getRecognitions();
+            if (allRecognitions != null) {
+
+                for(Recognition recognition : allRecognitions) {
+                    if(recognition.getBottom()>750) {
+                        cleanRecognitions.add(recognition);
+                    }
                 }
+
+                telemetry.addData("# Object Detected", cleanRecognitions.size());
                 telemetry.update();
             }
             caller.sleep(250);
         }
 
+
+
         int goldMineralX = -1;
         int silverMineral1X = -1;
         int silverMineral2X = -1;
+
+//        for(int i = updatedRecognitions.size()-1; i>=0; i--) {
+//            if(updatedRecognitions.get(i).getTop() < 410) {
+//                updatedRecognitions.remove(i);
+//            }
+//        }
 
 //        for(Recognition recognition : updatedRecognitions) {
 //            if(recognition.getTop() < 410) {
 //                updatedRecognitions.remove(recognition);
 //            }
-//        }s
+//        }
 
-        for (Recognition recognition : updatedRecognitions) {
+        for (Recognition recognition : cleanRecognitions) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) && goldMineralX==-1) {
                 goldMineralX = (int) recognition.getLeft();
             } else if (silverMineral1X == -1) {

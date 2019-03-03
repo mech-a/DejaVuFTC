@@ -55,7 +55,9 @@ public class POVDriveImu extends LinearOpMode {
     double[] g1Adjusted = new double[4];
     double[] g2Adjusted = new double[4];
 
-    double modifier = 0.05;
+    private static double DEADZONE = 0.35;
+
+    private static double MODIFIER = 0.1;
 
     double powL = 0;
     double powR = 0;
@@ -103,7 +105,7 @@ public class POVDriveImu extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            setGamepads(modifier);
+            setGamepads(MODIFIER);
 
             powFL = Range.clip(g1[1] + g1[2] + g1[0], -1, 1);
             powFR = Range.clip(g1[1] - g1[2] - g1[0], -1, 1);
@@ -233,19 +235,32 @@ public class POVDriveImu extends LinearOpMode {
 
     private void setGamepads(double modifier) {
         //left joystick x, y, right joystick x, y
-        g1[0] = gamepad1.left_stick_x * modifier;
-        g1[1] = -gamepad1.left_stick_y * modifier;
-        g1[2] = gamepad1.right_stick_x * modifier;
-        g1[3] = -gamepad1.right_stick_y * modifier;
+//        g1[0] = gamepad1.left_stick_x * modifier;
+//        g1[1] = -gamepad1.left_stick_y * modifier;
+//        g1[2] = gamepad1.right_stick_x * modifier;
+//        g1[3] = -gamepad1.right_stick_y * modifier;
 
-        g2[0] = gamepad2.left_stick_x * modifier;
-        g2[1] = -gamepad2.left_stick_y * modifier;
-        g2[2] = gamepad2.right_stick_x * modifier;
-        g2[3] = -gamepad2.right_stick_y * modifier;
+        g1[0] = gamepad1.left_stick_x;
+        g1[1] = -gamepad1.left_stick_y;
+        g1[2] = gamepad1.right_stick_x;
+        g1[3] = -gamepad1.right_stick_y;
+
+        for(int i = 0; i < g1.length; i++) {
+            g1[i] = (Math.abs(g1[i]) > DEADZONE ? g1[i] : 0);
+            g1[i]*=modifier;
+        }
+
+
+
+
+
+//        g2[0] = gamepad2.left_stick_x * modifier;
+//        g2[1] = -gamepad2.left_stick_y * modifier;
+//        g2[2] = gamepad2.right_stick_x * modifier;
+//        g2[3] = -gamepad2.right_stick_y * modifier;
 
         //TODO deadzones
-        for(int i = 0; i < g1.length; i++)
-            g1[i] = (Math.abs(g1[i]) > 0.15 ? g1[i] : 0);
+
 
         telemetry.addData("left stick x:", "%4f", gamepad1.left_stick_x);
         telemetry.addData("left stick y:", "%4f", gamepad1.left_stick_y);

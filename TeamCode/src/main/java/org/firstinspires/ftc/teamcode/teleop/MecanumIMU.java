@@ -73,7 +73,7 @@ public class MecanumIMU extends LinearOpMode {
 
 
 
-    double[] speedSwitch = {0.05,0.25};
+    double[] speedSwitch = {0.05,0.375};
     boolean runFast = true, runSlow = false;
     double modifier = speedSwitch[1];
     static double DEADZONE = 0.15, TRIGGER_DEADZONE = 0.1;
