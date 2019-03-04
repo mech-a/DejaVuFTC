@@ -34,12 +34,11 @@ public class CraterNoRedundancy extends LinearOpMode {
 
         //this is an enum
         //save the detected position of the gold mineral
-        GoldPosition x = r.getGoldPosition();
+
         //GoldPosition x = GoldPosition.RIGHT;
 
 
-        telemetry.addData("Position:", x);
-        telemetry.update();
+
 
         r.positionDrive(2, 100,0.75);
 
@@ -54,10 +53,11 @@ public class CraterNoRedundancy extends LinearOpMode {
         //r.positionDrive(0,840,0.3 );
 
         r.armMotors[0].setPower(0.5);
-        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 778) {}
+        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 990) {}
         r.armMotors[0].setPower(0);
 
         sleep(100);
+        GoldPosition x = r.getGoldPosition();
 
 
 
@@ -88,7 +88,7 @@ public class CraterNoRedundancy extends LinearOpMode {
             r.translate(Enums.Direction.RIGHT,39+5, speed);
         }
         else if (x==GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.RIGHT, 22+39, speed);
+            r.translate(Enums.Direction.RIGHT, 22+39+1, speed);
         }
         else {
             r.translate(Enums.Direction.RIGHT, 39-8, speed);
@@ -96,7 +96,7 @@ public class CraterNoRedundancy extends LinearOpMode {
 
         r.rotate("ccw", speed, 130);
         sleep(time);
-        r.translate(Enums.Direction.LEFT, 6, speed);
+        r.translate(Enums.Direction.LEFT, 15, speed);
         sleep(time);
         r.translate(Enums.Direction.BACK, 37, speed);
         sleep(time);

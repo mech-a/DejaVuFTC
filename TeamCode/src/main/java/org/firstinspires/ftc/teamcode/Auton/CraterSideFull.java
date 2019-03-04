@@ -44,7 +44,7 @@ public class CraterSideFull extends LinearOpMode {
         //r.positionDrive(0,840,0.3 );
 
         r.armMotors[0].setPower(0.5);
-        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 780) {}
+        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 900) {}
         r.armMotors[0].setPower(0);
 
         sleep(100);

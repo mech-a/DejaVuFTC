@@ -244,24 +244,22 @@ public class Robot {
 
         //caller.sleep(500);
 
-        List<Recognition> allRecognitions;
+        List<Recognition> allRecognitions = null;
         List<Recognition> cleanRecognitions = new ArrayList<Recognition>();
 
         for (int i = 0; i < 5 && !caller.isStopRequested(); i++) {
             allRecognitions = tfod.getRecognitions();
             if (allRecognitions != null) {
 
-                for(Recognition recognition : allRecognitions) {
-                    if(
-                        //recognition.getBottom()>790 && recognition.getHeight()>150
-                            true) {
-                        cleanRecognitions.add(recognition);
-                    }
-                }
-
 
             }
             caller.sleep(250);
+        }
+
+        for(Recognition recognition : allRecognitions) {
+            if(recognition.getBottom()>790 && recognition.getHeight()>150)  {
+                cleanRecognitions.add(recognition);
+            }
         }
 
 
@@ -314,7 +312,7 @@ public class Robot {
         if (goldMineralX == -1) {
             telemetry.addData("GoldMineral Pos", "LEFT");
             pos = GoldPosition.LEFT;
-        } else if (goldMineralX != -1 && (goldMineralX < silverMineral1X || goldMineralX < silverMineral2X)) {
+        } else if (goldMineralX < 225) {
             telemetry.addData("GoldMineral Pos", "MIDDLE");
             pos = GoldPosition.MIDDLE;
         } else {

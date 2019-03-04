@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode.Auton;
-import com.disnodeteam.dogecv.CameraViewDisplay;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
-import org.firstinspires.ftc
-        .teamcode.dependencies.Enums.GoldPosition;
+import org.firstinspires.ftc.teamcode.dependencies.Enums.GoldPosition;
 import org.firstinspires.ftc.teamcode.dependencies.Robot;
 
-import static org.firstinspires.ftc.teamcode.dependencies.Constants.SERVO_UNLOCKED;
+//import org.firstinspires.ftc.teamcode.DogeCVTesting.CustomGoldDetector;
 
 
-@Autonomous(name = "Depot Side", group = "Auton")
-public class DepotSideAuton extends LinearOpMode {
+@Autonomous(name = "Depot Side Rotate", group = "Auton")
+public class DepotSideAutonRotate extends LinearOpMode {
 
     Robot r = new Robot(this, Enums.OpModeType.AUTON);
 
     //constants that will probably be moved to the Constants class
-    private double speed = 0.25;
+    private double speed = 0.15;
     private int time = 50;
 
     @Override public void runOpMode() {
@@ -53,17 +50,17 @@ public class DepotSideAuton extends LinearOpMode {
         //r.positionDrive(0,840,0.3 );
 
           r.armMotors[0].setPower(0.5);
-        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 990) {}
+        while(!isStopRequested() && r.armMotors[0].getCurrentPosition() <= 780) {}
         r.armMotors[0].setPower(0);
 
 
         sleep(100);
-        //r.rotate("cw",0.1,5);
+        r.rotate("cw",0.1,5);
         GoldPosition x = r.getGoldPosition();
         telemetry.addData("Position:",x);
         telemetry.update();
-        //sleep(3000);
-        //r.rotate("ccw",0.1,0);
+        sleep(50);
+        r.rotate("ccw",0.1,0);
 
 
         //this is an enum
@@ -85,12 +82,12 @@ public class DepotSideAuton extends LinearOpMode {
 
 
 
-        if (x==Enums.GoldPosition.MIDDLE) {
+        if (x== GoldPosition.MIDDLE) {
             telemetry.update();
             r.translate(Enums.Direction.LEFT,6, speed);
             r.translate(Enums.Direction.BACK,38, speed);
         }
-        else if (x==Enums.GoldPosition.RIGHT) {
+        else if (x== GoldPosition.RIGHT) {
 
             r.translate(Enums.Direction.LEFT, 24, speed);
             sleep(time);
@@ -121,18 +118,14 @@ public class DepotSideAuton extends LinearOpMode {
 //        sleep(time);
 
 
-        if(x== Enums.GoldPosition.RIGHT) {
-            r.translate(Enums.Direction.RIGHT, 17, speed+0.1);
-            r.translate(Enums.Direction.FWD,70,0.2);
+        if(x== GoldPosition.RIGHT) {
+            r.translate(Enums.Direction.RIGHT, 15, speed+0.1);
         }
-        else if (x== Enums.GoldPosition.LEFT) {
-            r.translate(Enums.Direction.FWD, 8,0.2);
-            r.translate(Enums.Direction.RIGHT, 14, speed+0.1);
-            r.translate(Enums.Direction.FWD,62,0.2);
+        else if (x== GoldPosition.LEFT) {
+            r.translate(Enums.Direction.RIGHT, 12, speed+0.1);
         }
         else {
-            r.translate(Enums.Direction.RIGHT, 13, speed+0.1);
-            r.translate(Enums.Direction.FWD,70,0.2);
+            r.translate(Enums.Direction.RIGHT, 10, speed+0.1);
         }
         //IF MIDDLE GO 7INCHES towards the wall
         //
@@ -146,7 +139,7 @@ public class DepotSideAuton extends LinearOpMode {
 
         //MAKE THIS RUN LESS INCHES
         sleep(time);
-
+        r.translate(Enums.Direction.FWD,70,0.2);
 
         telemetry.update();
     }
