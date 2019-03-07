@@ -15,8 +15,8 @@ import java.io.PrintWriter;
 
 public class FTPHandler {
     private String server = "192.168.0.186";
-    private String user = "gbhat";
-    private String password = "OGMANVE7085";
+    private String user = "ftpuser";
+    private String password = "ftp";
     private int port = 21;
     private FTPClient ftp;
 
