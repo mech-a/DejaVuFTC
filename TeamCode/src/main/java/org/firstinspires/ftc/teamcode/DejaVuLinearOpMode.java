@@ -15,7 +15,8 @@ public abstract class DejaVuLinearOpMode extends LinearOpMode {
             ftp = new FTPHandler();
             ftp.downloadFile(fname, homePath+fname);
             //TODO make log.d
-            System.out.println("FTP File downloaded successfully");
+            //System.out.println("FTP File downloaded successfully");
+            telemetry.addData("FTP", "File downloaded successfully");
             ftp.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
