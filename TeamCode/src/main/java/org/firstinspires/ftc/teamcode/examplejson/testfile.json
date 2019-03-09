@@ -1,0 +1,18 @@
+{
+	"methods": [
+		{
+			"functionName": "translate",
+			"functionParams": [
+				800,
+				0.2
+			]
+		},
+		{
+			"functionName": "rotate",
+			"functionParams": [
+				800,
+				0.2
+			]
+		}
+	]
+}
