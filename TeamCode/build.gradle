@@ -14,4 +14,5 @@ dependencies {
     implementation project(':openCVLibrary3')
     implementation project(':DogeCV')
     implementation 'commons-net:commons-net:3.6'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
