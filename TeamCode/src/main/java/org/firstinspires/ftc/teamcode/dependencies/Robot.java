@@ -2,9 +2,9 @@
 // Will be deprecated after extended classes for dcmotor are made/subassemblies/class
 
 package org.firstinspires.ftc.teamcode.dependencies;
-
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
+//
+//import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
