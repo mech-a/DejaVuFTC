@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auton;
-import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
