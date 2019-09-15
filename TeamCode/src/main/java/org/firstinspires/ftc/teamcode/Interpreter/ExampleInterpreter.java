@@ -27,18 +27,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Interpreter;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.dependencies.Robot;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
 
 
 /**
  * Copy Me Linear
  */
 
-@TeleOp(name="ExampleInterpreter", group="Internal")
+@Autonomous(name="ExampleInterpreter", group="Internal")
 @Disabled
 public class ExampleInterpreter extends DejaVuLinearOpMode {
 
@@ -49,14 +54,37 @@ public class ExampleInterpreter extends DejaVuLinearOpMode {
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
 
+        Robot r = new Robot(this);
+
         download(fname);
+
+        try {
+            convertJSONToBOJO();
+        } catch (IOException e) {
+            //TODO log.d
+            e.printStackTrace();
+        }
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         //TODO implement reflection
-        while (opModeIsActive()) {
-
+        for(MethodData data : auton.methods) {
+            try{
+                if(data.functionParams != null) {
+                    Method method = data.getClassObj().getMethod(data.functionName, data.getParamTypes());
+                    //Method method = ExampleRobot.class.getMethod(data.functionName, data.getParamTypes());
+                    method.invoke(r, data.functionParams);
+                }
+                else {
+                    Method method = data.getClassObj().getMethod(data.functionName);
+                    //Method method = ExampleRobot.class.getMethod(data.functionName);
+                    method.invoke(r);
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

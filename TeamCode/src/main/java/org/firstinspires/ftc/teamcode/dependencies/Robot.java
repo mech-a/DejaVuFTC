@@ -167,8 +167,6 @@ public class Robot {
                     break;
                 }
                 telemetry.update();
-
-
             }
             caller.sleep(250);
         }

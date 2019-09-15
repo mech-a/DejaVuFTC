@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Interpreter;
 
 import org.firstinspires.ftc.teamcode.dependencies.Enums;
 
@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.dependencies.Enums;
 
 public class ExampleAuton {
     MethodData[] methods = new MethodData[] {
-            new MethodData("translate", Enums.Direction.BACK, 800, 0.2),
+            new MethodData("Robot","translate", Enums.Direction.BACK, 800, 0.2),
             //new MethodData("getGoldPosition", null);
-            new MethodData("rotate", "ccw", 80, 0.2)
+            new MethodData("Robot","rotate", "ccw", 80, 0.2)
     };
 }

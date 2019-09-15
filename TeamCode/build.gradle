@@ -15,4 +15,5 @@ dependencies {
     implementation project(':DogeCV')
     implementation 'commons-net:commons-net:3.6'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'commons-io:commons-io:2.6'
 }
