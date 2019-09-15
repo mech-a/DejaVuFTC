@@ -1,6 +1,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
 =======
@@ -18,8 +21,11 @@
  * list of conditions and the following disclaimer in the documentation and/or
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
 =======
@@ -35,6 +41,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
 =======
@@ -87,9 +96,13 @@ public class Armtesting extends LinearOpMode {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //-260
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+//-260
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 //-260
 >>>>>>> parent of 34196b3... i m gabi lol
