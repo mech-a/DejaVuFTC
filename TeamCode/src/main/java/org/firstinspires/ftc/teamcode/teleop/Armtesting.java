@@ -1,5 +1,8 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
 /* Copyright (c) 2017 FIRST. All rights reserved.
@@ -14,8 +17,11 @@
  * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
  * other materials provided with the distribution.
@@ -28,6 +34,9 @@
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 >>>>>>> parent of 34196b3... i m gabi lol
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -77,9 +86,13 @@ public class Armtesting extends LinearOpMode {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 //-260
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+//-260
+>>>>>>> parent of 34196b3... i m gabi lol
 =======
 //-260
 >>>>>>> parent of 34196b3... i m gabi lol
