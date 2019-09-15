@@ -1,18 +1,36 @@
 package com.disnodeteam.dogecv;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.GLES20;
+import android.os.Debug;
 import android.util.Log;
+import android.view.Surface;
 
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
-import com.disnodeteam.dogecv.math.MathFTC;
+import com.qualcomm.robotcore.util.ThreadPool;
+import com.vuforia.CameraDevice;
 import com.vuforia.Frame;
+import com.vuforia.Matrix34F;
+import com.vuforia.Matrix44F;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Tool;
+import com.vuforia.Trackable;
+import com.vuforia.TrackableResult;
 
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraFrame;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCaptureSession;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableImpl;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackablesImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.VuforiaWebcam;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -23,41 +41,39 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
+
+import static com.vuforia.Vuforia.setFrameFormat;
 
 /**
- * An implementation of Vuforia intended to be cross-compatible with DogeCV
+ * An implementation of Vuforia intended to be cross-compatible with OpenCV (and DogeCV by extension)
  */
 
-public abstract class Dogeforia extends VuforiaLocalizerImpl {
-
-    DrawViewSource rawView;
+public class Dogeforia extends VuforiaLocalizerImpl {
+    DogeCVDetector detector;
+    DrawViewSource displayView;
+    boolean dogeCVEnabled;
+    boolean showDebug = false;
 
     Thread workerThread;
     Bitmap outputImage;
-    Bitmap rotatedImage;
     Bitmap bitmap;
     Mat inputMat;
     Mat outMat;
-    Mat rotatedMat;
-    Mat displayMat;
+    BlockingQueue<CloseableFrame> frames;
     public Dogeforia(Parameters parameters) {
         super(parameters);
     }
 
-    /**
-     * Sets the raw view. Make sure to run this before start()!
-     * @param rawView The raw view to which we should display the camera frame
-     */
-    public void setRawView(DrawViewSource rawView){
-        this.rawView = rawView;
+    public void setDogeCVDetector(DogeCVDetector detector){
+        this.detector = detector;
+        detector.enable();
+        displayView = detector.getRawView();
+        setMonitorViewParent(displayView.getId());
         setFrameQueueCapacity(1);
     }
 
-    /**
-     * Starts Dogeforia
-     */
-    public synchronized void start(){
-
+    public void start(){
         workerThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -68,94 +84,133 @@ public abstract class Dogeforia extends VuforiaLocalizerImpl {
         });
         workerThread.setName("Dogeforia Thread");
         workerThread.start();
+
         Log.d("DogeCV", workerThread.getState().toString());
+
     }
 
-    /**
-     * Enables Vuforia VuMark tracking
-     */
+    public void enableDogeCV(){
+
+        dogeCVEnabled = true;
+    }
+
+    public void disableDogeCV(){
+        dogeCVEnabled = false;
+    }
     public void enableTrack(){
         startTracker();
     }
 
-    /**
-     * Stops Vuforia VuMark tracking
-     */
     public void disableTrack() {
         stopTracker();
     }
+    public void showDebug(){
+        showDebug = true;
 
-    public abstract Mat analyzeFrame(Mat rgba, Mat gray);
+    }
 
-    /**
-     * Analyzes the frame passed to this class using DogeCV
-     * @param frame The processed frame to be displayed
-     */
-    public void anaylzeFrame(Frame frame){
+    public void processFrame(Frame frame){
         if(frame != null ){
+
             bitmap = convertFrameToBitmap(frame);
+
             inputMat = new Mat(bitmap.getWidth(), bitmap.getHeight(), CvType.CV_8UC1);
             Utils.bitmapToMat(bitmap,inputMat);
-            rotatedMat = new Mat();
-            Core.flip(inputMat.t(), rotatedMat, 1); //Adjust this line to change the image rotation
-            outMat = analyzeFrame(rotatedMat, null);
+
+            outMat = detector.processFrame(inputMat, null);
+
+            if(showDebug){
+                if(loadedTrackableSets !=null && loadedTrackableSets.size() > 0) {
+                    VuforiaTrackablesImpl trackables = loadedTrackableSets.get(0);
+                    int count = 0;
+                    for(VuforiaTrackable trackable : trackables){
+                        if(trackable == null || ((VuforiaTrackableDefaultListener)trackable.getListener()) == null){
+                            continue;
+                        }
+                        if(((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()){
+                            Imgproc.putText(outMat,"Vuforia: " + trackable.getName(), new Point(10,50 * count + 50),0,2,new Scalar(0,255,0),3);
+                            count++;
+                        }
+
+                    }   
+                }
+                
+            }
+
 
             if(!outMat.empty() ){
 
-                displayMat = new Mat();
-                outMat.copyTo(displayMat);
-                rotatedImage = Bitmap.createBitmap(displayMat.width(), displayMat.height(), bitmap.getConfig());
-                Utils.matToBitmap(displayMat, rotatedImage);
+                bitmap.setHeight(outMat.height());
+                bitmap.setWidth(outMat.width());
+                Utils.matToBitmap(outMat, bitmap);
+
+
 
                 //height = <user-chosen width> * original height / original width
-                Size newSize = MathFTC.fullscreen(displayMat.size(), new Size(rawView.getWidth(), rawView.getHeight()));
-                outputImage =  Bitmap.createScaledBitmap(rotatedImage, (int) newSize.width, (int) newSize.height, false);
+                double adjustedHieght = displayView.getWidth() * outMat.height()/ outMat.width();
+                outputImage =  Bitmap.createScaledBitmap(bitmap,displayView.getWidth(), (int)adjustedHieght, false);
 
-                ((Activity) rawView.getContext()).runOnUiThread(new Runnable() {
+                ((Activity)displayView.getContext()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        rawView.onFrame(outputImage);
-                        rawView.invalidate();
+                        displayView.onFrame(outputImage);
+                        displayView.invalidate();
                     }
                 });
+
             }else{
                 Log.w("DogeCV", "MAT BITMAP MISMATCH OR EMPTY ERROR");
             }
+
+
             inputMat.release();
-            rotatedMat.release();
             outMat.release();
-            displayMat.release();
-        } else{
+
+
+        }else{
             Log.d("DogeCV", "No Frame!");
         }
     }
 
-    /**
-     * Renders the frame passed to this class through Vuforia
-     */
     public void render() {
-        if(!getFrameQueue().isEmpty()){
-            try {
-                anaylzeFrame(getFrameQueue().take());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+       // Log.d("DogeCV", "Rendering Frame");
+       // super.onRenderFrame()
+
+        if(detector != null && dogeCVEnabled){
+
+            if(!getFrameQueue().isEmpty()){
+                try {
+                    processFrame(getFrameQueue().take());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                Log.w("DogeCV", "Frame is empty. Enabling AparnaCV: " + getFrameQueueCapacity());
             }
-        } else{
-            Log.v("DogeCV", "Frame is empty. Que Size: " + getFrameQueueCapacity());
+
+            /*
+            getFrameOnce(Continuation.create(ThreadPool.getDefault(), new Consumer<Frame>()
+            {
+                @Override public void accept(Frame frame)
+                {
+                    processFrame(frame);
+                }
+            }));
+             */
         }
 
     }
 
-    /**
-     * Terminates Dogeforia
-     */
-    public synchronized void stop(){
+    public void stop(){
         close();
-        ((Activity) rawView.getContext()).runOnUiThread(new Runnable() {
+        ((Activity)displayView.getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 workerThread.interrupt();
+
+                detector.disable();
             }
         });
+
     }
 }

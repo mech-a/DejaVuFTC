@@ -1,7 +1,7 @@
 package com.disnodeteam.dogecv;
 
 /**
- * Contains global values and types
+ * Contains global enumerated types
  */
 public class DogeCV {
     public enum DetectionSpeed {
@@ -18,17 +18,5 @@ public class DogeCV {
         COLOR_DEVIATION
     }
 
-    public enum CameraMode {
-        BACK,
-        FRONT,
-        WEBCAM
-    }
 
-    public enum VuMark {
-        NONE,
-        BLUE_ROVER,
-        RED_FOOTPRINT,
-        FRONT_CRATERS,
-        BACK_SPACE
-    }
 }
