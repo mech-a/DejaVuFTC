@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
 /* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -10,8 +13,11 @@
  *
  * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
  * other materials provided with the distribution.
  *
  * Neither the name of FIRST nor the names of its contributors may be used to endorse or
@@ -21,6 +27,9 @@
  * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 34196b3... i m gabi lol
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -67,6 +76,10 @@ public class Armtesting extends LinearOpMode {
         r.positionDrive(2, (int)HD_COUNTS_PER_REV/4, 0.25);
     }
 }
+<<<<<<< HEAD
 //-260
 =======
 >>>>>>> parent of 4a1ee26... Changes
+=======
+//-260
+>>>>>>> parent of 34196b3... i m gabi lol
