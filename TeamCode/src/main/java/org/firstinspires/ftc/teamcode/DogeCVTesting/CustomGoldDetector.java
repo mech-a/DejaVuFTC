@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.DogeCVTesting;
 
 import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.DogeCVDetector;
 import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
