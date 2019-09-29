@@ -3,8 +3,8 @@
 
 package org.firstinspires.ftc.teamcode.dependencies;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
+//import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -49,11 +49,12 @@ public class Robot {
      */
     //FL,FR,BR,BR
     public DcMotor[] driveMotors = new DcMotor[4];
-    public Servo[] servoMotors = new Servo[2];
+    //
+    public Servo[] servoMotors = new Servo[7];
     //public DistanceSensor[] distanceSensors = new DistanceSensor[2];
 
-    //Raise, Telescope, Rotation, Intake
-    public DcMotor[] armMotors = new DcMotor[4];
+    // Horizontal, Vertical
+    public DcMotor[] armMotors = new DcMotor[2];
 
     private int adjustmentForangle = 3;
     private int adjustmentFortranslation = 1;
@@ -64,6 +65,7 @@ public class Robot {
 
     private int[] driveMtrTargets = new int[4];
     private int driveMtrTarget;
+    private int horizontalSlideTarget;
     private int[] armMtrTargets = new int[4];
 
     private BNO055IMU imu;
@@ -374,7 +376,7 @@ public class Robot {
         }
     }
     private void armMotorsInit() {
-        for (int i = 0; i<4 && !caller.isStopRequested(); i++) {
+        for (int i = 0; i<2 && !caller.isStopRequested(); i++) {
             armMotors[i] = hardwareMap.dcMotor.get(ARM_MOTOR_NAMES[i]);
 
             //TODO change if needed: well, i did it, but must be changed for when telescoping works
@@ -390,10 +392,7 @@ public class Robot {
                     break;
             }*/
 
-            if(i==3)
-                armMotors[i].setDirection(DcMotor.Direction.REVERSE);
-            else
-                armMotors[i].setDirection(DcMotor.Direction.FORWARD);
+            armMotors[i].setDirection(DcMotor.Direction.FORWARD);
 
             //Telescoping has to be init'd reverse
 
@@ -404,6 +403,7 @@ public class Robot {
             }
         }
     }
+
     public void imuInit() {
         imu = hardwareMap.get(BNO055IMU.class, SENSOR_NAMES[0]);
         gyroParameters = new BNO055IMU.Parameters();
@@ -456,6 +456,7 @@ public class Robot {
      * @param counts
      * @param speed
      */
+
     //Also rethink naming style, drive+whatever is getting really repetitive and long.
     public void positionDrive(int motorNum, int counts, double speed) {
 
@@ -868,4 +869,20 @@ public class Robot {
         return gyroParameters.gyroBandwidth;
     }
 
+
+    // 2019-20 CODE
+    public void intake() {
+        horizontalSlideTarget = (int) (Math.abs(6) * HD_COUNTS_PER_INCH);
+        armMotors[1].setTargetPosition(horizontalSlideTarget);
+        armMotors[1].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotors[1].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void hookFoundation() {
+
+    }
+
+    public void unhookFoundation() {
+
+    }
 }
